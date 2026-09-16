@@ -169,7 +169,7 @@
                     <i class="fa-solid fa-house-chimney-window text-2xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">Phòng B6203</h1>
+                    <h1 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">KTX Phòng B6203</h1>
                     <p class="text-sm text-blue-600 font-semibold" id="currentMonthDisplay">Đang tải...</p>
                 </div>
             </div>
@@ -772,7 +772,7 @@
         }
 
         function renderPublicDashboard(data) {
-            document.getElementById('currentMonthDisplay').innerText = `Tháng ${state.config.month}`;
+            document.getElementById('currentMonthDisplay').innerText = `Dữ liệu tháng ${state.config.month}`;
             document.getElementById('totalBillDisplay').innerText = formatMoney(data.grandTotalCost);
             document.getElementById('overviewElec').innerText = formatMoney(state.config.totalElec) + 'đ';
             document.getElementById('overviewFees').innerText = formatMoney(state.config.totalFees) + 'đ';
