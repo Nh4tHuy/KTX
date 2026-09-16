@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Web App Quản Lý Tiền Điện KTX Phòng B6203</title>
+    <title>Tiền Điện KTX Phòng B6203</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Đã gỡ bỏ Chart.js theo yêu cầu -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
    <meta name="robots" content="noindex, nofollow"/>
     <style>
@@ -30,13 +29,12 @@
             position: relative;
         }
 
-        /* --- MỚI: Hiệu ứng hình vuông/sóng bay từ dưới lên --- */
         .bg-animation-area {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             overflow: hidden;
-            pointer-events: none; /* Không cản trở click */
+            pointer-events: none; 
         }
         
         .floating-shapes {
@@ -59,7 +57,6 @@
             backdrop-filter: blur(2px);
         }
 
-        /* Tùy chỉnh kích thước, vị trí, tốc độ cho từng hình */
         .floating-shapes li:nth-child(1) { left: 10%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
         .floating-shapes li:nth-child(2) { left: 25%; width: 40px; height: 40px; animation-delay: 2s; animation-duration: 22s; border-radius: 50%; }
         .floating-shapes li:nth-child(3) { left: 45%; width: 80px; height: 80px; animation-delay: 5s; }
@@ -82,7 +79,7 @@
             }
         }
 
-        /* Các style giao diện cũ giữ nguyên */
+
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -151,7 +148,6 @@
 </head>
 <body class="pb-24 md:pb-10 text-sm md:text-base">
 
-    <!-- Animation Nền -->
     <div class="bg-animation-area">
         <ul class="floating-shapes">
             <li></li><li></li><li></li><li></li>
@@ -159,7 +155,6 @@
         </ul>
     </div>
 
-    <!-- Màn hình Loading -->
     <div id="loadingOverlay" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/80 backdrop-blur-md transition-opacity duration-500">
         <div class="relative flex justify-center items-center mb-6">
             <div class="absolute w-20 h-20 rounded-full bg-blue-500 opacity-20 animate-ping"></div>
@@ -192,7 +187,6 @@
 
         <main id="publicView" class="flex-1 px-4 md:px-4 space-y-6 md:space-y-8 fade-in">
             
-            <!-- Banner Tổng quan -->
             <div class="glass-panel rounded-[2rem] p-6 md:p-8 relative overflow-hidden bg-white/40 border border-white/60">
                 <div class="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-blue-400/20 to-cyan-300/20 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute bottom-0 right-0 p-4 opacity-5">
@@ -243,7 +237,6 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                 
-                <!-- Cột trái: Thành viên -->
                 <div class="lg:col-span-2 space-y-4">
                     <div class="flex justify-between items-center mb-2 px-1">
                         <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
@@ -253,14 +246,11 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5" id="publicMembersList">
-                        <!-- JS Render Member Cards Here -->
                     </div>
                 </div>
 
-                <!-- Cột phải: Tiện ích & Quỹ chung (Đã xóa Widget Biểu đồ) -->
                 <div class="space-y-6">
                     
-                    <!-- Widget Tiện ích nhanh -->
                     <div class="glass-panel rounded-[1.5rem] p-5">
                         <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-4">
                             <i class="fa-solid fa-bolt text-amber-500"></i> Tiện ích
@@ -281,7 +271,6 @@
                         </div>
                     </div>
 
-                    <!-- Quỹ mua chung -->
                     <div class="glass-panel rounded-[1.5rem] p-6 border-t-4 border-t-cyan-400">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="font-bold text-slate-800 flex items-center gap-2">
@@ -297,14 +286,12 @@
                         </div>
 
                         <div id="sharedItemsList" class="space-y-3 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
-                            <!-- JS Render Items Here -->
                         </div>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Modal Quy Định Tính Tiền -->
         <div id="rulesModal" class="fixed inset-0 z-[60] flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white rounded-[2rem] w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 border border-slate-200">
                 
@@ -358,7 +345,6 @@
             </div>
         </div>
 
-        <!-- Modal Báo cáo tổng kết (Master Bill) -->
         <div id="billModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white/90 backdrop-blur-xl rounded-[2rem] w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 border border-white" id="billModalContent">
                 
@@ -412,11 +398,9 @@
             </div>
         </div>
 
-        <!-- Modal Hóa đơn cá nhân & Mã QR Lớn -->
         <div id="memberBillModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
              <div class="bg-white rounded-[2rem] w-full max-w-md max-h-[95vh] flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 border border-slate-200" id="memberBillContent">
                  
-                 <!-- Header Cá nhân -->
                  <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-white flex-shrink-0 relative">
                     <div class="absolute inset-0 bg-gradient-to-r from-blue-50 to-transparent pointer-events-none"></div>
                     <div class="flex items-center gap-3 relative z-10">
@@ -435,7 +419,6 @@
                  </div>
 
                  <div class="p-5 space-y-5 bg-slate-50/50 overflow-y-auto flex-1 custom-scrollbar">
-                     <!-- Chi tiết phí -->
                      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
                          <h4 class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">Phân bổ chi phí</h4>
                          <div class="space-y-2.5 text-sm">
@@ -458,7 +441,6 @@
                          </div>
                      </div>
 
-                     <!-- Đối trừ -->
                      <div id="mbDeductionContainer">
                         <div class="bg-emerald-50 rounded-2xl p-4 border border-emerald-100 shadow-sm" id="mbDeductionBox">
                             <h4 class="text-[11px] font-extrabold text-emerald-600 uppercase tracking-wider mb-2">Đã ứng mua đồ</h4>
@@ -467,12 +449,10 @@
                                 <span class="font-black text-emerald-600 text-lg" id="mbAdvance">0đ</span>
                             </div>
                             <div class="text-[11px] text-emerald-700/80 pl-3 border-l-2 border-emerald-300 mt-2 space-y-1" id="mbItemsList">
-                                <!-- list -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- Trạng thái cuối -->
                     <div class="text-center pt-2">
                         <div class="inline-block bg-white px-6 py-4 rounded-3xl border-2 border-dashed border-slate-200 w-full shadow-sm relative overflow-hidden">
                             <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-1" id="mbFinalStatusText">CẦN THANH TOÁN</p>
@@ -480,7 +460,6 @@
                         </div>
                     </div>
 
-                    <!-- Vùng quét QR (Đã phóng to) -->
                     <div id="mbQRContainer" class="mt-2 flex flex-col items-center justify-center p-5 bg-gradient-to-b from-blue-50 to-white rounded-3xl border border-blue-200 shadow-sm hide">
                         <p class="text-xs font-bold text-blue-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                             <i class="fa-solid fa-qrcode text-lg"></i> Quét mã thanh toán
@@ -498,7 +477,6 @@
                             </div>
                         </div>
 
-                        <!-- Nút Tải QR -->
                         <button onclick="downloadQR()" class="mt-5 w-full bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-md">
                             <i class="fa-solid fa-download"></i> Lưu mã QR
                         </button>
@@ -551,7 +529,6 @@
             });
         }
 
-        // Mở popup quy định thay vì hiển thị Toast
         function showRules() {
             showModal('rulesModal');
         }
@@ -754,7 +731,6 @@
                 `;
                 listEl.insertAdjacentHTML('beforeend', cardHtml);
             });
-            // (Đã loại bỏ hàm renderChart(data) tại đây)
         }
 
         function renderBillPopup(data) {
@@ -919,14 +895,12 @@
 
         function showBillPopup() { showModal('billModal'); }
 
-        // Bổ sung đóng modal Quy định
         window.onclick = function(event) {
             if (event.target == document.getElementById('billModal')) closeModal('billModal');
             if (event.target == document.getElementById('memberBillModal')) closeModal('memberBillModal');
             if (event.target == document.getElementById('rulesModal')) closeModal('rulesModal');
         }
 
-        // Khởi động
         initApp();
     </script>
 </body>
