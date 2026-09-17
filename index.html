@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, iniatial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tiền KTX Phòng B6203</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -231,17 +231,6 @@
                             <p class="text-xs font-bold text-slate-500" id="totalDaysDisplay">0 ngày</p>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Widget Biểu đồ phân bổ chi phí -->
-            <div class="glass-panel rounded-[1.5rem] p-6 bg-white/40">
-                <h3 class="font-extrabold text-slate-800 text-lg mb-1 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-bar text-indigo-500"></i> Phân tích mức đóng góp
-                </h3>
-                <p class="text-xs text-slate-500 mb-5 font-medium">Tỷ lệ % số tiền phải đóng (chưa trừ tạm ứng) của từng thành viên so với tổng chi phí.</p>
-                <div id="costChartContainer" class="space-y-4">
-                    <!-- JS sẽ render biểu đồ ở đây -->
                 </div>
             </div>
 
@@ -695,8 +684,11 @@
         }
 
         function initApp() {
-            fetch(API_URL)
-                .then(response => response.json())
+            fetch(API_URL, { redirect: 'follow' })
+                .then(response => {
+                    if (!response.ok) throw new Error("CORS or Network Error");
+                    return response.json();
+                })
                 .then(data => {
                     // Cập nhật state với cấu trúc mới an toàn
                     state.config = { ...state.config, ...data.config };
@@ -709,7 +701,7 @@
                 })
                 .catch(error => {
                     console.error("Fetch error:", error);
-                    showToast("Không thể kết nối đến Google Sheets.", true);
+                    showToast("Không tải được dữ liệu! Vui lòng kiểm tra quyền truy cập Google Script.", true);
                     hideLoading();
                 });
         }
@@ -754,13 +746,10 @@
                 };
             });
 
-            // Sắp xếp để vẽ biểu đồ đẹp hơn (người chi phí cao nhất lên đầu)
-            const sortedForChart = [...processedMembers].sort((a,b) => b.shareCost - a.shareCost);
-
             return {
                 elecCost, waterCost, feeCost, totalSharedItemsCost, grandTotalCost,
                 totalDays, ratePerDay: totalDays > 0 ? (grandTotalCost / totalDays) : 0, 
-                processedMembers, sortedForChart
+                processedMembers
             };
         }
 
@@ -786,9 +775,6 @@
             document.getElementById('avgPerDayDisplay').innerText = formatMoney(data.ratePerDay) + 'đ';
             document.getElementById('memberCountDisplay').innerText = `${state.members.length} người`;
             document.getElementById('totalSharedItemsCost').innerText = formatMoney(data.totalSharedItemsCost) + 'đ';
-
-            // Render Biểu đồ cột ngang
-            renderCostChart(data.sortedForChart, data.grandTotalCost);
 
             // Quỹ chung list
             const sharedListEl = document.getElementById('sharedItemsList');
@@ -853,48 +839,6 @@
                     </div>
                 `);
             });
-        }
-
-        // Render biểu đồ
-        function renderCostChart(sortedMembers, grandTotal) {
-            const chartContainer = document.getElementById('costChartContainer');
-            chartContainer.innerHTML = '';
-            
-            if (grandTotal === 0 || sortedMembers.length === 0) {
-                chartContainer.innerHTML = '<p class="text-xs text-slate-400 italic">Chưa có dữ liệu chi phí.</p>';
-                return;
-            }
-
-            const colors = ['bg-blue-500', 'bg-cyan-500', 'bg-indigo-500', 'bg-teal-500', 'bg-sky-500', 'bg-violet-500'];
-
-            sortedMembers.forEach((m, index) => {
-                const percent = (m.shareCost / grandTotal) * 100;
-                const percentStr = percent.toFixed(1);
-                const colorClass = colors[index % colors.length];
-
-                const html = `
-                    <div class="w-full">
-                        <div class="flex justify-between text-[11px] font-bold text-slate-600 mb-1.5 px-1">
-                            <span class="flex items-center gap-1">
-                                <span class="w-2 h-2 rounded-full ${colorClass}"></span> ${m.name}
-                            </span>
-                            <span>${percentStr}% <span class="text-slate-400 font-medium ml-1">(${formatMoney(m.shareCost)}đ)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-200/60 rounded-full h-2.5 overflow-hidden shadow-inner">
-                            <div class="h-2.5 rounded-full ${colorClass} chart-bar shadow-sm" style="width: 0%"></div>
-                        </div>
-                    </div>
-                `;
-                chartContainer.insertAdjacentHTML('beforeend', html);
-            });
-
-            // Animation cho thanh tiến trình
-            setTimeout(() => {
-                const bars = chartContainer.querySelectorAll('.chart-bar');
-                sortedMembers.forEach((m, i) => {
-                    if(bars[i]) bars[i].style.width = `${(m.shareCost / grandTotal) * 100}%`;
-                });
-            }, 100);
         }
 
         function renderBillPopup(data) {
