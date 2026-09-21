@@ -6,10 +6,10 @@
     <title>Tiền KTX Phòng B6203</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/otpauth@9.3.1/dist/otpauth.umd.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <meta name="robots" content="noindex, nofollow"/>
+    
     <style>
         :root {
             --bg-gradient-1: #f0f9ff; 
@@ -150,7 +150,8 @@
         /* Calendar specific styles */
         .status-btn.active-full { background-color: #3b82f6; color: white; border-color: #3b82f6; } 
         .status-btn.active-morning { background-color: #fbbf24; color: #78350f; border-color: #fbbf24; } 
-        .status-btn.active-afternoon { background-color: #f97316; color: white; border-color: #f97316; } 
+        /* Cập nhật màu xanh lá cho buổi chiều */
+        .status-btn.active-afternoon { background-color: #22c55e; color: white; border-color: #22c55e; } 
         .status-btn.active-none { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; } 
 
         .calendar-grid-template {
@@ -300,9 +301,9 @@
                         
                         <div class="mt-4 flex flex-wrap gap-3 text-[11px] font-bold text-slate-500 justify-center">
                             <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-1.5 shadow-sm"></span> Cả ngày</div>
-                            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1.5 shadow-sm"></span> Chỉ sáng</div>
-                            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-orange-500 mr-1.5 shadow-sm"></span> Chỉ chiều</div>
-                            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-gray-200 border border-gray-300 mr-1.5"></span> Trống</div>
+                            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1.5 shadow-sm"></span> Buổi sáng</div>
+                            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-green-500 mr-1.5 shadow-sm"></span> Buổi chiều</div>
+                            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-gray-300 mr-1.5 shadow-sm"></span> Không ở</div>
                         </div>
                     </div>
 
@@ -312,7 +313,7 @@
                             <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
                                 <i class="fa-solid fa-users text-blue-500"></i> Thành viên phòng
                             </h3>
-                            <span class="text-xs font-bold text-blue-700 bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200" id="memberCountDisplay">0 người</span>
+                            <span class="text-xs font-bold text-blue-700 bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200" id="memberCountDisplay">0 thành </span>
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5" id="publicMembersList">
@@ -414,11 +415,12 @@
                 </div>
             </div>
             
-            <div class="text-center mt-10">
-                <a href="#/admin" class="text-xs font-bold transition-colors relative inline-block text-transparent hover:text-slate-300 w-10 h-10"><i class="fa-solid fa-user-shield"></i></a>
+            <div class="text-center mt-10 mb-4 cursor-pointer" onclick="window.location.hash = '#/admin'">
+                <p class="text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors">© 2026 App Quản Lý KTX B6203. All rights reserved.</p>
             </div>
         </main>
 
+        <!-- KHOẢNG KHÔNG GIAN ADMIN -->
         <main id="adminView" class="flex-1 px-4 md:px-4 space-y-6 md:space-y-8 fade-in hide">
             <!-- Cấu hình phí -->
             <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-blue-100 relative overflow-hidden">
@@ -479,7 +481,7 @@
                 <div id="adminCalendarGrid" class="calendar-grid-template max-w-3xl mx-auto">
                     <!-- Render bằng JS. Grid này cho phép click. -->
                 </div>
-                
+            </div>
 
             <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-slate-200">
                 <div class="flex justify-between items-center mb-6">
@@ -542,10 +544,10 @@
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <h3 class="text-2xl font-black text-slate-800 mb-2">Đăng Nhập Quản Trị</h3>
-                <p class="text-slate-500 text-sm mb-6">Nhập mã từ ứng dụng <strong class="text-blue-600">Google Authenticator</strong> để truy cập.</p>
+                <p class="text-slate-500 text-sm mb-6">Nhập mã <strong class="text-blue-600">PIN</strong> để truy cập khu vực quản trị.</p>
                 
-                <input type="text" id="adminPin" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="000000" class="w-full text-center text-3xl tracking-[0.4em] font-black px-4 py-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 outline-none mb-4 bg-slate-50 text-slate-800">
-                <p id="loginError" class="text-red-500 text-sm font-bold hide mb-4"><i class="fa-solid fa-triangle-exclamation"></i> Mã không hợp lệ hoặc đã hết hạn!</p>
+                <input type="password" id="adminPin" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="******" class="w-full text-center text-3xl tracking-[0.4em] font-black px-4 py-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 outline-none mb-4 bg-slate-50 text-slate-800">
+                <p id="loginError" class="text-red-500 text-sm font-bold hide mb-4"><i class="fa-solid fa-triangle-exclamation"></i> Mã PIN không đúng!</p>
                 
                 <div class="flex gap-3">
                     <button onclick="closeModal('loginModal'); window.location.hash = '';" class="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors">Hủy</button>
@@ -732,17 +734,10 @@
     </div>
 
     <script>
-        // CẬP NHẬT LẠI LINK SAU KHI DEPLOY GOOGLE APPS SCRIPT MỚI
         const API_URL = "https://script.google.com/macros/s/AKfycbwmTQmkHIUUZ1IcDpkuvt1I0c_8qGtBr_FnBqNxdG_92xRYYzwoiamqyojhBldgtA-W/exec"; 
         
         const BANK_BIN = "970405"; // Agribank
         const BANK_ACCOUNT = "7105205478044";
-
-        const ADMIN_SECRET = "KVKFM3C2OBZHK2LR"; 
-        const adminTotp = new OTPAuth.TOTP({
-            issuer: "KTX B6203", label: "Admin", algorithm: "SHA1",
-            digits: 6, period: 30, secret: ADMIN_SECRET
-        });
 
         // State bao gồm thêm Records lịch điểm danh
         let state = {
@@ -766,7 +761,7 @@
 
         const STATUS = { NONE: 'none', MORNING: 'morning', AFTERNOON: 'afternoon', FULL: 'full' };
         const STATUS_CONFIG = {
-            [STATUS.NONE]: { label: 'Không', value: 0, class: 'active-none' },
+            [STATUS.NONE]: { label: 'Không ở', value: 0, class: 'active-none' },
             [STATUS.MORNING]: { label: 'Sáng', value: 0.5, class: 'active-morning' },
             [STATUS.AFTERNOON]: { label: 'Chiều', value: 0.5, class: 'active-afternoon' },
             [STATUS.FULL]: { label: 'Cả ngày', value: 1, class: 'active-full' }
@@ -954,17 +949,30 @@
         }
 
         function renderDayIndicators(dateStr) {
-            if (!state.records[dateStr]) return '';
             let dots = '';
-            for (let mId in state.records[dateStr]) {
-                const status = state.records[dateStr][mId];
-                if (status === STATUS.FULL) {
-                    dots += `<div class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-blue-500 shadow-sm" title="Full"></div>`;
-                } else if (status === STATUS.MORNING) {
-                    dots += `<div class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-amber-400 shadow-sm" title="Sáng"></div>`;
-                } else if (status === STATUS.AFTERNOON) {
-                    dots += `<div class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-orange-500 shadow-sm" title="Chiều"></div>`;
+            // Luôn vẽ đủ 4 chấm đại diện cho 4 người từ trái qua phải
+            for (let i = 0; i < 4; i++) {
+                const member = state.members[i];
+                let status = STATUS.NONE;
+                let title = `Vị trí trống`;
+                
+                if (member) {
+                    title = member.name;
+                    // Lấy trạng thái của thành viên này trong ngày đó nếu có
+                    if (state.records[dateStr] && state.records[dateStr][member.id]) {
+                        status = state.records[dateStr][member.id];
+                    }
                 }
+                
+                // Mặc định là Không ở (Màu Xám)
+                let bgClass = 'bg-gray-300'; 
+                
+                if (status === STATUS.FULL) bgClass = 'bg-blue-500'; // Xanh biển
+                else if (status === STATUS.MORNING) bgClass = 'bg-amber-400'; // Vàng
+                else if (status === STATUS.AFTERNOON) bgClass = 'bg-green-500'; // Xanh lá
+                
+                let label = STATUS_CONFIG[status] ? STATUS_CONFIG[status].label : 'Không ở';
+                dots += `<div class="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full ${bgClass} shadow-sm" title="${title}: ${label}"></div>`;
             }
             return dots;
         }
@@ -982,7 +990,7 @@
             grid.innerHTML = '';
 
             for (let i = 0; i < firstDayIndex; i++) {
-                grid.innerHTML += `<div class="aspect-square bg-slate-50/30 rounded-xl border border-transparent"></div>`;
+                grid.innerHTML += `<div class="aspect-square lg:aspect-auto lg:min-h-[5.5rem] bg-slate-50/30 rounded-xl border border-transparent"></div>`;
             }
 
             const today = new Date();
@@ -1002,10 +1010,11 @@
                 if (hasFull) bgClass = 'bg-blue-50/50 border-blue-200';
                 else if (hasHalf) bgClass = 'bg-amber-50/50 border-amber-200';
 
+                // Tăng chiều cao tối thiểu bằng lg:min-h-[5.5rem] để không bị co trên Laptop
                 grid.innerHTML += `
-                    <div class="aspect-square lg:aspect-auto lg:h-16 rounded-xl border ${bgClass} p-1 md:p-2 flex flex-col justify-between ${isToday ? 'ring-2 ring-blue-400' : ''}">
+                    <div class="aspect-square lg:aspect-auto lg:min-h-[5.5rem] rounded-xl border ${bgClass} p-1 md:p-2 flex flex-col justify-between ${isToday ? 'ring-2 ring-blue-400' : ''}">
                         <div class="text-[10px] md:text-xs font-bold ${isToday ? 'text-blue-700' : 'text-slate-600'} text-right">${i}</div>
-                        <div class="flex flex-wrap gap-0.5 justify-end mt-1 overflow-hidden h-4 md:h-5">
+                        <div class="flex justify-center md:justify-around items-center gap-0.5 md:gap-1 mt-auto w-full pb-0.5 flex-wrap">
                             ${renderDayIndicators(dateStr)}
                         </div>
                     </div>
@@ -1026,7 +1035,7 @@
             grid.innerHTML = '';
 
             for (let i = 0; i < firstDayIndex; i++) {
-                grid.innerHTML += `<div class="aspect-square lg:aspect-auto lg:h-[4.5rem] bg-slate-50 rounded-xl border border-transparent"></div>`;
+                grid.innerHTML += `<div class="aspect-square lg:aspect-auto lg:min-h-[5.5rem] bg-slate-50 rounded-xl border border-transparent"></div>`;
             }
 
             const today = new Date();
@@ -1046,10 +1055,11 @@
                 if (hasFull) bgClass = 'bg-blue-50 border-blue-200 hover:border-blue-400';
                 else if (hasHalf) bgClass = 'bg-amber-50 border-amber-200 hover:border-amber-400';
 
+                // Thay thế lg:h-[4.5rem] bằng lg:min-h-[5.5rem] 
                 grid.innerHTML += `
-                    <div onclick="openAttendanceModal('${dateStr}', ${i}, ${month}, ${year})" class="aspect-square lg:aspect-auto lg:h-[4.5rem] rounded-xl border ${bgClass} p-1.5 md:p-2 flex flex-col justify-between cursor-pointer hover:-translate-y-0.5 transition-all shadow-sm hover:shadow-md ${isToday ? 'ring-2 ring-indigo-400 ring-offset-1' : ''}">
+                    <div onclick="openAttendanceModal('${dateStr}', ${i}, ${month}, ${year})" class="aspect-square lg:aspect-auto lg:min-h-[5.5rem] rounded-xl border ${bgClass} p-1.5 md:p-2 flex flex-col justify-between cursor-pointer hover:-translate-y-0.5 transition-all shadow-sm hover:shadow-md ${isToday ? 'ring-2 ring-indigo-400 ring-offset-1' : ''}">
                         <div class="text-[10px] md:text-sm font-black ${isToday ? 'text-indigo-600' : 'text-slate-600'}">${i}</div>
-                        <div class="flex flex-wrap gap-1 mt-1 overflow-hidden h-4 md:h-5">
+                        <div class="flex justify-center md:justify-around items-center gap-0.5 md:gap-1 mt-auto w-full pb-0.5 flex-wrap">
                             ${renderDayIndicators(dateStr)}
                         </div>
                     </div>
@@ -1383,12 +1393,16 @@
         window.addEventListener('hashchange', checkRoute);
 
         function verifyAdmin() {
-            if (adminTotp.validate({ token: document.getElementById('adminPin').value, window: 1 }) !== null) {
+            const pinInput = document.getElementById('adminPin').value;
+            // Kiểm tra mã PIN 4 số nhưng ô input cho nhập 6 số
+            if (pinInput === "2412") {
                 isAdminActive = true;
                 document.getElementById('loginError').classList.add('hide');
                 document.getElementById('adminPin').value = '';
                 closeModal('loginModal'); renderAdminDashboard();
-            } else document.getElementById('loginError').classList.remove('hide');
+            } else {
+                document.getElementById('loginError').classList.remove('hide');
+            }
         }
         function logoutAdmin() { isAdminActive = false; window.location.hash = ''; }
 
