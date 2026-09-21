@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, iniatial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tiền KTX Phòng B6203</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,11 +23,19 @@
 
         body {
             font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+            background: linear-gradient(-45deg, #f0f9ff, #e0f2fe, #bfdbfe, #bae6fd);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             background-attachment: fixed;
             min-height: 100vh;
             color: var(--text-main);
             position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* Background Animation */
@@ -35,6 +43,21 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; overflow: hidden; pointer-events: none; 
         }
+        
+        /* Glowing Orbs */
+        .glowing-orb {
+            position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.4;
+            animation: floatOrb 20s infinite ease-in-out alternate;
+        }
+        .orb-1 { width: 300px; height: 300px; background: #60a5fa; top: -10%; left: -10%; }
+        .orb-2 { width: 400px; height: 400px; background: #818cf8; bottom: -20%; right: -10%; animation-delay: -5s; }
+        .orb-3 { width: 250px; height: 250px; background: #38bdf8; top: 40%; left: 60%; animation-delay: -10s; }
+        
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
         .floating-shapes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; margin: 0; padding: 0; }
         .floating-shapes li {
             position: absolute; display: block; list-style: none;
@@ -124,13 +147,28 @@
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        /* Chart Bar Animation */
-        .chart-bar { transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* Calendar specific styles */
+        .status-btn.active-full { background-color: #3b82f6; color: white; border-color: #3b82f6; } 
+        .status-btn.active-morning { background-color: #fbbf24; color: #78350f; border-color: #fbbf24; } 
+        .status-btn.active-afternoon { background-color: #f97316; color: white; border-color: #f97316; } 
+        .status-btn.active-none { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; } 
+
+        .calendar-grid-template {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 0.25rem;
+        }
+        @media (min-width: 640px) {
+            .calendar-grid-template { gap: 0.5rem; }
+        }
     </style>
 </head>
 <body class="pb-24 md:pb-10 text-sm md:text-base">
 
     <div class="bg-animation-area">
+        <div class="glowing-orb orb-1"></div>
+        <div class="glowing-orb orb-2"></div>
+        <div class="glowing-orb orb-3"></div>
         <ul class="floating-shapes">
             <li></li><li></li><li></li><li></li><li></li><li></li>
         </ul>
@@ -151,6 +189,7 @@
 
     <div class="w-full max-w-7xl mx-auto md:p-6 min-h-screen flex flex-col relative">
         
+        <!-- Header -->
         <header class="glass-panel p-4 md:p-5 rounded-b-3xl md:rounded-3xl flex justify-between items-center mb-6 md:mb-8 sticky top-0 z-40 mx-0 md:mx-4 mt-0 md:mt-2 shadow-sm">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30 text-white cursor-pointer" onclick="window.location.hash = ''">
@@ -236,47 +275,128 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                 
-                <!-- Cột Danh sách thành viên -->
-                <div class="lg:col-span-2 space-y-4">
-                    <div class="flex justify-between items-center mb-2 px-1">
-                        <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-users text-blue-500"></i> Thành viên phòng
-                        </h3>
-                        <span class="text-xs font-bold text-blue-700 bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200" id="memberCountDisplay">0 người</span>
-                    </div>
+                <!-- Cột Danh sách thành viên & Lịch (Trái) -->
+                <div class="lg:col-span-2 space-y-6">
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5" id="publicMembersList">
-                        <!-- Render thẻ thành viên bằng JS -->
-                    </div>
-                </div>
+                    <!-- LỊCH THÁNG (READ-ONLY CHO TRANG CHỦ) -->
+                    <div class="glass-panel rounded-[2rem] p-5 md:p-6 shadow-sm relative overflow-hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
+                                <i class="fa-regular fa-calendar-check text-blue-500"></i> Lịch ngày ở
+                            </h3>
+                            <div class="flex gap-2 items-center">
+                                <button onclick="changeCalendarMonth(-1, false)" class="w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                                <span id="publicCalendarTitle" class="font-bold text-slate-700 text-sm w-28 text-center">...</span>
+                                <button onclick="changeCalendarMonth(1, false)" class="w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                            </div>
+                        </div>
 
-                <!-- Cột Tiện ích và Quỹ chung -->
-                <div class="space-y-6">
-                    
-                    <div class="glass-panel rounded-[1.5rem] p-5">
-                        <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-4">
-                            <i class="fa-solid fa-toolbox text-amber-500"></i> Tiện ích
-                        </h3>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="copyBankAccount()" class="bg-white hover:bg-blue-50 border border-slate-200 p-3 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors group shadow-sm">
-                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-                                    <i class="fa-regular fa-copy text-lg"></i>
-                                </div>
-                                <span class="text-xs font-semibold text-slate-700">Copy STK</span>
-                            </button>
-                            <button onclick="showRules()" class="bg-white hover:bg-emerald-50 border border-slate-200 p-3 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors group shadow-sm">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
-                                    <i class="fa-solid fa-scale-balanced text-lg"></i>
-                                </div>
-                                <span class="text-xs font-semibold text-slate-700">Cách tính tiền</span>
-                            </button>
+                        <div class="calendar-grid-template text-center font-bold text-slate-400 text-xs mb-2">
+                            <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
+                        </div>
+                        <div id="publicCalendarGrid" class="calendar-grid-template">
+                            <!-- Render Lịch bằng JS -->
+                        </div>
+                        
+                        <div class="mt-4 flex flex-wrap gap-3 text-[11px] font-bold text-slate-500 justify-center">
+                            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-1.5 shadow-sm"></span> Cả ngày</div>
+                            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1.5 shadow-sm"></span> Chỉ sáng</div>
+                            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-orange-500 mr-1.5 shadow-sm"></span> Chỉ chiều</div>
+                            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-gray-200 border border-gray-300 mr-1.5"></span> Trống</div>
                         </div>
                     </div>
 
+                    <!-- DANH SÁCH THÀNH VIÊN -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3 px-1">
+                            <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-users text-blue-500"></i> Thành viên phòng
+                            </h3>
+                            <span class="text-xs font-bold text-blue-700 bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200" id="memberCountDisplay">0 người</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5" id="publicMembersList">
+                            <!-- Render thẻ thành viên bằng JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    
+                    <!-- WIDGET 1: THỜI GIAN & CẬP NHẬT -->
+                    <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden bg-white/60">
+                        <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-4">
+                            <i class="fa-solid fa-clock text-blue-500"></i> Dữ liệu hệ thống
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-500">Hôm nay:</span>
+                                <span class="font-bold text-slate-800" id="currentDateDisplay">--/--/----</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-500">Giờ hiện tại:</span>
+                                <span class="font-black text-blue-600 text-lg" id="currentTimeDisplay">--:--:--</span>
+                            </div>
+                            <div class="border-t border-slate-200/80 pt-3 mt-3">
+                                <p class="text-[11px] font-bold text-slate-400 uppercase">Cập nhật lần cuối</p>
+                                <p class="text-sm font-semibold text-emerald-600 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-cloud-arrow-down"></i> <span id="lastUpdateDisplay">Đang tải...</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WIDGET 2: THÔNG TIN CHUYỂN KHOẢN -->
+                    <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50/50">
+                        <div class="absolute -right-4 -bottom-4 opacity-10"><i class="fa-solid fa-building-columns text-6xl text-indigo-500"></i></div>
+                        <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-4 relative z-10">
+                            <i class="fa-solid fa-building-columns text-indigo-500"></i> Chuyển khoản
+                        </h3>
+                        <div class="bg-white/90 rounded-xl p-4 shadow-sm border border-white space-y-3 relative z-10">
+                            <div>
+                                <p class="text-[10px] text-slate-500 uppercase font-bold">Người thụ hưởng</p>
+                                <p class="font-black text-slate-800">Ng P Nhật Huy</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-500 uppercase font-bold">Ngân hàng</p>
+                                <p class="font-bold text-slate-800">Agribank</p>
+                            </div>
+                            <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-lg border border-slate-100 mt-1">
+                                <div>
+                                    <p class="text-[10px] text-slate-500 uppercase font-bold">Số tài khoản</p>
+                                    <p class="font-black text-blue-700 tracking-wider">7105205478044</p>
+                                </div>
+                                <button onclick="copyBankAccount()" class="w-9 h-9 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-500 hover:text-white transition-colors flex items-center justify-center shadow-sm" title="Copy STK">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WIDGET 3: CÁCH TÍNH TIỀN -->
+                    <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden">
+                        <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-scale-balanced text-emerald-500"></i> Quy tắc tính phí
+                        </h3>
+                        <div class="space-y-3 text-[13px] text-slate-600">
+                            <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm">
+                                <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-bolt text-amber-500"></i> Điện, Nước & Phí</p>
+                                <p class="leading-relaxed">Được chia tự động theo <span class="font-bold text-blue-600">tỷ lệ ngày ở thực tế</span> (dựa trên lịch điểm danh). Cả ngày = 1, Nửa ngày = 0.5. Hệ thống sẽ làm tròn hóa đơn lên 500đ.</p>
+                            </div>
+                            <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm">
+                                <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-box-open text-cyan-500"></i> Quỹ đồ chung</p>
+                                <p class="leading-relaxed">Số tiền mua đồ dùng chung sẽ được <span class="font-bold text-cyan-600">chia đều ngang nhau</span> cho mọi người.</p>
+                            </div>
+                            <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm">
+                                <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-money-bill-transfer text-emerald-500"></i> Tiền ứng trước</p>
+                                <p class="leading-relaxed">Người bỏ tiền túi mua đồ chung sẽ được <span class="font-bold text-emerald-600">trừ thẳng</span> số tiền đã ứng vào tổng hóa đơn cần đóng cuối tháng.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WIDGET QUỸ CHUNG -->
                     <div class="glass-panel rounded-[1.5rem] p-6 ">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="font-bold text-slate-800 flex items-center gap-2">
-                                <i class="fa-solid fa-cart-shopping text-cyan-500"></i> Quỹ mua đồ chung
+                                <i class="fa-solid fa-cart-shopping text-cyan-500"></i> Danh sách quỹ chung
                             </h3>
                         </div>
                         
@@ -306,9 +426,14 @@
                 <h2 class="text-2xl font-black text-slate-800 mb-6"><i class="fa-solid fa-sliders text-blue-500 mr-2"></i>Cấu hình Tháng</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-3">
-                        <label class="block text-sm font-bold text-slate-600 mb-2">Tháng / Năm</label>
-                        <input type="text" id="adminMonth" class="w-full max-w-xs px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all font-semibold text-slate-800">
+                    <div class="lg:col-span-3 bg-blue-50/50 p-4 rounded-xl border border-blue-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-1">Tháng / Năm hóa đơn</label>
+                            <input type="text" id="adminMonth" class="w-full min-w-[200px] px-4 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all font-bold text-slate-800 placeholder-slate-400" placeholder="VD: 09/2026" onchange="syncCalendarWithConfig()">
+                        </div>
+                        <div class="text-xs text-slate-500 bg-white p-3 rounded-lg border border-slate-200 shadow-sm max-w-sm">
+                            <i class="fa-solid fa-circle-info text-blue-500 mb-1"></i> Số ngày ở của thành viên sẽ được <b>tự động tính</b> dựa trên lịch điểm danh của tháng này.
+                        </div>
                     </div>
                     
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
@@ -335,14 +460,29 @@
                          <input type="number" id="adminFeesCost" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 outline-none font-semibold text-slate-800">
                     </div>
                 </div>
-
-                <div class="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5 hidden">
-                    <!-- Phần báo cáo thu tiền Huy thu ẩn đi vì có thể không cần thiết cho mô hình tổng quát -->
-                    <span id="adminHuyCollection">0</span>
-                </div>
             </div>
 
-            <!-- Quản lý Thành Viên -->
+            <!-- Block Admin Lịch Điểm Danh -->
+            <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-calendar-days text-indigo-500 mr-2"></i>Chốt Ngày Ở (Điểm Danh)</h2>
+                    <div class="flex gap-2 items-center bg-slate-50 p-1.5 rounded-xl border border-slate-200">
+                        <button onclick="changeCalendarMonth(-1, true)" class="w-8 h-8 rounded-lg bg-white hover:bg-slate-200 text-slate-600 flex items-center justify-center shadow-sm transition-colors"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                        <span id="adminCalendarTitle" class="font-bold text-slate-700 text-sm px-2 w-28 text-center">...</span>
+                        <button onclick="changeCalendarMonth(1, true)" class="w-8 h-8 rounded-lg bg-white hover:bg-slate-200 text-slate-600 flex items-center justify-center shadow-sm transition-colors"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                    </div>
+                </div>
+
+                <div class="calendar-grid-template text-center font-bold text-slate-400 text-xs mb-2">
+                    <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
+                </div>
+                <div id="adminCalendarGrid" class="calendar-grid-template max-w-3xl mx-auto">
+                    <!-- Render bằng JS. Grid này cho phép click. -->
+                </div>
+                
+                <p class="text-center text-xs text-slate-400 font-medium mt-4 italic"><i class="fa-solid fa-hand-pointer"></i> Nhấn vào từng ngày để đánh dấu điểm danh người ở.</p>
+            </div>
+
             <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-slate-200">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-users-gear text-emerald-500 mr-2"></i>Quản lý Thành Viên</h2>
@@ -357,7 +497,7 @@
                             <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
                                 <th class="p-3 rounded-tl-xl w-16">ID</th>
                                 <th class="p-3">Tên thành viên</th>
-                                <th class="p-3 text-center">Số ngày ở</th>
+                                <th class="p-3 text-center">Số ngày ở (Tự động)</th>
                                 <th class="p-3 text-center">Trạng thái nộp</th>
                                 <th class="p-3 rounded-tr-xl text-center">Xóa</th>
                             </tr>
@@ -367,7 +507,6 @@
                 </div>
             </div>
 
-            <!-- Quản lý Quỹ Chung -->
             <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-slate-200">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-cart-shopping text-cyan-500 mr-2"></i>Quản lý Quỹ Chung</h2>
@@ -391,14 +530,13 @@
                 </div>
             </div>
 
-            <div class="sticky bottom-6 z-50 flex justify-center pb-6">
+            <div class="sticky bottom-6 z-50 flex justify-center pb-6 mt-10">
                 <button onclick="saveAdminData()" class="btn-gradient-blue px-10 py-4 rounded-full font-black text-lg shadow-xl flex items-center gap-3">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> LƯU LÊN MÁY CHỦ
+                    <i class="fa-solid fa-cloud-arrow-up text-xl"></i> LƯU LÊN MÁY CHỦ
                 </button>
             </div>
         </main>
 
-        
         <!-- Modal Đăng nhập Admin -->
         <div id="loginModal" class="fixed inset-0 z-[60] flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white rounded-[2rem] w-full max-w-sm flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 p-8 text-center">
@@ -418,51 +556,34 @@
             </div>
         </div>
 
-        <!-- Modal Cách tính tiền -->
-        <div id="rulesModal" class="fixed inset-0 z-[60] flex items-center justify-center modal-overlay p-4 hide">
-            <div class="bg-white rounded-[2rem] w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 border border-slate-200">
-                <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-blue-50 to-white flex-shrink-0">
-                    <h3 class="font-extrabold text-slate-800 text-lg flex items-center gap-2">
-                        <i class="fa-solid fa-scale-balanced text-blue-500"></i> Cách tính tiền
+        <!-- Modal Điểm Danh (Attendance) Admin -->
+        <div id="attendanceModal" class="fixed inset-0 z-[70] flex items-center justify-center modal-overlay p-4 hide">
+            <div class="bg-white rounded-[2rem] w-full max-w-lg overflow-hidden flex flex-col shadow-2xl transform transition-all scale-95 opacity-0">
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 flex justify-between items-center border-b border-blue-100">
+                    <h3 class="text-lg font-extrabold text-slate-800 flex items-center gap-2" id="modalDateTitle">
+                        <i class="fa-regular fa-calendar-check text-blue-600"></i> Điểm danh: ...
                     </h3>
-                    <button onclick="closeModal('rulesModal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors">
+                    <button onclick="closeModal('attendanceModal')" class="w-8 h-8 rounded-full bg-white hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors shadow-sm">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
-                <div class="p-6 overflow-y-auto space-y-5 text-sm text-slate-600 custom-scrollbar bg-slate-50/30">
-                    <div class="flex gap-4 items-start">
-                        <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center flex-shrink-0 mt-1">
-                            <i class="fa-solid fa-file-invoice text-lg"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-800 mb-1 text-base">Tiện ích (Điện, Nước, Phí)</h4>
-                            <p class="leading-relaxed">Được chia theo <span class="font-bold text-blue-600">tỷ lệ số ngày ở</span> của từng người (Làm tròn 500đ).</p>
-                            <p class="text-xs bg-white p-2 rounded-lg border border-slate-200 mt-2 text-slate-500 italic">
-                                Công thức: (Tổng tiền điện/nước) × (Số ngày ở của bạn ÷ Tổng số ngày của cả phòng)
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4 items-start">
-                        <div class="w-10 h-10 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center flex-shrink-0 mt-1">
-                            <i class="fa-solid fa-box-open text-lg"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-800 mb-1 text-base">Quỹ đồ dùng chung</h4>
-                            <p class="leading-relaxed">Được <span class="font-bold text-cyan-600">chia đều ngang nhau</span> cho tất cả các thành viên (không tính theo số ngày ở).</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4 items-start">
-                        <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 mt-1">
-                            <i class="fa-solid fa-money-bill-transfer text-lg"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-800 mb-1 text-base">Khoản tiền ứng</h4>
-                            <p class="leading-relaxed">Nếu bạn đã bỏ tiền mua đồ chung, số tiền đó sẽ được hệ thống <span class="font-bold text-emerald-600">tự động trừ thẳng</span> vào tổng chi phí bạn phải đóng.</p>
-                        </div>
+                
+                <div class="p-5 overflow-y-auto max-h-[60vh] bg-slate-50/50 custom-scrollbar">
+                    <div id="modalMembersList" class="space-y-4">
+                        <!-- Nút điểm danh render bằng JS -->
                     </div>
                 </div>
-                <div class="p-4 bg-white border-t border-slate-100">
-                    <button onclick="closeModal('rulesModal')" class="w-full bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold py-3 rounded-xl transition-colors">Đã hiểu</button>
+
+                <!-- Nút chốt cả tuần (ẩn mặc định, chỉ hiện thứ 7, CN) -->
+                <div id="bulkWeekContainer" class="px-5 pb-4 bg-slate-50/50 hide">
+                    <button onclick="applyToWholeWeek()" class="w-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 font-bold py-2.5 rounded-xl transition-colors text-sm flex items-center justify-center gap-2 border border-indigo-200 shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Áp dụng cho CẢ TUẦN
+                    </button>
+                </div>
+                
+                <div class="p-4 bg-white border-t border-slate-100 flex gap-3">
+                    <button onclick="closeModal('attendanceModal')" class="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors">Hủy</button>
+                    <button onclick="saveAttendance()" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-colors shadow-md">Lưu & Đóng</button>
                 </div>
             </div>
         </div>
@@ -614,7 +735,7 @@
 
     <script>
         // CẬP NHẬT LẠI LINK SAU KHI DEPLOY GOOGLE APPS SCRIPT MỚI
-        const API_URL = "https://script.google.com/macros/s/AKfycbwV6Q8o-2P8VR0kPtai0QqXfelEuv81bCnoduX5ZJO49kdm7hYW3IZt_6R0_s79mvel/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbwmTQmkHIUUZ1IcDpkuvt1I0c_8qGtBr_FnBqNxdG_92xRYYzwoiamqyojhBldgtA-W/exec"; 
         
         const BANK_BIN = "970405"; // Agribank
         const BANK_ACCOUNT = "7105205478044";
@@ -625,7 +746,7 @@
             digits: 6, period: 30, secret: ADMIN_SECRET
         });
 
-        // State bao gồm thêm Cấu hình Điện Nước
+        // State bao gồm thêm Records lịch điểm danh
         let state = {
             config: { 
                 month: "Đang tải...", 
@@ -634,14 +755,40 @@
                 totalFees: 0 
             },
             members: [],
-            sharedItems: []
+            sharedItems: [],
+            records: {} // Chứa dữ liệu điểm danh: { "2026-09-01": { "1": "full", "2": "morning" } }
         };
         
         let isAdminActive = false;
+
+        // Quản lý trạng thái lịch
+        let calendarDate = new Date(); // Tháng hiện tại đang hiển thị trên UI lịch
+        let selectedDateStr = null;
+        let tempModalRecords = {};
+
+        const STATUS = { NONE: 'none', MORNING: 'morning', AFTERNOON: 'afternoon', FULL: 'full' };
+        const STATUS_CONFIG = {
+            [STATUS.NONE]: { label: 'Không', value: 0, class: 'active-none' },
+            [STATUS.MORNING]: { label: 'Sáng', value: 0.5, class: 'active-morning' },
+            [STATUS.AFTERNOON]: { label: 'Chiều', value: 0.5, class: 'active-afternoon' },
+            [STATUS.FULL]: { label: 'Cả ngày', value: 1, class: 'active-full' }
+        };
         
-        // Tiện ích Format & Toast
         const round500 = (amount) => Math.round(amount / 500) * 500;
         const formatMoney = (amount) => new Intl.NumberFormat('vi-VN').format(Math.round(amount));
+
+        function updateClock() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' });
+            const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            const dateEl = document.getElementById('currentDateDisplay');
+            const timeEl = document.getElementById('currentTimeDisplay');
+            if(dateEl) dateEl.innerText = dateStr;
+            if(timeEl) timeEl.innerText = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
         function showLoading(text = "Đang đồng bộ dữ liệu") {
             const loader = document.getElementById('loadingOverlay');
@@ -690,11 +837,18 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Cập nhật state với cấu trúc mới an toàn
                     state.config = { ...state.config, ...data.config };
                     state.members = data.members || [];
                     state.sharedItems = data.sharedItems || [];
+                    state.records = data.records || {};
                     
+                    syncCalendarWithConfig(); // Đồng bộ tháng lịch với cấu hình
+                    calculateDaysFromRecords(); // Tính lại ngày ở từ records
+                    
+                    // Cập nhật Last Updated UI
+                    const now = new Date();
+                    document.getElementById('lastUpdateDisplay').innerText = now.toLocaleTimeString('vi-VN') + ' - ' + now.toLocaleDateString('vi-VN', {day:'2-digit', month:'2-digit', year:'numeric'});
+
                     calculateAndRender();
                     hideLoading();
                     checkRoute(); 
@@ -704,6 +858,42 @@
                     showToast("Không tải được dữ liệu! Vui lòng kiểm tra quyền truy cập Google Script.", true);
                     hideLoading();
                 });
+        }
+
+        // Tự động phân tích tháng năm từ config (VD: "09/2026") để thiết lập calendarDate ban đầu
+        function syncCalendarWithConfig() {
+            try {
+                let adminMonthVal = state.config.month || "";
+                if(document.getElementById('adminMonth') && isAdminActive) {
+                    adminMonthVal = document.getElementById('adminMonth').value;
+                }
+                const match = adminMonthVal.match(/(\d{1,2})\/(\d{4})/);
+                if (match) {
+                    calendarDate.setMonth(parseInt(match[1]) - 1);
+                    calendarDate.setFullYear(parseInt(match[2]));
+                }
+            } catch(e) { console.warn("Lỗi phân tích tháng/năm config", e); }
+        }
+
+        // Tính tổng số ngày ở của từng thành viên trong THÁNG HIỆN TẠI trên lịch
+        function calculateDaysFromRecords() {
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            const prefix = `${year}-${String(month + 1).padStart(2, '0')}`;
+            
+            // Reset toàn bộ days = 0 trước khi tính lại
+            state.members.forEach(m => m.days = 0);
+            
+            for (const [dateStr, dayRecords] of Object.entries(state.records)) {
+                if (dateStr.startsWith(prefix)) {
+                    for (const [mId, status] of Object.entries(dayRecords)) {
+                        const m = state.members.find(x => x.id == mId);
+                        if (m && STATUS_CONFIG[status]) {
+                            m.days += STATUS_CONFIG[status].value;
+                        }
+                    }
+                }
+            }
         }
 
         function calculateData() {
@@ -751,6 +941,251 @@
                 totalDays, ratePerDay: totalDays > 0 ? (grandTotalCost / totalDays) : 0, 
                 processedMembers
             };
+        }
+        
+        function changeCalendarMonth(step, isAdmin) {
+            calendarDate.setMonth(calendarDate.getMonth() + step);
+            calculateDaysFromRecords(); // Tháng đổi => Ngày ở đổi
+            
+            if (isAdmin) {
+                renderAdminCalendar();
+                renderAdminMembersTable(); // Cập nhật lại số ngày trên table
+            } else {
+                calculateAndRender(); // Re-render public UI since days changed
+            }
+        }
+
+        function renderDayIndicators(dateStr) {
+            if (!state.records[dateStr]) return '';
+            let dots = '';
+            for (let mId in state.records[dateStr]) {
+                const status = state.records[dateStr][mId];
+                if (status === STATUS.FULL) {
+                    dots += `<div class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-blue-500 shadow-sm" title="Full"></div>`;
+                } else if (status === STATUS.MORNING) {
+                    dots += `<div class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-amber-400 shadow-sm" title="Sáng"></div>`;
+                } else if (status === STATUS.AFTERNOON) {
+                    dots += `<div class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-orange-500 shadow-sm" title="Chiều"></div>`;
+                }
+            }
+            return dots;
+        }
+
+        // Render lịch public (chỉ xem)
+        function renderPublicCalendar() {
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            document.getElementById('publicCalendarTitle').innerText = `Tháng ${month + 1}/${year}`;
+            
+            const firstDayIndex = new Date(year, month, 1).getDay(); 
+            const lastDay = new Date(year, month + 1, 0).getDate();
+            
+            const grid = document.getElementById('publicCalendarGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                grid.innerHTML += `<div class="aspect-square bg-slate-50/30 rounded-xl border border-transparent"></div>`;
+            }
+
+            const today = new Date();
+            for (let i = 1; i <= lastDay; i++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                let isToday = (i === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+                
+                let hasFull = false, hasHalf = false;
+                if (state.records[dateStr]) {
+                    for (let mId in state.records[dateStr]) {
+                        if (state.records[dateStr][mId] === STATUS.FULL) hasFull = true;
+                        if (state.records[dateStr][mId] === STATUS.MORNING || state.records[dateStr][mId] === STATUS.AFTERNOON) hasHalf = true;
+                    }
+                }
+
+                let bgClass = 'bg-white border-slate-100';
+                if (hasFull) bgClass = 'bg-blue-50/50 border-blue-200';
+                else if (hasHalf) bgClass = 'bg-amber-50/50 border-amber-200';
+
+                grid.innerHTML += `
+                    <div class="aspect-square lg:aspect-auto lg:h-16 rounded-xl border ${bgClass} p-1 md:p-2 flex flex-col justify-between ${isToday ? 'ring-2 ring-blue-400' : ''}">
+                        <div class="text-[10px] md:text-xs font-bold ${isToday ? 'text-blue-700' : 'text-slate-600'} text-right">${i}</div>
+                        <div class="flex flex-wrap gap-0.5 justify-end mt-1 overflow-hidden h-4 md:h-5">
+                            ${renderDayIndicators(dateStr)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Render lịch admin (Tương tác được)
+        function renderAdminCalendar() {
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            document.getElementById('adminCalendarTitle').innerText = `Tháng ${month + 1}/${year}`;
+            
+            const firstDayIndex = new Date(year, month, 1).getDay(); 
+            const lastDay = new Date(year, month + 1, 0).getDate();
+            
+            const grid = document.getElementById('adminCalendarGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                grid.innerHTML += `<div class="aspect-square lg:aspect-auto lg:h-[4.5rem] bg-slate-50 rounded-xl border border-transparent"></div>`;
+            }
+
+            const today = new Date();
+            for (let i = 1; i <= lastDay; i++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                let isToday = (i === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+                
+                let hasFull = false, hasHalf = false;
+                if (state.records[dateStr]) {
+                    for (let mId in state.records[dateStr]) {
+                        if (state.records[dateStr][mId] === STATUS.FULL) hasFull = true;
+                        if (state.records[dateStr][mId] === STATUS.MORNING || state.records[dateStr][mId] === STATUS.AFTERNOON) hasHalf = true;
+                    }
+                }
+
+                let bgClass = 'bg-white border-slate-200 hover:border-indigo-300';
+                if (hasFull) bgClass = 'bg-blue-50 border-blue-200 hover:border-blue-400';
+                else if (hasHalf) bgClass = 'bg-amber-50 border-amber-200 hover:border-amber-400';
+
+                grid.innerHTML += `
+                    <div onclick="openAttendanceModal('${dateStr}', ${i}, ${month}, ${year})" class="aspect-square lg:aspect-auto lg:h-[4.5rem] rounded-xl border ${bgClass} p-1.5 md:p-2 flex flex-col justify-between cursor-pointer hover:-translate-y-0.5 transition-all shadow-sm hover:shadow-md ${isToday ? 'ring-2 ring-indigo-400 ring-offset-1' : ''}">
+                        <div class="text-[10px] md:text-sm font-black ${isToday ? 'text-indigo-600' : 'text-slate-600'}">${i}</div>
+                        <div class="flex flex-wrap gap-1 mt-1 overflow-hidden h-4 md:h-5">
+                            ${renderDayIndicators(dateStr)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function openAttendanceModal(dateStr, day, month, year) {
+            selectedDateStr = dateStr;
+            tempModalRecords = state.records[dateStr] ? { ...state.records[dateStr] } : {};
+            
+            document.getElementById('modalDateTitle').innerHTML = `<i class="fa-regular fa-calendar-check text-blue-600"></i> Điểm danh: ${String(day).padStart(2, '0')}/${String(month + 1).padStart(2, '0')}/${year}`;
+            
+            // Kiểm tra xem ngày đang chọn có phải Thứ 7(6) hay CN(0) không để hiện nút "Cả tuần"
+            const clickedDate = new Date(year, month, day);
+            const dayOfWeek = clickedDate.getDay();
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                document.getElementById('bulkWeekContainer').classList.remove('hide');
+            } else {
+                document.getElementById('bulkWeekContainer').classList.add('hide');
+            }
+
+            const list = document.getElementById('modalMembersList');
+            list.innerHTML = '';
+            
+            if (state.members.length === 0) {
+                list.innerHTML = '<p class="text-center text-slate-500 py-4 font-medium italic">Chưa có thành viên nào.</p>';
+            }
+
+            state.members.forEach(member => {
+                const currentStatus = tempModalRecords[member.id] || STATUS.NONE;
+                const div = document.createElement('div');
+                div.className = 'bg-white p-3 md:p-4 rounded-xl border border-slate-200 shadow-sm';
+                
+                let buttonsHTML = '';
+                for (const [key, conf] of Object.entries(STATUS_CONFIG)) {
+                    const isActive = currentStatus === key;
+                    const baseClass = "status-btn flex-1 text-xs md:text-sm py-2 px-1 text-center border rounded-lg font-bold transition-all cursor-pointer";
+                    const activeClass = isActive ? conf.class : "border-slate-200 text-slate-500 hover:bg-slate-50";
+                    
+                    buttonsHTML += `
+                        <div onclick="updateTempRecord(${member.id}, '${key}')" 
+                             class="${baseClass} ${activeClass} ${isActive ? 'ring-2 ring-offset-1 ring-blue-300 shadow-sm' : ''}"
+                             id="btn-${member.id}-${key}">
+                            ${conf.label}
+                        </div>
+                    `;
+                }
+
+                div.innerHTML = `
+                    <div class="font-extrabold text-slate-800 mb-2.5 flex items-center gap-2">
+                        <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs text-slate-600">${member.name.charAt(0).toUpperCase()}</div>
+                        ${member.name}
+                    </div>
+                    <div class="flex space-x-1.5 md:space-x-2">
+                        ${buttonsHTML}
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+
+            showModal('attendanceModal');
+        }
+
+        function updateTempRecord(memberId, status) {
+            tempModalRecords[memberId] = status;
+            for (const key of Object.keys(STATUS_CONFIG)) {
+                const btn = document.getElementById(`btn-${memberId}-${key}`);
+                if (btn) {
+                    if (key === status) {
+                        btn.className = `status-btn flex-1 text-xs md:text-sm py-2 px-1 text-center border rounded-lg font-bold transition-all cursor-pointer ${STATUS_CONFIG[key].class} ring-2 ring-offset-1 ring-blue-300 shadow-sm`;
+                    } else {
+                        btn.className = `status-btn flex-1 text-xs md:text-sm py-2 px-1 text-center border rounded-lg font-bold transition-all cursor-pointer border-slate-200 text-slate-500 hover:bg-slate-50`;
+                    }
+                }
+            }
+        }
+
+        function saveAttendance() {
+            if (selectedDateStr) {
+                // Xóa các record "none" cho nhẹ
+                for (let mId in tempModalRecords) {
+                    if (tempModalRecords[mId] === STATUS.NONE) delete tempModalRecords[mId];
+                }
+                
+                if (Object.keys(tempModalRecords).length > 0) state.records[selectedDateStr] = tempModalRecords;
+                else delete state.records[selectedDateStr];
+                
+                calculateDaysFromRecords(); // Tính lại tổng ngày
+                renderAdminCalendar(); // Cập nhật màu dot trên lịch
+                renderAdminMembersTable(); // Cập nhật số ngày trên bảng
+            }
+            closeModal('attendanceModal');
+        }
+
+        // Chức năng áp dụng mảng trạng thái hiện tại cho nguyên tuần (Từ T2 -> CN)
+        function applyToWholeWeek() {
+            if (!confirm("Xác nhận: Lấy dữ liệu bạn vừa đánh dấu và tự động áp dụng cho CẢ TUẦN này (từ Thứ 2 đến Chủ nhật)?")) return;
+
+            const [y, m, d] = selectedDateStr.split('-').map(Number);
+            const currDate = new Date(y, m - 1, d);
+            const dayOfWeek = currDate.getDay();
+            
+            // Lùi về thứ 2 của tuần đó
+            const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+            const monday = new Date(currDate);
+            monday.setDate(currDate.getDate() + diffToMonday);
+
+            // Chỉ lưu các trạng thái không phải là "Không ở"
+            const cleanRecords = {};
+            for (let mId in tempModalRecords) {
+                if (tempModalRecords[mId] !== STATUS.NONE) {
+                    cleanRecords[mId] = tempModalRecords[mId];
+                }
+            }
+
+            // Gắn vào 7 ngày liên tiếp
+            for (let i = 0; i < 7; i++) {
+                const loopDate = new Date(monday);
+                loopDate.setDate(monday.getDate() + i);
+                const dateKey = `${loopDate.getFullYear()}-${String(loopDate.getMonth() + 1).padStart(2, '0')}-${String(loopDate.getDate()).padStart(2, '0')}`;
+                
+                if (Object.keys(cleanRecords).length > 0) {
+                    state.records[dateKey] = { ...cleanRecords };
+                } else {
+                    delete state.records[dateKey];
+                }
+            }
+            
+            calculateDaysFromRecords();
+            renderAdminCalendar();
+            renderAdminMembersTable();
+            closeModal('attendanceModal');
+            showToast("Đã lưu điểm danh cho nguyên tuần!");
         }
 
         function renderPublicDashboard(data) {
@@ -839,6 +1274,8 @@
                     </div>
                 `);
             });
+            
+            renderPublicCalendar(); // Render lịch public mới
         }
 
         function renderBillPopup(data) {
@@ -969,9 +1406,13 @@
             document.getElementById('adminWaterUsage').value = state.config.waterUsage || 0;
             document.getElementById('adminFeesCost').value = state.config.totalFees;
 
-            renderAdminMembersTable(); renderAdminItemsTable();
+            syncCalendarWithConfig(); // Đưa lịch về tháng đang set
+            renderAdminCalendar(); // Render lịch
+            renderAdminMembersTable(); 
+            renderAdminItemsTable();
         }
 
+        // Input "Ngày ở" trong bảng admin chỉ mang tính read-only
         function renderAdminMembersTable() {
             const tbody = document.getElementById('adminMembersTable'); tbody.innerHTML = '';
             state.members.forEach((m, idx) => {
@@ -979,7 +1420,7 @@
                     <tr class="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
                         <td class="p-3"><input type="number" value="${m.id}" onchange="state.members[${idx}].id=this.value" class="w-12 px-2 py-1.5 border border-slate-200 rounded-lg outline-none text-center font-bold" ${m.id==1?'readonly':''}></td>
                         <td class="p-3"><input type="text" value="${m.name}" onchange="state.members[${idx}].name=this.value" class="w-full min-w-[120px] px-3 py-1.5 border border-slate-200 rounded-lg outline-none font-semibold text-slate-700"></td>
-                        <td class="p-3 text-center"><input type="number" value="${m.days}" onchange="state.members[${idx}].days=this.value" class="w-16 px-2 py-1.5 border border-slate-200 rounded-lg outline-none text-center font-bold"></td>
+                        <td class="p-3 text-center"><input type="number" value="${m.days}" readonly class="w-16 px-2 py-1.5 border border-slate-200 bg-slate-100 rounded-lg outline-none text-center font-bold text-slate-500 cursor-not-allowed" title="Tự động tính từ Lịch điểm danh"></td>
                         <td class="p-3 text-center">
                             <select onchange="state.members[${idx}].status=this.value" class="px-2 py-1.5 border border-slate-200 rounded-lg outline-none font-bold ${m.status === 'paid' ? 'text-emerald-600' : 'text-amber-600'}">
                                 <option value="paid" class="text-emerald-600" ${m.status === 'paid' ? 'selected' : ''}>Đã nộp</option>
@@ -1008,10 +1449,10 @@
         }
 
         function addAdminMember() {
-            state.members.push({ id: state.members.length ? Math.max(...state.members.map(m=>m.id))+1 : 1, name: "Tên mới", days: 30, status: "unpaid" });
+            state.members.push({ id: state.members.length ? Math.max(...state.members.map(m=>m.id))+1 : 1, name: "Tên mới", days: 0, status: "unpaid" });
             renderAdminMembersTable();
         }
-        function removeAdminMember(idx) { if(confirm("Xóa thành viên này?")) { state.members.splice(idx, 1); renderAdminMembersTable(); } }
+        function removeAdminMember(idx) { if(confirm("Xóa thành viên này? Dữ liệu lịch của họ sẽ vẫn lưu nhưng không tính vào tổng nữa.")) { state.members.splice(idx, 1); renderAdminMembersTable(); } }
         function addAdminItem() {
             state.sharedItems.push({ id: state.sharedItems.length ? Math.max(...state.sharedItems.map(i=>i.id))+1 : 1, buyerId: state.members[0]?.id||1, name: "Đồ mới", cost: 0 });
             renderAdminItemsTable();
@@ -1025,6 +1466,9 @@
             state.config.waterCost = Number(document.getElementById('adminWaterCost').value);
             state.config.waterUsage = Number(document.getElementById('adminWaterUsage').value);
             state.config.totalFees = Number(document.getElementById('adminFeesCost').value);
+            
+            // Tính lại ngày một lần nữa để chắc chắn dữ liệu Member Days chuẩn
+            calculateDaysFromRecords();
 
             showLoading("Đang lưu lên máy chủ...");
             fetch(API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(state) })
@@ -1038,7 +1482,7 @@
         }
 
         function calculateAndRender() { if(state.members.length > 0) { const data = calculateData(); renderPublicDashboard(data); renderBillPopup(data); } }
-        function showRules() { showModal('rulesModal'); }
+        
         function showBillPopup() { showModal('billModal'); }
         function showModal(id) { const m = document.getElementById(id), c = m.querySelector('div'); m.classList.remove('hide'); void m.offsetWidth; c.classList.remove('scale-95', 'opacity-0'); c.classList.add('scale-100', 'opacity-100'); }
         function closeModal(id) { const m = document.getElementById(id), c = m.querySelector('div'); c.classList.remove('scale-100', 'opacity-100'); c.classList.add('scale-95', 'opacity-0'); setTimeout(() => m.classList.add('hide'), 300); }
@@ -1055,10 +1499,11 @@
         }
 
         window.onclick = function(e) {
-            if (['billModal', 'memberBillModal', 'rulesModal'].includes(e.target.id)) closeModal(e.target.id);
+            if (['billModal', 'memberBillModal', 'attendanceModal'].includes(e.target.id)) closeModal(e.target.id);
             if (e.target.id === 'loginModal') { closeModal('loginModal'); window.location.hash = ''; }
         }
 
+        // Khởi động ứng dụng
         initApp();
     </script>
 </body>
