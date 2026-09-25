@@ -253,7 +253,7 @@
             <div class="w-14 h-14 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin z-10 shadow-lg"></div>
             <i class="fa-solid fa-cloud-arrow-down absolute text-blue-600 text-lg z-20"></i>
         </div>
-        <h3 id="loadingText" class="text-xl font-extrabold text-blue-900 tracking-tight">Đang tải dữ liệu KTX...</h3>
+        <h3 id="loadingText" class="text-xl font-extrabold text-blue-900 tracking-tight">Đang tải dữ liệu...</h3>
         <p class="text-sm text-blue-600/70 mt-2 animate-pulse font-medium">Vui lòng chờ trong giây lát</p>
     </div>
 
@@ -640,7 +640,7 @@
                             <i class="fa-solid fa-user-check text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="text-lg font-extrabold leading-tight">Điểm Danh Trong Ngày</h3>
+                            <h3 class="text-lg font-extrabold leading-tight">Điểm Danh</h3>
                             <p class="text-xs text-emerald-100 font-medium">Tự cập nhật ngày ở KTX của bạn</p>
                         </div>
                     </div>
@@ -1349,13 +1349,13 @@
                 const status = dayRecords[m.id] || STATUS.NONE;
                 let statusBadge = '';
                 if (status === STATUS.FULL) {
-                    statusBadge = `<span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-sun text-amber-500"></i> Cả ngày (1.0)</span>`;
+                    statusBadge = `<span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-sun text-amber-500"></i> Cả ngày</span>`;
                 } else if (status === STATUS.MORNING) {
-                    statusBadge = `<span class="bg-amber-100 text-amber-800 font-bold px-2 py-1 rounded-lg text-xs flex items-center gap-1"><i class="fa-regular fa-sun text-amber-500"></i> Sáng (0.5)</span>`;
+                    statusBadge = `<span class="bg-amber-100 text-amber-800 font-bold px-2 py-1 rounded-lg text-xs flex items-center gap-1"><i class="fa-regular fa-sun text-amber-500"></i> Sáng</span>`;
                 } else if (status === STATUS.AFTERNOON) {
-                    statusBadge = `<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-1 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-moon text-emerald-600"></i> Chiều (0.5)</span>`;
+                    statusBadge = `<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-1 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-moon text-emerald-600"></i> Chiều</span>`;
                 } else {
-                    statusBadge = `<span class="bg-slate-100 text-slate-400 font-medium px-2 py-1 rounded-lg text-xs">Vắng (0)</span>`;
+                    statusBadge = `<span class="bg-slate-100 text-slate-400 font-medium px-2 py-1 rounded-lg text-xs">Vắng</span>`;
                 }
 
                 html += `
