@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tiền KTX Phòng B06203</title>
     
+    <!-- Tối ưu tốc độ: DNS prefetch & Preconnect tài nguyên ngoài -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://img.vietqr.io">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <meta name="robots" content="noindex, nofollow"/>
     
     <style>
@@ -17,89 +24,96 @@
             --primary-blue: #3b82f6;
             --primary-blue-light: #60a5fa;
             --text-main: #334155;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.78);
+            --glass-border: rgba(255, 255, 255, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(-45deg, #f0f9ff, #e0f2fe, #bfdbfe, #bae6fd);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 35%, #bfdbfe 75%, #bae6fd 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 18s ease infinite alternate;
             background-attachment: fixed;
             min-height: 100vh;
             color: var(--text-main);
             position: relative;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes gradientShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
         }
 
-        /* Background Animation */
+        /* Ambient floating bubbles & glowing orbs (GPU accelerated) */
         .bg-animation-area {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; overflow: hidden; pointer-events: none; 
+            z-index: -1; overflow: hidden; pointer-events: none;
+            contain: strict;
         }
         
-        /* Glowing Orbs */
         .glowing-orb {
-            position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.4;
-            animation: floatOrb 20s infinite ease-in-out alternate;
+            position: absolute; border-radius: 50%; filter: blur(55px); opacity: 0.35;
+            will-change: transform;
+            animation: floatOrb 22s infinite ease-in-out alternate;
         }
-        .orb-1 { width: 300px; height: 300px; background: #60a5fa; top: -10%; left: -10%; }
-        .orb-2 { width: 400px; height: 400px; background: #818cf8; bottom: -20%; right: -10%; animation-delay: -5s; }
-        .orb-3 { width: 250px; height: 250px; background: #38bdf8; top: 40%; left: 60%; animation-delay: -10s; }
+        .orb-1 { width: 320px; height: 320px; background: #60a5fa; top: -10%; left: -10%; }
+        .orb-2 { width: 400px; height: 400px; background: #818cf8; bottom: -15%; right: -10%; animation-delay: -6s; }
+        .orb-3 { width: 260px; height: 260px; background: #38bdf8; top: 40%; left: 60%; animation-delay: -11s; }
         
         @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, 50px) scale(1.1); }
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            100% { transform: translate3d(30px, 45px, 0) scale(1.08); }
         }
 
         .floating-shapes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; margin: 0; padding: 0; }
         .floating-shapes li {
             position: absolute; display: block; list-style: none;
             width: 20px; height: 20px;
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.85);
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.05);
             animation: floatUp 25s linear infinite;
             bottom: -150px; border-radius: 4px; backdrop-filter: blur(2px);
+            will-change: transform, opacity;
         }
-        .floating-shapes li:nth-child(1) { left: 10%; width: 60px; height: 60px; animation-duration: 18s; }
-        .floating-shapes li:nth-child(2) { left: 25%; width: 40px; height: 40px; animation-delay: 2s; animation-duration: 22s; border-radius: 50%; }
-        .floating-shapes li:nth-child(3) { left: 45%; width: 80px; height: 80px; animation-delay: 5s; }
-        .floating-shapes li:nth-child(4) { left: 60%; width: 30px; height: 30px; animation-duration: 15s; }
-        .floating-shapes li:nth-child(5) { left: 75%; width: 50px; height: 50px; animation-delay: 4s; }
-        .floating-shapes li:nth-child(6) { left: 90%; width: 70px; height: 70px; animation-delay: 8s; border-radius: 50%; }
+        .floating-shapes li:nth-child(1) { left: 10%; width: 55px; height: 55px; animation-duration: 20s; }
+        .floating-shapes li:nth-child(2) { left: 25%; width: 36px; height: 36px; animation-delay: 2s; animation-duration: 24s; border-radius: 50%; }
+        .floating-shapes li:nth-child(3) { left: 45%; width: 75px; height: 75px; animation-delay: 4s; }
+        .floating-shapes li:nth-child(4) { left: 65%; width: 30px; height: 30px; animation-duration: 16s; }
+        .floating-shapes li:nth-child(5) { left: 80%; width: 45px; height: 45px; animation-delay: 3s; }
+        .floating-shapes li:nth-child(6) { left: 92%; width: 65px; height: 65px; animation-delay: 7s; border-radius: 50%; }
         
         @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 20%; }
-            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+            0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.9; }
+            100% { transform: translate3d(0, -1100px, 0) rotate(540deg); opacity: 0; }
         }
 
-        /* Glassmorphism Classes */
+        /* Glassmorphism styling */
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px 0 rgba(37, 99, 235, 0.05);
+            box-shadow: 0 8px 30px 0 rgba(37, 99, 235, 0.05);
         }
         
         .glass-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.8));
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 4px 15px -3px rgba(37, 99, 235, 0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.85));
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 16px -3px rgba(37, 99, 235, 0.06);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
         }
         
         .glass-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1), 0 8px 10px -6px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 16px 25px -5px rgba(37, 99, 235, 0.1), 0 8px 10px -6px rgba(37, 99, 235, 0.06);
             border-color: var(--primary-blue-light);
         }
 
@@ -108,64 +122,121 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .hide { display: none !important; }
         
         .modal-overlay {
-            background-color: rgba(15, 23, 42, 0.4);
+            background-color: rgba(15, 23, 42, 0.45);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
         }
 
         .btn-gradient-blue {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
             color: white;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         .btn-gradient-blue:hover {
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn-gradient-emerald {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+            color: white;
+            transition: all 0.2s ease;
+        }
+        .btn-gradient-emerald:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
             transform: translateY(-1px);
         }
         
         #toast-container {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 9999; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 10px;
+            z-index: 9999; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 8px;
         }
         .toast-msg {
-            background: #1e293b; color: white; padding: 10px 20px; border-radius: 30px;
-            font-size: 14px; font-weight: 500; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-            animation: slideUpFade 0.3s forwards, fadeOut 0.3s 2.5s forwards;
+            background: #0f172a; color: white; padding: 10px 20px; border-radius: 30px;
+            font-size: 13.5px; font-weight: 600; box-shadow: 0 10px 25px -3px rgba(0,0,0,0.25);
+            animation: slideUpFade 0.25s forwards, fadeOut 0.25s 2.6s forwards;
             display: flex; align-items: center; gap: 8px;
+            white-space: nowrap;
         }
-        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        /* Calendar specific styles */
+        /* Attendance button classes */
         .status-btn.active-full { background-color: #3b82f6; color: white; border-color: #3b82f6; } 
         .status-btn.active-morning { background-color: #fbbf24; color: #78350f; border-color: #fbbf24; } 
-        /* Cập nhật màu xanh lá cho buổi chiều */
         .status-btn.active-afternoon { background-color: #22c55e; color: white; border-color: #22c55e; } 
         .status-btn.active-none { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; } 
+
+        /* Self-attendance choice styles */
+        .self-choice-btn {
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 0.8rem 0.6rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            background-color: white;
+            user-select: none;
+        }
+        .self-choice-btn:hover {
+            border-color: #93c5fd;
+            transform: translateY(-2px);
+        }
+        .self-choice-btn.selected-full {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+        .self-choice-btn.selected-morning {
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+        }
+        .self-choice-btn.selected-afternoon {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        .self-choice-btn.selected-none {
+            border-color: #94a3b8;
+            background-color: #f8fafc;
+            box-shadow: 0 4px 12px rgba(148, 163, 184, 0.2);
+        }
 
         .calendar-grid-template {
             display: grid;
             grid-template-columns: repeat(7, minmax(0, 1fr));
-            gap: 0.25rem;
+            gap: 0.35rem;
         }
         @media (min-width: 640px) {
             .calendar-grid-template { gap: 0.5rem; }
+        }
+
+        .badge-pulse {
+            animation: pulseSubtle 2.2s infinite ease-in-out;
+        }
+        @keyframes pulseSubtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.02); }
         }
     </style>
 </head>
 <body class="pb-24 md:pb-10 text-sm md:text-base">
 
+    <!-- Ambient background -->
     <div class="bg-animation-area">
         <div class="glowing-orb orb-1"></div>
         <div class="glowing-orb orb-2"></div>
@@ -176,71 +247,77 @@
     </div>
 
     <!-- Loading Screen -->
-    <div id="loadingOverlay" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/80 backdrop-blur-md transition-opacity duration-500">
+    <div id="loadingOverlay" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/85 backdrop-blur-md transition-opacity duration-300">
         <div class="relative flex justify-center items-center mb-6">
             <div class="absolute w-20 h-20 rounded-full bg-blue-500 opacity-20 animate-ping"></div>
             <div class="w-14 h-14 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin z-10 shadow-lg"></div>
             <i class="fa-solid fa-cloud-arrow-down absolute text-blue-600 text-lg z-20"></i>
         </div>
-        <h3 id="loadingText" class="text-xl font-extrabold text-blue-900 tracking-tight">Đang đồng bộ dữ liệu</h3>
-        <p class="text-sm text-blue-600/70 mt-2 animate-pulse font-medium">Vui lòng chờ trong giây lát...</p>
+        <h3 id="loadingText" class="text-xl font-extrabold text-blue-900 tracking-tight">Đang tải dữ liệu KTX...</h3>
+        <p class="text-sm text-blue-600/70 mt-2 animate-pulse font-medium">Vui lòng chờ trong giây lát</p>
     </div>
 
+    <!-- Toast Container -->
     <div id="toast-container"></div>
 
     <div class="w-full max-w-7xl mx-auto md:p-6 min-h-screen flex flex-col relative">
         
-        <!-- Header -->
-        <header class="glass-panel p-4 md:p-5 rounded-b-3xl md:rounded-3xl flex justify-between items-center mb-6 md:mb-8 sticky top-0 z-40 mx-0 md:mx-4 mt-0 md:mt-2 shadow-sm">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30 text-white cursor-pointer" onclick="window.location.hash = ''">
-                    <i class="fa-solid fa-house-chimney-window text-2xl"></i>
+        <!-- Header (Taskbar với 2 nút kèm icon hiển thị trên cả Mobile và PC) -->
+        <header class="glass-panel p-3.5 md:p-4 rounded-b-3xl md:rounded-3xl flex justify-between items-center mb-6 md:mb-8 sticky top-0 z-40 mx-0 md:mx-4 mt-0 md:mt-2 shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-md shadow-blue-500/30 text-white cursor-pointer hover:rotate-6 transition-transform" onclick="window.location.hash = ''">
+                    <i class="fa-solid fa-house-chimney-window text-xl md:text-2xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">KTX Phòng B06203</h1>
-                    <p class="text-sm text-blue-600 font-semibold" id="currentMonthDisplay">Đang tải...</p>
+                    <h1 class="text-lg md:text-2xl font-black text-slate-800 tracking-tight leading-tight">KTX B06203</h1>
+                    <p class="text-[11px] md:text-xs text-blue-600 font-bold" id="currentMonthDisplay">Đang tải...</p>
                 </div>
             </div>
             
-            <div class="flex gap-2">
-                <button id="btnAdminLogout" onclick="logoutAdmin()" class="hidden w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center shadow-sm hover:bg-red-200 transition-colors" title="Đăng xuất Admin">
-                    <i class="fa-solid fa-sign-out-alt"></i>
+            <!-- Cụm nút trên Taskbar (hiện chữ + icon trên cả mobile & desktop) -->
+            <div class="flex items-center gap-2 md:gap-3">
+                <!-- Nút 1: Điểm Danh -->
+                <button onclick="openSelfAttendanceModal()" class="btn-gradient-emerald font-extrabold px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm flex items-center gap-1.5 md:gap-2 shadow-sm active:scale-95 transition-transform" title="Thành viên tự điểm danh">
+                    <i class="fa-solid fa-user-check text-xs md:text-sm"></i>
+                   
                 </button>
-                <button onclick="showBillPopup()" class="md:hidden w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shadow-sm">
-                    <i class="fa-solid fa-file-invoice-dollar"></i>
+
+                <!-- Nút 2: Tổng Kết -->
+                <button onclick="showBillPopup()" class="btn-gradient-blue font-extrabold px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm flex items-center gap-1.5 md:gap-2 shadow-sm active:scale-95 transition-transform" title="Xem Báo Cáo Tổng Kết">
+                    <i class="fa-solid fa-file-invoice-dollar text-xs md:text-sm"></i>
+                    
+                </button>
+
+                <!-- Nút Admin Logout (ẩn mặc định) -->
+                <button id="btnAdminLogout" onclick="logoutAdmin()" class="hidden w-9 h-9 md:w-10 md:h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center shadow-sm hover:bg-red-200 transition-colors" title="Đăng xuất Admin">
+                    <i class="fa-solid fa-sign-out-alt"></i>
                 </button>
             </div>
         </header>
 
+        <!-- VIEW CHÍNH: NGƯỜI DÙNG PHÒNG B06203 -->
         <main id="publicView" class="flex-1 px-4 md:px-4 space-y-6 md:space-y-8 fade-in">
             
-            <!-- Widget Tổng Quan Tiền -->
-            <div class="glass-panel rounded-[2rem] p-6 md:p-8 relative overflow-hidden bg-white/50 border border-white/80">
+            <!-- Widget Tổng Quan Tiền Phòng (Thuần hiển thị, không chứa nút) -->
+            <div class="glass-panel rounded-[2rem] p-6 md:p-8 relative overflow-hidden bg-white/60 border border-white/80">
                 <div class="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-blue-400/20 to-cyan-300/20 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute bottom-0 right-0 p-4 opacity-5 pointer-events-none">
                     <i class="fa-solid fa-wallet text-9xl"></i>
                 </div>
                 
-                <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                    <div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider shadow-sm">Tổng chi phí tháng</span>
-                        </div>
-                        <div class="flex items-baseline gap-2">
-                            <h2 class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-blue-900 tracking-tighter" id="totalBillDisplay">0</h2>
-                            <span class="text-2xl text-blue-600 font-bold">VNĐ</span>
-                        </div>
+                <div class="relative z-10 flex flex-col justify-start">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider shadow-sm">Tổng chi phí tháng</span>
                     </div>
-                    
-                    <div class="hidden md:flex gap-3">
-                        <button onclick="showBillPopup()" class="glass-panel border-2 border-blue-400 text-blue-700 hover:bg-blue-50 px-6 py-3.5 rounded-2xl font-bold transition-all flex items-center gap-2 shadow-sm hover:shadow-md">
-                            <i class="fa-solid fa-file-invoice-dollar text-lg"></i> Tổng Kết Tháng
-                        </button>
+                    <div class="flex items-baseline gap-2">
+                        <h2 class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-blue-900 tracking-tighter" id="totalBillDisplay">0</h2>
+                        <span class="text-2xl text-blue-600 font-bold">VNĐ</span>
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mt-8 pt-6 border-t border-slate-200/80 relative z-10">
-                    <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm flex flex-col">
+                <!-- 5 thông số chi tiết -->
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mt-6 pt-5 border-t border-slate-200/80 relative z-10">
+                    <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm flex flex-col">
                         <p class="text-[11px] text-slate-500 font-bold mb-1 uppercase tracking-wider flex justify-between">
                             <span><i class="fa-solid fa-bolt text-amber-500 mr-1"></i>Điện</span>
                             <span class="text-blue-500" id="overviewElecUsage">0 kWh</span>
@@ -248,7 +325,7 @@
                         <p class="text-lg font-extrabold text-blue-800" id="overviewElec">0đ</p>
                         <p class="text-[9px] text-slate-400 mt-auto pt-1 font-semibold" id="overviewElecPrice">~0đ/kWh</p>
                     </div>
-                    <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm flex flex-col">
+                    <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm flex flex-col">
                         <p class="text-[11px] text-slate-500 font-bold mb-1 uppercase tracking-wider flex justify-between">
                             <span><i class="fa-solid fa-droplet text-cyan-500 mr-1"></i>Nước</span>
                             <span class="text-blue-500" id="overviewWaterUsage">0 Khối</span>
@@ -256,12 +333,12 @@
                         <p class="text-lg font-extrabold text-blue-800" id="overviewWater">0đ</p>
                         <p class="text-[9px] text-slate-400 mt-auto pt-1 font-semibold" id="overviewWaterPrice">~0đ/Khối</p>
                     </div>
-                    <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm">
-                        <p class="text-[11px] text-slate-500 font-bold mb-1 uppercase tracking-wider">Phí khác</p>
+                    <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
+                        <p class="text-[11px] text-slate-500 font-bold mb-1 uppercase tracking-wider flex items-center gap-1"><i class="fa-solid fa-receipt text-slate-400"></i>Phí khác</p>
                         <p class="text-lg font-extrabold text-blue-800 mt-1" id="overviewFees">0đ</p>
                     </div>
-                    <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm">
-                        <p class="text-[11px] text-slate-500 font-bold mb-1 uppercase tracking-wider">Quỹ chung</p>
+                    <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
+                        <p class="text-[11px] text-slate-500 font-bold mb-1 uppercase tracking-wider flex items-center gap-1"><i class="fa-solid fa-cart-shopping text-cyan-500"></i>Quỹ chung</p>
                         <p class="text-lg font-extrabold text-blue-800 mt-1" id="overviewShared">0đ</p>
                     </div>
                     <div class="bg-blue-500/10 p-3 rounded-xl border border-blue-200 col-span-2 md:col-span-1 shadow-sm">
@@ -274,17 +351,59 @@
                 </div>
             </div>
 
+            <!-- BỐ CỤC 2 CỘT -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                 
-                <!-- Cột Danh sách thành viên & Lịch (Trái) -->
+                <!-- CỘT CHÍNH (2 CỘT): 1. Thành viên -> 2. Quỹ chung -> 3. Ngày ở -->
                 <div class="lg:col-span-2 space-y-6">
                     
-                    <!-- LỊCH THÁNG (READ-ONLY CHO TRANG CHỦ) -->
-                    <div class="glass-panel rounded-[2rem] p-5 md:p-6 shadow-sm relative overflow-hidden">
+                    <!-- 1. WIDGET THÀNH VIÊN -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3.5 px-1">
+                            <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-users text-blue-500"></i> Thành viên
+                            </h3>
+                            <span class="text-xs font-bold text-blue-700 bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200" id="memberCountDisplay">0 thành viên</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5" id="publicMembersList">
+                            <!-- Render thẻ thành viên bằng JS -->
+                        </div>
+                    </div>
+
+                    <!-- 2. WIDGET DANH SÁCH QUỸ CHUNG -->
+                    <div class="glass-panel rounded-[2rem] p-6 shadow-sm relative overflow-hidden bg-white/65">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
-                                <i class="fa-regular fa-calendar-check text-blue-500"></i> Ngày ở
+                                <i class="fa-solid fa-cart-shopping text-cyan-500"></i> Quỹ chung
                             </h3>
+                           
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-2xl p-4 mb-4 border border-cyan-100 flex justify-between items-center shadow-sm">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-receipt"></i>
+                                </div>
+                                <span class="text-sm text-slate-600 font-bold">Tổng chi tiêu:</span>
+                            </div>
+                            <span class="font-black text-cyan-700 text-xl md:text-2xl" id="totalSharedItemsCost">0đ</span>
+                        </div>
+
+                        <div id="sharedItemsList" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                            <!-- Render danh sách đồ mua chung bằng JS -->
+                        </div>
+                    </div>
+
+                    <!-- 3. WIDGET NGÀY Ở (LỊCH ĐIỂM DANH) -->
+                    <div class="glass-panel rounded-[2rem] p-5 md:p-6 shadow-sm relative overflow-hidden bg-white/65">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
+                                    <i class="fa-regular fa-calendar-check text-blue-500"></i> Ngày ở
+                                </h3>
+                               
+                            </div>
                             <div class="flex gap-2 items-center">
                                 <button onclick="changeCalendarMonth(-1, false)" class="w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors"><i class="fa-solid fa-chevron-left text-xs"></i></button>
                                 <span id="publicCalendarTitle" class="font-bold text-slate-700 text-sm w-28 text-center">...</span>
@@ -307,40 +426,30 @@
                         </div>
                     </div>
 
-                    <!-- DANH SÁCH THÀNH VIÊN -->
-                    <div>
-                        <div class="flex justify-between items-center mb-3 px-1">
-                            <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
-                                <i class="fa-solid fa-users text-blue-500"></i> Thành viên
-                            </h3>
-                            <span class="text-xs font-bold text-blue-700 bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200" id="memberCountDisplay">0 thành </span>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5" id="publicMembersList">
-                            <!-- Render thẻ thành viên bằng JS -->
-                        </div>
-                    </div>
                 </div>
 
+                <!-- CỘT PHỤ (1 CỘT BÊN PHẢI) -->
                 <div class="space-y-6">
                     
                     <!-- WIDGET 1: THỜI GIAN & CẬP NHẬT -->
-                    <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden bg-white/60">
+                    <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden bg-white/70">
                         <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-4">
                             <i class="fa-solid fa-clock text-blue-500"></i> Web app 
                         </h3>
                         <div class="space-y-2">
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-slate-500">Hôm nay:</span>
+                                <span class="text-slate-500 font-medium">Hôm nay:</span>
                                 <span class="font-bold text-slate-800" id="currentDateDisplay">--/--/----</span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-slate-500">Giờ hiện tại:</span>
+                                <span class="text-slate-500 font-medium">Giờ hiện tại:</span>
                                 <span class="font-black text-blue-600 text-lg" id="currentTimeDisplay">--:--:--</span>
                             </div>
                             <div class="border-t border-slate-200/80 pt-3 mt-3">
                                 <p class="text-[11px] font-bold text-slate-400 uppercase">Cập nhật lần cuối</p>
-                                <p class="text-sm font-semibold text-emerald-600 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-cloud-arrow-down"></i> <span id="lastUpdateDisplay">Đang tải...</span></p>
+                                <p class="text-sm font-semibold text-emerald-600 mt-0.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-cloud-arrow-down"></i> <span id="lastUpdateDisplay">Đang tải...</span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -351,7 +460,7 @@
                         <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-4 relative z-10">
                             <i class="fa-solid fa-building-columns text-indigo-500"></i> Chuyển khoản *
                         </h3>
-                        <div class="bg-white/90 rounded-xl p-4 shadow-sm border border-white space-y-3 relative z-10">
+                        <div class="bg-white/95 rounded-xl p-4 shadow-sm border border-white space-y-3 relative z-10">
                             <div>
                                 <p class="text-[10px] text-slate-500 uppercase font-bold">Người thụ hưởng</p>
                                 <p class="font-black text-slate-800">Nguyễn Phạm Nhật Huy</p>
@@ -365,58 +474,39 @@
                                     <p class="text-[10px] text-slate-500 uppercase font-bold">Số tài khoản</p>
                                     <p class="font-black text-blue-700 tracking-wider">7105205478044</p>
                                 </div>
-                                <button onclick="copyBankAccount()" class="w-9 h-9 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-500 hover:text-white transition-colors flex items-center justify-center shadow-sm" title="Copy STK">
+                                <button onclick="copyBankAccount()" class="w-9 h-9 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-500 hover:text-white transition-colors flex items-center justify-center shadow-sm" title="Sao chép STK">
                                     <i class="fa-regular fa-copy"></i>
                                 </button>
                             </div>
-                            <p class="text-[11px] text-slate-500 font-semibold mb-1 text-center">* Đại diện phòng gửi tiền Điện/Nước lên HTQL của trường</p>
+                            <p class="text-[10px] text-slate-500 font-semibold mb-1 text-center">* Đại diện phòng nộp tiền Điện/Nước lên HTQL trường</p>
                         </div>
                     </div>
 
                     <!-- WIDGET 3: CÁCH TÍNH TIỀN -->
-                    <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden">
+                    <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden bg-white/70">
                         <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-3">
                             <i class="fa-solid fa-scale-balanced text-emerald-500"></i> Quy tắc tính phí
                         </h3>
                         <div class="space-y-3 text-[13px] text-slate-600">
-                            <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm">
+                            <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
                                 <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-bolt text-amber-500"></i> Điện, Nước</p>
-                                <p class="leading-relaxed">Được chia tự động theo <span class="font-bold text-blue-600">tỷ lệ ngày ở thực tế</span>. Hệ thống sẽ làm tròn hóa đơn lên 500đ. <br/> <b>Công thức:</b> (Tổng tiền điện/nước) × (Số ngày ở của bạn ÷ Tổng số ngày của cả phòng)</p>
+                                <p class="leading-relaxed">Được chia tự động theo <span class="font-bold text-blue-600">tỷ lệ ngày ở thực tế</span>. Làm tròn lên 500đ. <br/> <b>Công thức:</b> (Tổng tiền) × (Số ngày ở ÷ Tổng ngày cả phòng)</p>
                             </div>
-                            <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm">
+                            <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
                                 <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-box-open text-cyan-500"></i> Quỹ đồ chung</p>
-                                <p class="leading-relaxed">Số tiền mua đồ dùng chung sẽ được <span class="font-bold text-cyan-600">chia đều ngang nhau</span> cho tất cả các thành viên (không tính theo số ngày ở).</p>
+                                <p class="leading-relaxed">Số tiền mua đồ chung được <span class="font-bold text-cyan-600">chia đều ngang nhau</span> cho tất cả các thành viên.</p>
                             </div>
-                            <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm">
+                            <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
                                 <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-money-bill-transfer text-emerald-500"></i> Tiền ứng trước</p>
-                                <p class="leading-relaxed">Thành viên bỏ tiền túi mua đồ chung sẽ được <span class="font-bold text-emerald-600">trừ thẳng</span> số tiền đã ứng vào tổng hóa đơn cần đóng cuối tháng.</p>
+                                <p class="leading-relaxed">Thành viên ứng tiền mua đồ sẽ được <span class="font-bold text-emerald-600">trừ thẳng</span> vào số tiền cần đóng cuối tháng.</p>
                             </div>
-                              <div class="bg-white/70 p-3 rounded-xl border border-white shadow-sm">
-                                <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-note-sticky" style="color: rgb(177, 151, 252);"></i> Ghi nhận ngày ở</p>
-                                <p class="leading-relaxed">Nghi nhận ở KTX vào Buổi sáng (0h-12h) và Buổi chiều (12h-24h). Thời gian ghi nhận mang tính gần đúng nên <span class="font-bold text-red-600">đơn giá sẽ có sai số</span>.</p>
+                            <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
+                                <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-note-sticky text-indigo-400"></i> Ghi nhận ngày ở</p>
+                                <p class="leading-relaxed">Buổi sáng (0h-12h) và Buổi chiều (12h-24h). Thời gian ghi nhận mang tính tương đối nên <span class="font-bold text-red-600">đơn giá có sai số nhỏ</span>.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- WIDGET QUỸ CHUNG -->
-                    <div class="glass-panel rounded-[1.5rem] p-6 ">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
-                                <i class="fa-solid fa-cart-shopping text-cyan-500"></i> Danh sách quỹ chung
-                            </h3>
-                        </div>
-                        
-                        <div class="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl p-4 mb-4 border border-cyan-100">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-slate-600 font-semibold">Tổng đã chi:</span>
-                                <span class="font-black text-cyan-700 text-xl" id="totalSharedItemsCost">0đ</span>
-                            </div>
-                        </div>
-
-                        <div id="sharedItemsList" class="space-y-3 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
-                            <!-- Render bằng JS -->
-                        </div>
-                    </div>
                 </div>
             </div>
             
@@ -425,9 +515,8 @@
             </div>
         </main>
 
-        <!-- KHOẢNG KHÔNG GIAN ADMIN -->
+        <!-- KHU VỰC QUẢN TRỊ ADMIN -->
         <main id="adminView" class="flex-1 px-4 md:px-4 space-y-6 md:space-y-8 fade-in hide">
-            <!-- Cấu hình phí -->
             <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-blue-100 relative overflow-hidden">
                 <div class="absolute top-0 right-0 bg-blue-500 text-white px-4 py-1 rounded-bl-xl font-bold text-xs shadow-md">Khu Vực Quản Trị</div>
                 <h2 class="text-2xl font-black text-slate-800 mb-6"><i class="fa-solid fa-sliders text-blue-500 mr-2"></i>Cấu hình Tháng</h2>
@@ -469,10 +558,10 @@
                 </div>
             </div>
 
-            <!-- Block Admin Lịch Điểm Danh -->
+            <!-- Block Điểm Danh Admin -->
             <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-slate-200">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                    <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-calendar-days text-indigo-500 mr-2"></i>Điểm Danh</h2>
+                    <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-calendar-days text-indigo-500 mr-2"></i>Điểm Danh Admin</h2>
                     <div class="flex gap-2 items-center bg-slate-50 p-1.5 rounded-xl border border-slate-200">
                         <button onclick="changeCalendarMonth(-1, true)" class="w-8 h-8 rounded-lg bg-white hover:bg-slate-200 text-slate-600 flex items-center justify-center shadow-sm transition-colors"><i class="fa-solid fa-chevron-left text-xs"></i></button>
                         <span id="adminCalendarTitle" class="font-bold text-slate-700 text-sm px-2 w-28 text-center">...</span>
@@ -483,11 +572,10 @@
                 <div class="calendar-grid-template text-center font-bold text-slate-400 text-xs mb-2">
                     <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
                 </div>
-                <div id="adminCalendarGrid" class="calendar-grid-template max-w-3xl mx-auto">
-                    <!-- Render bằng JS. Grid này cho phép click. -->
-                </div>
+                <div id="adminCalendarGrid" class="calendar-grid-template max-w-3xl mx-auto"></div>
             </div>
 
+            <!-- Quản lý Thành viên Admin -->
             <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-slate-200">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-users-gear text-emerald-500 mr-2"></i>Quản lý Thành Viên</h2>
@@ -496,7 +584,7 @@
                     </button>
                 </div>
                 
-                <div class="overflow-x-auto custom-scrollbar">
+                <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[600px]">
                         <thead>
                             <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
@@ -512,6 +600,7 @@
                 </div>
             </div>
 
+            <!-- Quản lý Quỹ Chung Admin -->
             <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-slate-200">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-cart-shopping text-cyan-500 mr-2"></i>Quản lý Quỹ Chung</h2>
@@ -520,7 +609,7 @@
                     </button>
                 </div>
                 
-                <div class="overflow-x-auto custom-scrollbar">
+                <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[600px]">
                         <thead>
                             <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
@@ -542,16 +631,93 @@
             </div>
         </main>
 
-        <!-- Modal Đăng nhập Admin -->
+        <!-- MODAL 1: TỰ ĐIỂM DANH CHO THÀNH VIÊN -->
+        <div id="selfAttendanceModal" class="fixed inset-0 z-[65] flex items-center justify-center modal-overlay p-4 hide">
+            <div class="bg-white rounded-[2rem] w-full max-w-md overflow-hidden flex flex-col shadow-2xl transform transition-all scale-95 opacity-0 border border-emerald-100">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-5 flex justify-between items-center text-white">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+                            <i class="fa-solid fa-user-check text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-extrabold leading-tight">Điểm Danh Trong Ngày</h3>
+                            <p class="text-xs text-emerald-100 font-medium">Tự cập nhật ngày ở KTX của bạn</p>
+                        </div>
+                    </div>
+                    <button onclick="closeModal('selfAttendanceModal')" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center text-white transition-colors">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="p-5 space-y-4 bg-slate-50/60 overflow-y-auto max-h-[75vh]">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                            <i class="fa-solid fa-user text-emerald-600 mr-1"></i> Bạn là thành viên nào?
+                        </label>
+                        <select id="modalSelfMemberSelect" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-sm rounded-xl px-4 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition-all shadow-sm" onchange="syncModalCurrentStatus()">
+                            <option value="">Chọn tên</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                            <i class="fa-regular fa-calendar text-emerald-600 mr-1"></i> Chọn ngày điểm danh
+                        </label>
+                        <input type="date" id="modalSelfDateInput" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-sm rounded-xl px-4 py-2.5 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition-all shadow-sm" onchange="syncModalCurrentStatus()">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                                <i class="fa-solid fa-clock text-emerald-600 mr-1"></i> Thời gian ở trong ngày
+                            </label>
+                            <span id="modalSelfStatusBadge" class="text-[10px] font-bold text-slate-400 bg-slate-200/70 px-2 py-0.5 rounded-md">Chưa chọn</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2.5" id="modalSelfChoiceGrid">
+                            <div onclick="selectModalStatus('full')" id="modalChoice-full" class="self-choice-btn">
+                                <i class="fa-solid fa-sun text-blue-500 text-lg mb-1 block"></i>
+                                <p class="font-black text-xs text-slate-800">Cả ngày</p>
+                                <p class="text-[10px] text-slate-400 font-semibold mt-0.5">Sáng + Chiều</p>
+                            </div>
+                            <div onclick="selectModalStatus('morning')" id="modalChoice-morning" class="self-choice-btn">
+                                <i class="fa-regular fa-sun text-amber-500 text-lg mb-1 block"></i>
+                                <p class="font-black text-xs text-slate-800">Buổi sáng</p>
+                                <p class="text-[10px] text-slate-400 font-semibold mt-0.5">0h - 12h</p>
+                            </div>
+                            <div onclick="selectModalStatus('afternoon')" id="modalChoice-afternoon" class="self-choice-btn">
+                                <i class="fa-solid fa-moon text-emerald-500 text-lg mb-1 block"></i>
+                                <p class="font-black text-xs text-slate-800">Buổi chiều</p>
+                                <p class="text-[10px] text-slate-400 font-semibold mt-0.5">12h - 24h</p>
+                            </div>
+                            <div onclick="selectModalStatus('none')" id="modalChoice-none" class="self-choice-btn">
+                                <i class="fa-solid fa-person-walking-arrow-right text-slate-400 text-lg mb-1 block"></i>
+                                <p class="font-black text-xs text-slate-800">Không ở</p>
+                                <p class="text-[10px] text-slate-400 font-semibold mt-0.5">Vắng mặt</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-white border-t border-slate-100 flex gap-3">
+                    <button onclick="closeModal('selfAttendanceModal')" class="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors text-sm">Hủy</button>
+                    <button onclick="submitModalAttendance()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 text-sm">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Lưu Điểm Danh
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 2: ĐĂNG NHẬP ADMIN -->
         <div id="loginModal" class="fixed inset-0 z-[60] flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white rounded-[2rem] w-full max-w-sm flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 p-8 text-center">
                 <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mx-auto mb-4 text-2xl shadow-sm">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <h3 class="text-2xl font-black text-slate-800 mb-2">Đăng Nhập Quản Trị</h3>
-                <p class="text-slate-500 text-sm mb-6">Nhập mã PIN <strong class="text-blue-600">6 số</strong> để truy cập khu vực quản trị.</p>
+                <p class="text-slate-500 text-sm mb-6">Nhập mã PIN <strong class="text-blue-600">4 số</strong> để quản trị.</p>
                 
-                <input type="password" id="adminPin" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="******" class="w-full text-center text-3xl tracking-[0.4em] font-black px-4 py-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 outline-none mb-4 bg-slate-50 text-slate-800">
+                <input type="password" id="adminPin" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="••••" class="w-full text-center text-3xl tracking-[0.4em] font-black px-4 py-3.5 rounded-xl border-2 border-slate-200 focus:border-blue-500 outline-none mb-4 bg-slate-50 text-slate-800">
                 <p id="loginError" class="text-red-500 text-sm font-bold hide mb-4"><i class="fa-solid fa-triangle-exclamation"></i> Alo! Vô đây làm gì???</p>
                 
                 <div class="flex gap-3">
@@ -561,7 +727,7 @@
             </div>
         </div>
 
-        <!-- Modal Điểm Danh (Attendance) Admin -->
+        <!-- MODAL 3: ĐIỂM DANH DÀNH CHO ADMIN -->
         <div id="attendanceModal" class="fixed inset-0 z-[70] flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white rounded-[2rem] w-full max-w-lg overflow-hidden flex flex-col shadow-2xl transform transition-all scale-95 opacity-0">
                 <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 flex justify-between items-center border-b border-blue-100">
@@ -572,15 +738,24 @@
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
-                
-                <div class="p-5 overflow-y-auto max-h-[60vh] bg-slate-50/50 custom-scrollbar">
-                    <div id="modalMembersList" class="space-y-4">
-                        <!-- Nút điểm danh render bằng JS -->
+
+                <div class="px-5 pt-3 pb-1 bg-slate-50/80 flex items-center justify-between border-b border-slate-100">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wide">Chọn nhanh:</span>
+                    <div class="flex gap-2">
+                        <button onclick="quickSetAllAttendance('full')" class="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold px-2.5 py-1 rounded-md transition-colors">
+                            <i class="fa-solid fa-check-double mr-1"></i>Tất cả Cả ngày
+                        </button>
+                        <button onclick="quickSetAllAttendance('none')" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-2.5 py-1 rounded-md transition-colors">
+                            <i class="fa-solid fa-xmark mr-1"></i>Tất cả Vắng
+                        </button>
                     </div>
                 </div>
+                
+                <div class="p-5 overflow-y-auto max-h-[55vh] bg-slate-50/50">
+                    <div id="modalMembersList" class="space-y-4"></div>
+                </div>
 
-                <!-- Nút chốt cả tuần (ẩn mặc định, chỉ hiện thứ 7, CN) -->
-                <div id="bulkWeekContainer" class="px-5 pb-4 bg-slate-50/50 hide">
+                <div id="bulkWeekContainer" class="px-5 pb-3 bg-slate-50/50 hide">
                     <button onclick="applyToWholeWeek()" class="w-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 font-bold py-2.5 rounded-xl transition-colors text-sm flex items-center justify-center gap-2 border border-indigo-200 shadow-sm">
                         <i class="fa-solid fa-wand-magic-sparkles"></i> Áp dụng cho CẢ TUẦN
                     </button>
@@ -593,7 +768,45 @@
             </div>
         </div>
 
-        <!-- Modal Bill Tổng -->
+        <!-- MODAL 4: XEM CHI TIẾT NGÀY Ở (DAY INSPECT) -->
+        <div id="dayInspectModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
+            <div class="bg-white rounded-[2rem] w-full max-w-sm overflow-hidden flex flex-col shadow-2xl transform transition-all scale-95 opacity-0 border border-slate-200">
+                <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 flex justify-between items-center">
+                    <h3 class="font-extrabold text-slate-800 text-base flex items-center gap-2" id="inspectDateTitle">
+                        <i class="fa-regular fa-calendar-days text-blue-600"></i> Ngày: ...
+                    </h3>
+                    <button onclick="closeModal('dayInspectModal')" class="w-8 h-8 rounded-full bg-white hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors shadow-sm">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="p-4 space-y-2.5 max-h-[60vh] overflow-y-auto" id="dayInspectList"></div>
+                <div class="p-3 bg-slate-50 border-t border-slate-100 flex gap-2">
+                    <button onclick="closeModal('dayInspectModal')" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-sm transition-colors">
+                        Đóng
+                    </button>
+                    <button onclick="openSelfAttendanceForInspectedDate()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-sm transition-colors shadow-sm flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-user-check"></i> Điểm danh ngày này
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 5: XÁC NHẬN HÀNH ĐỘNG TUỲ BIẾN (CUSTOM CONFIRM) -->
+        <div id="customConfirmModal" class="fixed inset-0 z-[80] flex items-center justify-center modal-overlay p-4 hide">
+            <div class="bg-white rounded-[2rem] w-full max-w-sm flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 p-6 text-center">
+                <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+                <h3 class="text-xl font-extrabold text-slate-800 mb-2" id="confirmModalTitle">Xác nhận</h3>
+                <p class="text-slate-600 text-sm mb-6 leading-relaxed" id="confirmModalMessage">Bạn có chắc chắn muốn thực hiện hành động này?</p>
+                <div class="flex gap-3">
+                    <button id="btnConfirmCancel" class="flex-1 bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl hover:bg-slate-200 transition-colors text-sm">Hủy</button>
+                    <button id="btnConfirmOk" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition-colors shadow-md text-sm">Đồng ý</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 6: BÁO CÁO TỔNG KẾT THÁNG -->
         <div id="billModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white/95 backdrop-blur-xl rounded-[2rem] w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 border border-white">
                 <div class="p-6 bg-gradient-to-br from-blue-600 to-indigo-700 flex justify-between items-start relative overflow-hidden flex-shrink-0">
@@ -608,7 +821,7 @@
                     </button>
                 </div>
                 
-                <div class="p-5 md:p-6 overflow-y-auto flex-1 custom-scrollbar bg-slate-50/50 space-y-6">
+                <div class="p-5 md:p-6 overflow-y-auto flex-1 bg-slate-50/50 space-y-6">
                     <div class="bg-white rounded-2xl p-5 border border-blue-100 shadow-sm">
                         <h4 class="text-xs font-extrabold text-blue-500 uppercase tracking-wider mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
                             <i class="fa-solid fa-calculator"></i> Thông số chung
@@ -649,7 +862,7 @@
             </div>
         </div>
 
-        <!-- Modal Bill Cá nhân -->
+        <!-- MODAL 7: BILL CÁ NHÂN & VIETQR -->
         <div id="memberBillModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
              <div class="bg-white rounded-[2rem] w-full max-w-md max-h-[95vh] flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 border border-slate-200">
                  <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-white flex-shrink-0 relative">
@@ -669,7 +882,7 @@
                      </button>
                  </div>
 
-                 <div class="p-5 space-y-5 bg-slate-50/50 overflow-y-auto flex-1 custom-scrollbar">
+                 <div class="p-5 space-y-5 bg-slate-50/50 overflow-y-auto flex-1">
                      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
                          <h4 class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">Phân bổ chi phí</h4>
                          <div class="space-y-2.5 text-sm">
@@ -716,20 +929,37 @@
 
                     <div id="mbQRContainer" class="mt-2 flex flex-col items-center justify-center p-5 bg-gradient-to-b from-blue-50 to-white rounded-3xl border border-blue-200 shadow-sm hide">
                         <p class="text-xs font-bold text-blue-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-qrcode text-lg"></i> Quét mã thanh toán
+                            <i class="fa-solid fa-qrcode text-lg"></i> Quét mã để thanh toán nhanh
                         </p>
                         <div class="bg-white p-3 rounded-2xl shadow-lg border border-blue-100 relative group">
                             <div class="absolute inset-0 bg-blue-500 opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity pointer-events-none"></div>
-                            <img id="mbQRCode" src="" alt="Mã QR Chuyển Khoản" class="w-64 h-64 sm:w-72 sm:h-72 object-contain" crossorigin="anonymous">
+                            <img id="mbQRCode" src="" alt="Mã QR Chuyển Khoản" class="w-64 h-64 sm:w-72 sm:h-72 object-contain" crossorigin="anonymous" loading="lazy">
                         </div>
-                        <div class="mt-4 w-full bg-slate-50 p-3 rounded-xl border border-slate-200 relative">
-                            <p class="text-[11px] text-slate-500 font-semibold mb-1 text-center">Nội dung chuyển khoản:</p>
-                            <div class="flex items-center justify-center gap-2">
-                                <span id="mbQRText" class="font-bold text-slate-800 text-sm md:text-base break-all text-center"></span>
+
+                        <!-- Nút sao chép số tiền & nội dung -->
+                        <div class="mt-4 w-full space-y-2">
+                            <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                                <div>
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold">Số tiền chuyển</p>
+                                    <p class="font-black text-blue-700 text-sm" id="mbCopyAmountDisplay">0đ</p>
+                                </div>
+                                <button onclick="copyToClipboard(document.getElementById('mbCopyAmountDisplay').getAttribute('data-raw'), 'Đã sao chép số tiền!')" class="px-2.5 py-1.5 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold text-xs flex items-center gap-1 transition-colors">
+                                    <i class="fa-regular fa-copy"></i> Chép
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                                <div class="overflow-hidden pr-2">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold">Nội dung chuyển khoản</p>
+                                    <p class="font-bold text-slate-800 text-xs truncate" id="mbQRText"></p>
+                                </div>
+                                <button onclick="copyToClipboard(document.getElementById('mbQRText').innerText, 'Đã sao chép nội dung CK!')" class="px-2.5 py-1.5 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold text-xs flex items-center gap-1 transition-colors flex-shrink-0">
+                                    <i class="fa-regular fa-copy"></i> Chép
+                                </button>
                             </div>
                         </div>
-                        <button onclick="downloadQR()" class="mt-5 w-full bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-md">
-                            <i class="fa-solid fa-download"></i> Lưu mã QR
+
+                        <button onclick="downloadQR()" class="mt-4 w-full bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-md text-sm">
+                            <i class="fa-solid fa-download"></i> Tải ảnh mã QR
                         </button>
                     </div>
                  </div>
@@ -740,11 +970,10 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwmTQmkHIUUZ1IcDpkuvt1I0c_8qGtBr_FnBqNxdG_92xRYYzwoiamqyojhBldgtA-W/exec"; 
-        
         const BANK_BIN = "970405"; // Agribank
         const BANK_ACCOUNT = "7105205478044";
 
-        // State bao gồm thêm Records lịch điểm danh
+        // Global State
         let state = {
             config: { 
                 month: "Đang tải...", 
@@ -754,15 +983,15 @@
             },
             members: [],
             sharedItems: [],
-            records: {} // Chứa dữ liệu điểm danh: { "2026-09-01": { "1": "full", "2": "morning" } }
+            records: {}
         };
         
         let isAdminActive = false;
-
-        // Quản lý trạng thái lịch
-        let calendarDate = new Date(); // Tháng hiện tại đang hiển thị trên UI lịch
+        let calendarDate = new Date();
         let selectedDateStr = null;
         let tempModalRecords = {};
+        let inspectedDateStr = null;
+        let modalSelfSelectedStatus = 'full';
 
         const STATUS = { NONE: 'none', MORNING: 'morning', AFTERNOON: 'afternoon', FULL: 'full' };
         const STATUS_CONFIG = {
@@ -772,23 +1001,28 @@
             [STATUS.FULL]: { label: 'Cả ngày', value: 1, class: 'active-full' }
         };
         
+        // Cache định dạng tiền tệ để tối ưu hiệu năng
+        const moneyFormatter = new Intl.NumberFormat('vi-VN');
         const round500 = (amount) => Math.round(amount / 500) * 500;
-        const formatMoney = (amount) => new Intl.NumberFormat('vi-VN').format(Math.round(amount));
+        const formatMoney = (amount) => moneyFormatter.format(Math.round(amount));
 
+        function getTodayDateString() {
+            const now = new Date();
+            return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        }
+
+        // Đồng hồ thời gian thực
         function updateClock() {
             const now = new Date();
-            const dateStr = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' });
-            const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
             const dateEl = document.getElementById('currentDateDisplay');
             const timeEl = document.getElementById('currentTimeDisplay');
-            if(dateEl) dateEl.innerText = dateStr;
-            if(timeEl) timeEl.innerText = timeStr;
+            if (dateEl) dateEl.innerText = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' });
+            if (timeEl) timeEl.innerText = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        function showLoading(text = "Đang đồng bộ dữ liệu") {
+        function showLoading(text = "Đang đồng bộ dữ liệu...") {
             const loader = document.getElementById('loadingOverlay');
             document.getElementById('loadingText').innerText = text;
             loader.classList.remove('hide', 'opacity-0');
@@ -797,41 +1031,84 @@
         function hideLoading() {
             const loader = document.getElementById('loadingOverlay');
             loader.classList.add('opacity-0');
-            setTimeout(() => loader.classList.add('hide'), 500);
+            setTimeout(() => loader.classList.add('hide'), 300);
         }
 
         function showToast(message, isError = false) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = 'toast-msg';
-            toast.innerHTML = (isError ? '<i class="fa-solid fa-triangle-exclamation text-red-400 mr-2"></i>' : '<i class="fa-solid fa-circle-check text-emerald-400 mr-2"></i>') + `<span>${message}</span>`;
+            toast.innerHTML = (isError ? '<i class="fa-solid fa-triangle-exclamation text-red-400"></i>' : '<i class="fa-solid fa-circle-check text-emerald-400"></i>') + `<span>${message}</span>`;
             container.appendChild(toast);
-            setTimeout(() => { if(container.contains(toast)) container.removeChild(toast); }, 3300);
+            setTimeout(() => { if (container.contains(toast)) container.removeChild(toast); }, 3000);
         }
 
         function copyBankAccount() {
-            navigator.clipboard.writeText(BANK_ACCOUNT).then(() => showToast("Đã sao chép số tài khoản: " + BANK_ACCOUNT))
-            .catch(() => {
-                const temp = document.createElement("input"); temp.value = BANK_ACCOUNT; document.body.appendChild(temp);
-                temp.select(); document.execCommand("copy"); document.body.removeChild(temp);
-                showToast("Đã sao chép số tài khoản: " + BANK_ACCOUNT);
-            });
+            copyToClipboard(BANK_ACCOUNT, "Đã sao chép STK: " + BANK_ACCOUNT);
         }
 
+        function copyToClipboard(text, successMsg = "Đã sao chép!") {
+            if (!text) return;
+            const textStr = String(text);
+            const fallbackCopy = () => {
+                const temp = document.createElement("textarea");
+                temp.value = textStr;
+                temp.style.position = "fixed";
+                temp.style.left = "-9999px";
+                document.body.appendChild(temp);
+                temp.focus();
+                temp.select();
+                try {
+                    document.execCommand("copy");
+                    showToast(successMsg);
+                } catch(e) {
+                    showToast("Không thể sao chép!", true);
+                }
+                document.body.removeChild(temp);
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textStr).then(() => showToast(successMsg)).catch(fallbackCopy);
+            } else {
+                fallbackCopy();
+            }
+        }
+
+        let confirmCallback = null;
+        function openCustomConfirm(title, message, onConfirm) {
+            document.getElementById('confirmModalTitle').innerText = title;
+            document.getElementById('confirmModalMessage').innerText = message;
+            confirmCallback = onConfirm;
+            showModal('customConfirmModal');
+        }
+
+        document.getElementById('btnConfirmOk')?.addEventListener('click', () => {
+            closeModal('customConfirmModal');
+            if (typeof confirmCallback === 'function') confirmCallback();
+        });
+        document.getElementById('btnConfirmCancel')?.addEventListener('click', () => {
+            closeModal('customConfirmModal');
+        });
+
         function removeVietnameseTones(str) {
-            str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
-            str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
-            str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); str = str.replace(/đ/g,"d");
-            str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A"); str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
-            str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I"); str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
-            str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U"); str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y"); str = str.replace(/Đ/g, "D");
-            str = str.replace(/[^a-zA-Z0-9 ]/g, ""); return str.trim();
+            if (!str) return "";
+            str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a").replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
+            str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i").replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
+            str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u").replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y").replace(/đ/g,"d");
+            str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A").replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+            str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I").replace(/Ò|Ó|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+            str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U").replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y").replace(/Đ/g, "D");
+            return str.replace(/[^a-zA-Z0-9 ]/g, "").trim();
         }
 
         function initApp() {
+            const todayStr = getTodayDateString();
+            const mDate = document.getElementById('modalSelfDateInput');
+            if (mDate) mDate.value = todayStr;
+
             fetch(API_URL, { redirect: 'follow' })
                 .then(response => {
-                    if (!response.ok) throw new Error("CORS or Network Error");
+                    if (!response.ok) throw new Error("Network response not ok");
                     return response.json();
                 })
                 .then(data => {
@@ -840,12 +1117,15 @@
                     state.sharedItems = data.sharedItems || [];
                     state.records = data.records || {};
                     
-                    syncCalendarWithConfig(); // Đồng bộ tháng lịch với cấu hình
-                    calculateDaysFromRecords(); // Tính lại ngày ở từ records
+                    syncCalendarWithConfig();
+                    calculateDaysFromRecords();
+                    populateAttendanceMemberOptions();
                     
-                    // Cập nhật Last Updated UI
                     const now = new Date();
-                    document.getElementById('lastUpdateDisplay').innerText = now.toLocaleTimeString('vi-VN') + ' - ' + now.toLocaleDateString('vi-VN', {day:'2-digit', month:'2-digit', year:'numeric'});
+                    const lastEl = document.getElementById('lastUpdateDisplay');
+                    if (lastEl) {
+                        lastEl.innerText = now.toLocaleTimeString('vi-VN') + ' - ' + now.toLocaleDateString('vi-VN', {day:'2-digit', month:'2-digit', year:'numeric'});
+                    }
 
                     calculateAndRender();
                     hideLoading();
@@ -853,36 +1133,55 @@
                 })
                 .catch(error => {
                     console.error("Fetch error:", error);
-                    showToast("Không tải được dữ liệu! Vui lòng kiểm tra quyền truy cập Google Script.", true);
+                    showToast("Không tải được dữ liệu từ Apps Script!", true);
                     hideLoading();
                 });
         }
 
-        // Tự động phân tích tháng năm từ config (VD: "09/2026") để thiết lập calendarDate ban đầu
+        function populateAttendanceMemberOptions() {
+            const mSelect = document.getElementById('modalSelfMemberSelect');
+            if (!mSelect) return;
+            const currentMVal = mSelect.value;
+
+            let optionsHtml = `<option value="">-- Bấm vào đây để chọn tên bạn --</option>`;
+            for (let i = 0; i < state.members.length; i++) {
+                const m = state.members[i];
+                optionsHtml += `<option value="${m.id}">${m.name}</option>`;
+            }
+
+            mSelect.innerHTML = optionsHtml;
+            if (currentMVal) mSelect.value = currentMVal;
+
+            selectModalStatus(modalSelfSelectedStatus);
+            syncModalCurrentStatus();
+        }
+
         function syncCalendarWithConfig() {
             try {
                 let adminMonthVal = state.config.month || "";
-                if(document.getElementById('adminMonth') && isAdminActive) {
+                if (document.getElementById('adminMonth') && isAdminActive) {
                     adminMonthVal = document.getElementById('adminMonth').value;
                 }
                 const match = adminMonthVal.match(/(\d{1,2})\/(\d{4})/);
                 if (match) {
-                    calendarDate.setMonth(parseInt(match[1]) - 1);
-                    calendarDate.setFullYear(parseInt(match[2]));
+                    calendarDate.setMonth(parseInt(match[1], 10) - 1);
+                    calendarDate.setFullYear(parseInt(match[2], 10));
                 }
-            } catch(e) { console.warn("Lỗi phân tích tháng/năm config", e); }
+            } catch(e) { console.warn("Parse month error:", e); }
         }
 
-        // Tính tổng số ngày ở của từng thành viên trong THÁNG HIỆN TẠI trên lịch
         function calculateDaysFromRecords() {
             const year = calendarDate.getFullYear();
             const month = calendarDate.getMonth();
             const prefix = `${year}-${String(month + 1).padStart(2, '0')}`;
             
-            // Reset toàn bộ days = 0 trước khi tính lại
-            state.members.forEach(m => m.days = 0);
+            for (let i = 0; i < state.members.length; i++) {
+                state.members[i].days = 0;
+            }
             
-            for (const [dateStr, dayRecords] of Object.entries(state.records)) {
+            const entries = Object.entries(state.records);
+            for (let i = 0; i < entries.length; i++) {
+                const [dateStr, dayRecords] = entries[i];
                 if (dateStr.startsWith(prefix)) {
                     for (const [mId, status] of Object.entries(dayRecords)) {
                         const m = state.members.find(x => x.id == mId);
@@ -897,19 +1196,29 @@
         function calculateData() {
             let totalSharedItemsCost = 0;
             const advancesByUser = {};
-            state.members.forEach(m => advancesByUser[m.id] = 0);
+            for (let i = 0; i < state.members.length; i++) {
+                advancesByUser[state.members[i].id] = 0;
+            }
             
-            state.sharedItems.forEach(item => {
-                totalSharedItemsCost += Number(item.cost);
-                if(advancesByUser[item.buyerId] !== undefined) advancesByUser[item.buyerId] += Number(item.cost);
-            });
+            for (let i = 0; i < state.sharedItems.length; i++) {
+                const item = state.sharedItems[i];
+                const cost = Number(item.cost) || 0;
+                totalSharedItemsCost += cost;
+                if (advancesByUser[item.buyerId] !== undefined) {
+                    advancesByUser[item.buyerId] += cost;
+                }
+            }
 
             const elecCost = Number(state.config.totalElec) || 0;
             const waterCost = Number(state.config.waterCost) || 0;
             const feeCost = Number(state.config.totalFees) || 0;
             const grandTotalCost = elecCost + waterCost + feeCost + totalSharedItemsCost;
             
-            let totalDays = state.members.reduce((sum, m) => sum + Number(m.days), 0);
+            let totalDays = 0;
+            for (let i = 0; i < state.members.length; i++) {
+                totalDays += Number(state.members[i].days) || 0;
+            }
+
             const numberOfMembers = state.members.length;
             const sharedItemSharePerPerson = numberOfMembers > 0 ? (totalSharedItemsCost / numberOfMembers) : 0;
 
@@ -943,19 +1252,19 @@
         
         function changeCalendarMonth(step, isAdmin) {
             calendarDate.setMonth(calendarDate.getMonth() + step);
-            calculateDaysFromRecords(); // Tháng đổi => Ngày ở đổi
+            calculateDaysFromRecords();
             
             if (isAdmin) {
                 renderAdminCalendar();
-                renderAdminMembersTable(); // Cập nhật lại số ngày trên table
+                renderAdminMembersTable();
             } else {
-                calculateAndRender(); // Re-render public UI since days changed
+                calculateAndRender();
             }
         }
 
         function renderDayIndicators(dateStr) {
             let dots = '';
-            // Luôn vẽ đủ 4 chấm đại diện cho 4 người từ trái qua phải
+            const dayRecords = state.records[dateStr];
             for (let i = 0; i < 4; i++) {
                 const member = state.members[i];
                 let status = STATUS.NONE;
@@ -963,26 +1272,22 @@
                 
                 if (member) {
                     title = member.name;
-                    // Lấy trạng thái của thành viên này trong ngày đó nếu có
-                    if (state.records[dateStr] && state.records[dateStr][member.id]) {
-                        status = state.records[dateStr][member.id];
+                    if (dayRecords && dayRecords[member.id]) {
+                        status = dayRecords[member.id];
                     }
                 }
                 
-                // Mặc định là Không ở (Màu Xám)
                 let bgClass = 'bg-gray-300'; 
-                
-                if (status === STATUS.FULL) bgClass = 'bg-blue-500'; // Xanh biển
-                else if (status === STATUS.MORNING) bgClass = 'bg-amber-400'; // Vàng
-                else if (status === STATUS.AFTERNOON) bgClass = 'bg-green-500'; // Xanh lá
+                if (status === STATUS.FULL) bgClass = 'bg-blue-500';
+                else if (status === STATUS.MORNING) bgClass = 'bg-amber-400';
+                else if (status === STATUS.AFTERNOON) bgClass = 'bg-green-500';
                 
                 let label = STATUS_CONFIG[status] ? STATUS_CONFIG[status].label : 'Không ở';
-                dots += `<div class="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full ${bgClass} shadow-sm" title="${title}: ${label}"></div>`;
+                dots += `<div class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${bgClass} shadow-sm" title="${title}: ${label}"></div>`;
             }
             return dots;
         }
 
-        // Render lịch public (chỉ xem)
         function renderPublicCalendar() {
             const year = calendarDate.getFullYear();
             const month = calendarDate.getMonth();
@@ -990,34 +1295,38 @@
             
             const firstDayIndex = new Date(year, month, 1).getDay(); 
             const lastDay = new Date(year, month + 1, 0).getDate();
-            
             const grid = document.getElementById('publicCalendarGrid');
-            grid.innerHTML = '';
-
+            
+            let gridHtml = '';
             for (let i = 0; i < firstDayIndex; i++) {
-                grid.innerHTML += `<div class="aspect-square lg:aspect-auto lg:min-h-[5.5rem] bg-slate-50/30 rounded-xl border border-transparent"></div>`;
+                gridHtml += `<div class="aspect-square lg:aspect-auto lg:min-h-[5.2rem] bg-slate-50/30 rounded-xl border border-transparent"></div>`;
             }
 
             const today = new Date();
+            const currentYear = today.getFullYear();
+            const currentMonth = today.getMonth();
+            const currentDate = today.getDate();
+
             for (let i = 1; i <= lastDay; i++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                let isToday = (i === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+                const isToday = (i === currentDate && month === currentMonth && year === currentYear);
                 
                 let hasFull = false, hasHalf = false;
-                if (state.records[dateStr]) {
-                    for (let mId in state.records[dateStr]) {
-                        if (state.records[dateStr][mId] === STATUS.FULL) hasFull = true;
-                        if (state.records[dateStr][mId] === STATUS.MORNING || state.records[dateStr][mId] === STATUS.AFTERNOON) hasHalf = true;
+                const dayRecord = state.records[dateStr];
+                if (dayRecord) {
+                    for (const mId in dayRecord) {
+                        const st = dayRecord[mId];
+                        if (st === STATUS.FULL) hasFull = true;
+                        else if (st === STATUS.MORNING || st === STATUS.AFTERNOON) hasHalf = true;
                     }
                 }
 
-                let bgClass = 'bg-white border-slate-100';
-                if (hasFull) bgClass = 'bg-blue-50/50 border-blue-200';
-                else if (hasHalf) bgClass = 'bg-amber-50/50 border-amber-200';
+                let bgClass = 'bg-white border-slate-100 hover:border-blue-300';
+                if (hasFull) bgClass = 'bg-blue-50/50 border-blue-200 hover:border-blue-400';
+                else if (hasHalf) bgClass = 'bg-amber-50/50 border-amber-200 hover:border-amber-400';
 
-                // Tăng chiều cao tối thiểu bằng lg:min-h-[5.5rem] để không bị co trên Laptop
-                grid.innerHTML += `
-                    <div class="aspect-square lg:aspect-auto lg:min-h-[5.5rem] rounded-xl border ${bgClass} p-1 md:p-2 flex flex-col justify-between ${isToday ? 'ring-2 ring-blue-400' : ''}">
+                gridHtml += `
+                    <div onclick="openDayInspect('${dateStr}', ${i}, ${month + 1}, ${year})" class="aspect-square lg:aspect-auto lg:min-h-[5.2rem] rounded-xl border ${bgClass} p-1 md:p-1.5 flex flex-col justify-between cursor-pointer hover:shadow-md transition-all ${isToday ? 'ring-2 ring-blue-500 font-black' : ''}">
                         <div class="text-[10px] md:text-xs font-bold ${isToday ? 'text-blue-700' : 'text-slate-600'} text-right">${i}</div>
                         <div class="flex justify-center md:justify-around items-center gap-0.5 md:gap-1 mt-auto w-full pb-0.5 flex-wrap">
                             ${renderDayIndicators(dateStr)}
@@ -1025,9 +1334,153 @@
                     </div>
                 `;
             }
+            grid.innerHTML = gridHtml;
         }
 
-        // Render lịch admin (Tương tác được)
+        function openDayInspect(dateStr, day, month, year) {
+            inspectedDateStr = dateStr;
+            document.getElementById('inspectDateTitle').innerText = `Ngày ${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
+            const listEl = document.getElementById('dayInspectList');
+            const dayRecords = state.records[dateStr] || {};
+            
+            let html = '';
+            for (let i = 0; i < state.members.length; i++) {
+                const m = state.members[i];
+                const status = dayRecords[m.id] || STATUS.NONE;
+                let statusBadge = '';
+                if (status === STATUS.FULL) {
+                    statusBadge = `<span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-sun text-amber-500"></i> Cả ngày (1.0)</span>`;
+                } else if (status === STATUS.MORNING) {
+                    statusBadge = `<span class="bg-amber-100 text-amber-800 font-bold px-2 py-1 rounded-lg text-xs flex items-center gap-1"><i class="fa-regular fa-sun text-amber-500"></i> Sáng (0.5)</span>`;
+                } else if (status === STATUS.AFTERNOON) {
+                    statusBadge = `<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-1 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-moon text-emerald-600"></i> Chiều (0.5)</span>`;
+                } else {
+                    statusBadge = `<span class="bg-slate-100 text-slate-400 font-medium px-2 py-1 rounded-lg text-xs">Vắng (0)</span>`;
+                }
+
+                html += `
+                    <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 text-white font-bold flex items-center justify-center text-xs shadow-sm">${m.name.charAt(0).toUpperCase()}</div>
+                            <span class="font-bold text-slate-800 text-sm">${m.name}</span>
+                        </div>
+                        ${statusBadge}
+                    </div>
+                `;
+            }
+            listEl.innerHTML = html;
+            showModal('dayInspectModal');
+        }
+
+        function openSelfAttendanceForInspectedDate() {
+            closeModal('dayInspectModal');
+            openSelfAttendanceModal(inspectedDateStr);
+        }
+
+        function selectModalStatus(status) {
+            modalSelfSelectedStatus = status;
+            const keys = ['full', 'morning', 'afternoon', 'none'];
+            for (let i = 0; i < keys.length; i++) {
+                const k = keys[i];
+                const btn = document.getElementById(`modalChoice-${k}`);
+                if (btn) {
+                    btn.classList.remove('selected-full', 'selected-morning', 'selected-afternoon', 'selected-none');
+                    if (k === status) btn.classList.add(`selected-${status}`);
+                }
+            }
+        }
+
+        function syncModalCurrentStatus() {
+            const mId = document.getElementById('modalSelfMemberSelect')?.value;
+            const dateStr = document.getElementById('modalSelfDateInput')?.value;
+            const badge = document.getElementById('modalSelfStatusBadge');
+            if (!badge) return;
+
+            if (!mId || !dateStr) {
+                badge.innerText = "Chưa chọn";
+                badge.className = "text-[10px] font-bold text-slate-400 bg-slate-200/70 px-2 py-0.5 rounded-md";
+                return;
+            }
+
+            const current = (state.records[dateStr] && state.records[dateStr][mId]) || STATUS.NONE;
+            const conf = STATUS_CONFIG[current];
+            badge.innerText = `Hiện tại: ${conf.label}`;
+
+            if (current === STATUS.FULL) badge.className = "text-[10px] font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-md";
+            else if (current === STATUS.MORNING) badge.className = "text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-md";
+            else if (current === STATUS.AFTERNOON) badge.className = "text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md";
+            else badge.className = "text-[10px] font-bold text-slate-500 bg-slate-200 px-2 py-0.5 rounded-md";
+
+            selectModalStatus(current !== STATUS.NONE ? current : 'full');
+        }
+
+        function openSelfAttendanceModal(prefillDateStr = null) {
+            populateAttendanceMemberOptions();
+            
+            const dateInput = document.getElementById('modalSelfDateInput');
+            if (prefillDateStr) {
+                dateInput.value = prefillDateStr;
+            } else if (!dateInput.value) {
+                dateInput.value = getTodayDateString();
+            }
+
+            syncModalCurrentStatus();
+            showModal('selfAttendanceModal');
+        }
+
+        function submitModalAttendance() {
+            const mId = document.getElementById('modalSelfMemberSelect').value;
+            const dateStr = document.getElementById('modalSelfDateInput').value;
+            
+            if (!mId) {
+                showToast("Vui lòng chọn tên của bạn!", true);
+                return;
+            }
+            if (!dateStr) {
+                showToast("Vui lòng chọn ngày điểm danh!", true);
+                return;
+            }
+
+            if (!state.records[dateStr]) state.records[dateStr] = {};
+
+            if (modalSelfSelectedStatus === STATUS.NONE) {
+                delete state.records[dateStr][mId];
+                if (Object.keys(state.records[dateStr]).length === 0) {
+                    delete state.records[dateStr];
+                }
+            } else {
+                state.records[dateStr][mId] = modalSelfSelectedStatus;
+            }
+
+            calculateDaysFromRecords();
+            calculateAndRender();
+
+            showLoading("Đang lưu điểm danh lên hệ thống...");
+            fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(state)
+            })
+            .then(res => res.json())
+            .then(result => {
+                hideLoading();
+                if (result.success) {
+                    const memberName = state.members.find(m => m.id == mId)?.name || "bạn";
+                    const statusLabel = STATUS_CONFIG[modalSelfSelectedStatus]?.label || "Chưa ở";
+                    const [, m, d] = dateStr.split('-');
+                    showToast(`Đã lưu: ${memberName} (${statusLabel} ngày ${d}/${m})!`);
+                    closeModal('selfAttendanceModal');
+                } else {
+                    showToast("Lỗi khi lưu: " + result.error, true);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                hideLoading();
+                showToast("Lỗi kết nối khi gửi dữ liệu!", true);
+            });
+        }
+
         function renderAdminCalendar() {
             const year = calendarDate.getFullYear();
             const month = calendarDate.getMonth();
@@ -1035,24 +1488,29 @@
             
             const firstDayIndex = new Date(year, month, 1).getDay(); 
             const lastDay = new Date(year, month + 1, 0).getDate();
-            
             const grid = document.getElementById('adminCalendarGrid');
-            grid.innerHTML = '';
-
+            
+            let gridHtml = '';
             for (let i = 0; i < firstDayIndex; i++) {
-                grid.innerHTML += `<div class="aspect-square lg:aspect-auto lg:min-h-[5.5rem] bg-slate-50 rounded-xl border border-transparent"></div>`;
+                gridHtml += `<div class="aspect-square lg:aspect-auto lg:min-h-[5.2rem] bg-slate-50 rounded-xl border border-transparent"></div>`;
             }
 
             const today = new Date();
+            const currentYear = today.getFullYear();
+            const currentMonth = today.getMonth();
+            const currentDate = today.getDate();
+
             for (let i = 1; i <= lastDay; i++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                let isToday = (i === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+                const isToday = (i === currentDate && month === currentMonth && year === currentYear);
                 
                 let hasFull = false, hasHalf = false;
-                if (state.records[dateStr]) {
-                    for (let mId in state.records[dateStr]) {
-                        if (state.records[dateStr][mId] === STATUS.FULL) hasFull = true;
-                        if (state.records[dateStr][mId] === STATUS.MORNING || state.records[dateStr][mId] === STATUS.AFTERNOON) hasHalf = true;
+                const dayRecord = state.records[dateStr];
+                if (dayRecord) {
+                    for (const mId in dayRecord) {
+                        const st = dayRecord[mId];
+                        if (st === STATUS.FULL) hasFull = true;
+                        else if (st === STATUS.MORNING || st === STATUS.AFTERNOON) hasHalf = true;
                     }
                 }
 
@@ -1060,9 +1518,8 @@
                 if (hasFull) bgClass = 'bg-blue-50 border-blue-200 hover:border-blue-400';
                 else if (hasHalf) bgClass = 'bg-amber-50 border-amber-200 hover:border-amber-400';
 
-                // Thay thế lg:h-[4.5rem] bằng lg:min-h-[5.5rem] 
-                grid.innerHTML += `
-                    <div onclick="openAttendanceModal('${dateStr}', ${i}, ${month}, ${year})" class="aspect-square lg:aspect-auto lg:min-h-[5.5rem] rounded-xl border ${bgClass} p-1.5 md:p-2 flex flex-col justify-between cursor-pointer hover:-translate-y-0.5 transition-all shadow-sm hover:shadow-md ${isToday ? 'ring-2 ring-indigo-400 ring-offset-1' : ''}">
+                gridHtml += `
+                    <div onclick="openAttendanceModal('${dateStr}', ${i}, ${month}, ${year})" class="aspect-square lg:aspect-auto lg:min-h-[5.2rem] rounded-xl border ${bgClass} p-1.5 md:p-2 flex flex-col justify-between cursor-pointer hover:-translate-y-0.5 transition-all shadow-sm hover:shadow-md ${isToday ? 'ring-2 ring-indigo-400 ring-offset-1' : ''}">
                         <div class="text-[10px] md:text-sm font-black ${isToday ? 'text-indigo-600' : 'text-slate-600'}">${i}</div>
                         <div class="flex justify-center md:justify-around items-center gap-0.5 md:gap-1 mt-auto w-full pb-0.5 flex-wrap">
                             ${renderDayIndicators(dateStr)}
@@ -1070,6 +1527,7 @@
                     </div>
                 `;
             }
+            grid.innerHTML = gridHtml;
         }
 
         function openAttendanceModal(dateStr, day, month, year) {
@@ -1078,7 +1536,6 @@
             
             document.getElementById('modalDateTitle').innerHTML = `<i class="fa-regular fa-calendar-check text-blue-600"></i> Điểm danh: ${String(day).padStart(2, '0')}/${String(month + 1).padStart(2, '0')}/${year}`;
             
-            // Kiểm tra xem ngày đang chọn có phải Thứ 7(6) hay CN(0) không để hiện nút "Cả tuần"
             const clickedDate = new Date(year, month, day);
             const dayOfWeek = clickedDate.getDay();
             if (dayOfWeek === 0 || dayOfWeek === 6) {
@@ -1088,43 +1545,42 @@
             }
 
             const list = document.getElementById('modalMembersList');
-            list.innerHTML = '';
-            
             if (state.members.length === 0) {
                 list.innerHTML = '<p class="text-center text-slate-500 py-4 font-medium italic">Chưa có thành viên nào.</p>';
-            }
+            } else {
+                let html = '';
+                for (let i = 0; i < state.members.length; i++) {
+                    const member = state.members[i];
+                    const currentStatus = tempModalRecords[member.id] || STATUS.NONE;
+                    let buttonsHTML = '';
+                    for (const [key, conf] of Object.entries(STATUS_CONFIG)) {
+                        const isActive = currentStatus === key;
+                        const baseClass = "status-btn flex-1 text-xs md:text-sm py-2 px-1 text-center border rounded-lg font-bold transition-all cursor-pointer";
+                        const activeClass = isActive ? conf.class : "border-slate-200 text-slate-500 hover:bg-slate-50";
+                        
+                        buttonsHTML += `
+                            <div onclick="updateTempRecord(${member.id}, '${key}')" 
+                                 class="${baseClass} ${activeClass} ${isActive ? 'ring-2 ring-offset-1 ring-blue-300 shadow-sm' : ''}"
+                                 id="btn-${member.id}-${key}">
+                                ${conf.label}
+                            </div>
+                        `;
+                    }
 
-            state.members.forEach(member => {
-                const currentStatus = tempModalRecords[member.id] || STATUS.NONE;
-                const div = document.createElement('div');
-                div.className = 'bg-white p-3 md:p-4 rounded-xl border border-slate-200 shadow-sm';
-                
-                let buttonsHTML = '';
-                for (const [key, conf] of Object.entries(STATUS_CONFIG)) {
-                    const isActive = currentStatus === key;
-                    const baseClass = "status-btn flex-1 text-xs md:text-sm py-2 px-1 text-center border rounded-lg font-bold transition-all cursor-pointer";
-                    const activeClass = isActive ? conf.class : "border-slate-200 text-slate-500 hover:bg-slate-50";
-                    
-                    buttonsHTML += `
-                        <div onclick="updateTempRecord(${member.id}, '${key}')" 
-                             class="${baseClass} ${activeClass} ${isActive ? 'ring-2 ring-offset-1 ring-blue-300 shadow-sm' : ''}"
-                             id="btn-${member.id}-${key}">
-                            ${conf.label}
+                    html += `
+                        <div class="bg-white p-3 md:p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="font-extrabold text-slate-800 mb-2.5 flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs text-slate-600">${member.name.charAt(0).toUpperCase()}</div>
+                                ${member.name}
+                            </div>
+                            <div class="flex space-x-1.5 md:space-x-2">
+                                ${buttonsHTML}
+                            </div>
                         </div>
                     `;
                 }
-
-                div.innerHTML = `
-                    <div class="font-extrabold text-slate-800 mb-2.5 flex items-center gap-2">
-                        <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs text-slate-600">${member.name.charAt(0).toUpperCase()}</div>
-                        ${member.name}
-                    </div>
-                    <div class="flex space-x-1.5 md:space-x-2">
-                        ${buttonsHTML}
-                    </div>
-                `;
-                list.appendChild(div);
-            });
+                list.innerHTML = html;
+            }
 
             showModal('attendanceModal');
         }
@@ -1143,78 +1599,82 @@
             }
         }
 
+        function quickSetAllAttendance(status) {
+            for (let i = 0; i < state.members.length; i++) {
+                updateTempRecord(state.members[i].id, status);
+            }
+        }
+
         function saveAttendance() {
             if (selectedDateStr) {
-                // Xóa các record "none" cho nhẹ
-                for (let mId in tempModalRecords) {
+                for (const mId in tempModalRecords) {
                     if (tempModalRecords[mId] === STATUS.NONE) delete tempModalRecords[mId];
                 }
                 
                 if (Object.keys(tempModalRecords).length > 0) state.records[selectedDateStr] = tempModalRecords;
                 else delete state.records[selectedDateStr];
                 
-                calculateDaysFromRecords(); // Tính lại tổng ngày
-                renderAdminCalendar(); // Cập nhật màu dot trên lịch
-                renderAdminMembersTable(); // Cập nhật số ngày trên bảng
+                calculateDaysFromRecords();
+                renderAdminCalendar();
+                renderAdminMembersTable();
             }
             closeModal('attendanceModal');
         }
 
-        // Chức năng áp dụng mảng trạng thái hiện tại cho nguyên tuần (Từ T2 -> CN)
         function applyToWholeWeek() {
-            if (!confirm("Xác nhận: Lấy dữ liệu bạn vừa đánh dấu và tự động áp dụng cho CẢ TUẦN này (từ Thứ 2 đến Chủ nhật)?")) return;
+            openCustomConfirm(
+                "Áp dụng cho CẢ TUẦN?",
+                "Hệ thống sẽ lấy trạng thái điểm danh bạn vừa chọn và tự động điền cho tất cả các ngày từ Thứ 2 đến Chủ nhật của tuần này.",
+                () => {
+                    const [y, m, d] = selectedDateStr.split('-').map(Number);
+                    const currDate = new Date(y, m - 1, d);
+                    const dayOfWeek = currDate.getDay();
+                    
+                    const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                    const monday = new Date(currDate);
+                    monday.setDate(currDate.getDate() + diffToMonday);
 
-            const [y, m, d] = selectedDateStr.split('-').map(Number);
-            const currDate = new Date(y, m - 1, d);
-            const dayOfWeek = currDate.getDay();
-            
-            // Lùi về thứ 2 của tuần đó
-            const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-            const monday = new Date(currDate);
-            monday.setDate(currDate.getDate() + diffToMonday);
+                    const cleanRecords = {};
+                    for (const mId in tempModalRecords) {
+                        if (tempModalRecords[mId] !== STATUS.NONE) {
+                            cleanRecords[mId] = tempModalRecords[mId];
+                        }
+                    }
 
-            // Chỉ lưu các trạng thái không phải là "Không ở"
-            const cleanRecords = {};
-            for (let mId in tempModalRecords) {
-                if (tempModalRecords[mId] !== STATUS.NONE) {
-                    cleanRecords[mId] = tempModalRecords[mId];
+                    for (let i = 0; i < 7; i++) {
+                        const loopDate = new Date(monday);
+                        loopDate.setDate(monday.getDate() + i);
+                        const dateKey = `${loopDate.getFullYear()}-${String(loopDate.getMonth() + 1).padStart(2, '0')}-${String(loopDate.getDate()).padStart(2, '0')}`;
+                        
+                        if (Object.keys(cleanRecords).length > 0) {
+                            state.records[dateKey] = { ...cleanRecords };
+                        } else {
+                            delete state.records[dateKey];
+                        }
+                    }
+                    
+                    calculateDaysFromRecords();
+                    renderAdminCalendar();
+                    renderAdminMembersTable();
+                    closeModal('attendanceModal');
+                    showToast("Đã lưu điểm danh cho cả tuần!");
                 }
-            }
-
-            // Gắn vào 7 ngày liên tiếp
-            for (let i = 0; i < 7; i++) {
-                const loopDate = new Date(monday);
-                loopDate.setDate(monday.getDate() + i);
-                const dateKey = `${loopDate.getFullYear()}-${String(loopDate.getMonth() + 1).padStart(2, '0')}-${String(loopDate.getDate()).padStart(2, '0')}`;
-                
-                if (Object.keys(cleanRecords).length > 0) {
-                    state.records[dateKey] = { ...cleanRecords };
-                } else {
-                    delete state.records[dateKey];
-                }
-            }
-            
-            calculateDaysFromRecords();
-            renderAdminCalendar();
-            renderAdminMembersTable();
-            closeModal('attendanceModal');
-            showToast("Đã lưu điểm danh cho nguyên tuần!");
+            );
         }
 
         function renderPublicDashboard(data) {
             document.getElementById('currentMonthDisplay').innerText = `Tháng ${state.config.month}`;
             document.getElementById('totalBillDisplay').innerText = formatMoney(data.grandTotalCost);
             
-            // Render Điện Nước
             document.getElementById('overviewElec').innerText = formatMoney(data.elecCost) + 'đ';
             document.getElementById('overviewElecUsage').innerText = (state.config.elecUsage || 0) + ' kWh';
             const elecPrice = (data.elecCost > 0 && state.config.elecUsage > 0) ? Math.round(data.elecCost / state.config.elecUsage) : 0;
-            document.getElementById('overviewElecPrice').innerText = `~${formatMoney(elecPrice)}đ / kWh`;
+            document.getElementById('overviewElecPrice').innerText = `~${formatMoney(elecPrice)}đ/kWh`;
 
             document.getElementById('overviewWater').innerText = formatMoney(data.waterCost) + 'đ';
             document.getElementById('overviewWaterUsage').innerText = (state.config.waterUsage || 0) + ' Khối';
             const waterPrice = (data.waterCost > 0 && state.config.waterUsage > 0) ? Math.round(data.waterCost / state.config.waterUsage) : 0;
-            document.getElementById('overviewWaterPrice').innerText = `~${formatMoney(waterPrice)}đ / Khối`;
+            document.getElementById('overviewWaterPrice').innerText = `~${formatMoney(waterPrice)}đ/Khối`;
 
             document.getElementById('overviewFees').innerText = formatMoney(data.feeCost) + 'đ';
             document.getElementById('overviewShared').innerText = formatMoney(data.totalSharedItemsCost) + 'đ';
@@ -1226,39 +1686,50 @@
 
             // Quỹ chung list
             const sharedListEl = document.getElementById('sharedItemsList');
-            sharedListEl.innerHTML = state.sharedItems.length === 0 ? '<p class="text-center text-sm text-slate-400 py-4 italic">Chưa có khoản quỹ chung nào</p>' : '';
-            state.sharedItems.forEach(item => {
-                const buyerName = state.members.find(m => m.id == item.buyerId)?.name || 'Không rõ';
-                sharedListEl.insertAdjacentHTML('beforeend', `
-                    <div class="flex justify-between items-center bg-white/70 p-3 rounded-xl border border-white shadow-sm hover:bg-white transition-colors">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-100 to-teal-100 text-teal-700 flex items-center justify-center text-xs font-bold border border-teal-200">${buyerName.charAt(0).toUpperCase()}</div>
-                            <div>
-                                <p class="text-sm font-bold text-slate-800 leading-tight">${item.name}</p>
-                                <p class="text-[10px] text-slate-500 uppercase tracking-wide mt-0.5"><i class="fa-solid fa-user mr-1"></i>${buyerName}</p>
+            if (state.sharedItems.length === 0) {
+                sharedListEl.innerHTML = '<p class="text-center text-sm text-slate-400 py-4 italic">Chưa có khoản chi quỹ chung nào</p>';
+            } else {
+                let sharedHtml = '';
+                for (let i = 0; i < state.sharedItems.length; i++) {
+                    const item = state.sharedItems[i];
+                    const buyerName = state.members.find(m => m.id == item.buyerId)?.name || 'Không rõ';
+                    sharedHtml += `
+                        <div class="flex justify-between items-center bg-white/70 p-3 rounded-xl border border-white shadow-sm hover:bg-white transition-colors">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-100 to-teal-100 text-teal-700 flex items-center justify-center text-xs font-bold border border-teal-200">${buyerName.charAt(0).toUpperCase()}</div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-800 leading-tight">${item.name}</p>
+                                    <p class="text-[10px] text-slate-500 uppercase tracking-wide mt-0.5"><i class="fa-solid fa-user mr-1"></i>${buyerName}</p>
+                                </div>
                             </div>
+                            <span class="font-black text-slate-700">${formatMoney(item.cost)}đ</span>
                         </div>
-                        <span class="font-black text-slate-700">${formatMoney(item.cost)}đ</span>
-                    </div>
-                `);
-            });
+                    `;
+                }
+                sharedListEl.innerHTML = sharedHtml;
+            }
 
-            // Member list
+            // Danh sách thẻ thành viên
             const listEl = document.getElementById('publicMembersList');
-            listEl.innerHTML = '';
-            data.processedMembers.forEach((m) => {
+            let membersHtml = '';
+            for (let i = 0; i < data.processedMembers.length; i++) {
+                const m = data.processedMembers[i];
                 const isOwe = m.netAmount > 0;
                 const netText = isOwe ? "CẦN THANH TOÁN" : (m.netAmount < 0 ? "NHẬN LẠI QUỸ" : "HÒA VỐN");
                 const netColorClass = isOwe ? "text-blue-600" : (m.netAmount < 0 ? "text-emerald-500" : "text-slate-400");
                 const statusBadge = m.status === 'paid' 
-                    ? `<span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide border border-emerald-200"><i class="fa-solid fa-check mr-1"></i>Đã đóng</span>`
+                    ? `<span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide border border-emerald-200 badge-pulse"><i class="fa-solid fa-check mr-1"></i>Đã đóng</span>`
                     : `<span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide border border-amber-200"><i class="fa-solid fa-clock mr-1"></i>Chưa đóng</span>`;
 
-                listEl.insertAdjacentHTML('beforeend', `
+                const totalItemAmount = (m.elecShare + m.waterShare + m.feeShare + m.sharedItemShare) || 1;
+                const elecWaterPct = Math.min(100, Math.round(((m.elecShare + m.waterShare) / totalItemAmount) * 100));
+                const sharedPct = Math.min(100 - elecWaterPct, Math.round((m.sharedItemShare / totalItemAmount) * 100));
+
+                membersHtml += `
                     <div class="glass-card rounded-[1.5rem] p-5 flex flex-col relative group">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-cyan-100 border border-blue-200 shadow-sm flex items-center justify-center font-black text-xl text-blue-700">${m.name.charAt(0).toUpperCase()}</div>
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-200 shadow-md shadow-blue-500/20 flex items-center justify-center font-black text-xl text-white">${m.name.charAt(0).toUpperCase()}</div>
                                 <div>
                                     <h4 class="font-extrabold text-slate-800 text-lg leading-tight">${m.name}</h4>
                                     <div class="flex gap-2 mt-1 items-center">
@@ -1269,26 +1740,32 @@
                             </div>
                         </div>
                         
-                        <div class="space-y-1.5 text-xs text-slate-600 mb-2 border-l-2 border-blue-200 pl-3">
+                        <div class="space-y-1.5 text-xs text-slate-600 mb-3 border-l-2 border-blue-300 pl-3">
                              <div class="flex justify-between"><span>Điện & Nước:</span><span class="font-semibold">${formatMoney(m.elecShare + m.waterShare)}đ</span></div>
                              <div class="flex justify-between"><span>Phí khác:</span><span class="font-semibold">${formatMoney(m.feeShare)}đ</span></div>
                              <div class="flex justify-between"><span>Quỹ chung:</span><span class="font-semibold">${formatMoney(m.sharedItemShare)}đ</span></div>
-                            ${m.totalAdvance > 0 ? `<div class="flex justify-between pt-1 mt-1 border-t border-slate-200 border-dashed text-emerald-600"><span class="font-semibold">Tạm ứng:</span><span class="font-bold">${formatMoney(m.totalAdvance)}đ</span></div>` : ''}
+                            ${m.totalAdvance > 0 ? `<div class="flex justify-between pt-1 mt-1 border-t border-slate-200 border-dashed text-emerald-600"><span class="font-semibold">Tạm ứng:</span><span class="font-bold">-${formatMoney(m.totalAdvance)}đ</span></div>` : ''}
                         </div>
 
-                        <div class="mt-auto pt-3">
+                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden flex mb-3" title="Tỷ lệ: Điện Nước (Xanh biển), Quỹ chung (Xanh cyan)">
+                            <div style="width: ${elecWaterPct}%" class="bg-blue-500 h-full"></div>
+                            <div style="width: ${sharedPct}%" class="bg-cyan-400 h-full"></div>
+                            <div class="flex-1 bg-slate-200 h-full"></div>
+                        </div>
+
+                        <div class="mt-auto pt-2 border-t border-slate-100">
                             <div class="flex justify-between items-end px-1">
                                 <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">${netText}</span>
                                 <span class="font-black text-xl ${netColorClass}">${formatMoney(Math.abs(m.netAmount))}đ</span>
                             </div>
-                            ${isOwe ? `<button onclick="openMemberBill(${m.id})" class="w-full btn-gradient-blue text-white py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-4 text-sm"><i class="fa-solid fa-qrcode"></i> Chi tiết & Đóng tiền</button>` 
+                            ${isOwe ? `<button onclick="openMemberBill(${m.id})" class="w-full btn-gradient-blue text-white py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-4 text-sm shadow-md"><i class="fa-solid fa-qrcode"></i> Chi tiết & Đóng tiền</button>` 
                                     : `<button onclick="openMemberBill(${m.id})" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-4 transition-colors text-sm"><i class="fa-solid fa-file-lines"></i> Xem chi tiết</button>`}
                         </div>
                     </div>
-                `);
-            });
-            
-            renderPublicCalendar(); // Render lịch public mới
+                `;
+            }
+            listEl.innerHTML = membersHtml;
+            renderPublicCalendar();
         }
 
         function renderBillPopup(data) {
@@ -1305,11 +1782,12 @@
             document.getElementById('billRate').innerText = formatMoney(data.ratePerDay) + 'đ';
             
             const listEl = document.getElementById('billMembersList');
-            listEl.innerHTML = '';
-            data.processedMembers.forEach(m => {
+            let html = '';
+            for (let i = 0; i < data.processedMembers.length; i++) {
+                const m = data.processedMembers[i];
                 let balanceHtml = m.netAmount > 0 ? `<span class="text-blue-600 font-bold">${formatMoney(Math.abs(m.netAmount))}đ</span>` 
                     : (m.netAmount < 0 ? `<span class="text-emerald-600 font-bold">Dư ${formatMoney(Math.abs(m.netAmount))}đ</span>` : `<span class="text-slate-400 font-bold">0đ</span>`);
-                listEl.insertAdjacentHTML('beforeend', `
+                html += `
                     <div class="flex justify-between items-center py-3 border-b border-slate-200/60 last:border-0 bg-white px-4 rounded-xl shadow-sm mb-2">
                         <div class="flex-1">
                             <p class="text-sm font-bold text-slate-800">${m.name} <span class="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500 font-bold ml-1">${m.days} ngày</span></p>
@@ -1325,8 +1803,9 @@
                             </p>
                         </div>
                     </div>
-                `);
-            });
+                `;
+            }
+            listEl.innerHTML = html;
         }
 
         function openMemberBill(memberId) {
@@ -1353,7 +1832,9 @@
                 document.getElementById('mbItemsList').innerHTML = userItems.map(item => `
                     <div class="flex justify-between py-1"><span>- ${item.name}</span><span class="font-bold">${formatMoney(item.cost)}đ</span></div>
                 `).join('');
-            } else { deducContainer.classList.add('hide'); }
+            } else {
+                deducContainer.classList.add('hide');
+            }
 
             const qrContainer = document.getElementById('mbQRContainer');
             const finalAmountEl = document.getElementById('mbFinalAmount');
@@ -1372,6 +1853,8 @@
                 
                 document.getElementById('mbQRCode').src = `https://img.vietqr.io/image/${BANK_BIN}-${BANK_ACCOUNT}-compact2.png?amount=${transferAmount}&addInfo=${encodeURIComponent(transferMessage)}`;
                 document.getElementById('mbQRText').innerText = transferMessage;
+                document.getElementById('mbCopyAmountDisplay').innerText = formatMoney(transferAmount) + 'đ';
+                document.getElementById('mbCopyAmountDisplay').setAttribute('data-raw', transferAmount);
                 qrContainer.classList.remove('hide');
             } else {
                 finalTextEl.innerText = member.netAmount < 0 ? "NHẬN LẠI TIỀN QUỸ" : "ĐÃ HÒA VỐN";
@@ -1385,8 +1868,11 @@
         function checkRoute() {
             if (window.location.hash === '#/admin') {
                 if (!isAdminActive) {
-                    showModal('loginModal'); setTimeout(() => document.getElementById('adminPin').focus(), 300);
-                } else renderAdminDashboard();
+                    showModal('loginModal');
+                    setTimeout(() => document.getElementById('adminPin')?.focus(), 250);
+                } else {
+                    renderAdminDashboard();
+                }
             } else {
                 isAdminActive = false;
                 document.getElementById('adminView').classList.add('hide');
@@ -1399,12 +1885,12 @@
 
         function verifyAdmin() {
             const pinInput = document.getElementById('adminPin').value;
-            // Kiểm tra mã PIN 4 số nhưng ô input cho nhập 6 số
             if (pinInput === "2412") {
                 isAdminActive = true;
                 document.getElementById('loginError').classList.add('hide');
                 document.getElementById('adminPin').value = '';
-                closeModal('loginModal'); renderAdminDashboard();
+                closeModal('loginModal'); 
+                renderAdminDashboard();
             } else {
                 document.getElementById('loginError').classList.remove('hide');
             }
@@ -1423,58 +1909,75 @@
             document.getElementById('adminWaterUsage').value = state.config.waterUsage || 0;
             document.getElementById('adminFeesCost').value = state.config.totalFees;
 
-            syncCalendarWithConfig(); // Đưa lịch về tháng đang set
-            renderAdminCalendar(); // Render lịch
+            syncCalendarWithConfig();
+            renderAdminCalendar();
             renderAdminMembersTable(); 
             renderAdminItemsTable();
         }
 
-        // Input "Ngày ở" trong bảng admin chỉ mang tính read-only
         function renderAdminMembersTable() {
-            const tbody = document.getElementById('adminMembersTable'); tbody.innerHTML = '';
-            state.members.forEach((m, idx) => {
-                tbody.innerHTML += `
+            const tbody = document.getElementById('adminMembersTable');
+            let html = '';
+            for (let idx = 0; idx < state.members.length; idx++) {
+                const m = state.members[idx];
+                html += `
                     <tr class="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
                         <td class="p-3"><input type="number" value="${m.id}" onchange="state.members[${idx}].id=this.value" class="w-12 px-2 py-1.5 border border-slate-200 rounded-lg outline-none text-center font-bold" ${m.id==1?'readonly':''}></td>
-                        <td class="p-3"><input type="text" value="${m.name}" onchange="state.members[${idx}].name=this.value" class="w-full min-w-[120px] px-3 py-1.5 border border-slate-200 rounded-lg outline-none font-semibold text-slate-700"></td>
-                        <td class="p-3 text-center"><input type="number" value="${m.days}" readonly class="w-16 px-2 py-1.5 border border-slate-200 bg-slate-100 rounded-lg outline-none text-center font-bold text-slate-500 cursor-not-allowed" title="Tự động tính từ Lịch điểm danh"></td>
+                        <td class="p-3"><input type="text" value="${m.name}" onchange="state.members[${idx}].name=this.value; populateAttendanceMemberOptions();" class="w-full min-w-[120px] px-3 py-1.5 border border-slate-200 rounded-lg outline-none font-semibold text-slate-700"></td>
+                        <td class="p-3 text-center"><input type="number" value="${m.days}" readonly class="w-16 px-2 py-1.5 border border-slate-200 bg-slate-100 rounded-lg outline-none text-center font-bold text-slate-500 cursor-not-allowed"></td>
                         <td class="p-3 text-center">
                             <select onchange="state.members[${idx}].status=this.value" class="px-2 py-1.5 border border-slate-200 rounded-lg outline-none font-bold ${m.status === 'paid' ? 'text-emerald-600' : 'text-amber-600'}">
                                 <option value="paid" class="text-emerald-600" ${m.status === 'paid' ? 'selected' : ''}>Đã nộp</option>
                                 <option value="unpaid" class="text-amber-600" ${m.status === 'unpaid' ? 'selected' : ''}>Chưa nộp</option>
                             </select>
                         </td>
-                        <td class="p-3 text-center">${m.id != 1 ? `<button onclick="removeAdminMember(${idx})" class="w-8 h-8 rounded-full bg-red-100 text-red-500 hover:bg-red-500 hover:text-white"><i class="fa-solid fa-trash-can"></i></button>` : ''}</td>
+                        <td class="p-3 text-center">${m.id != 1 ? `<button onclick="removeAdminMember(${idx})" class="w-8 h-8 rounded-full bg-red-100 text-red-500 hover:bg-red-500 hover:text-white transition-colors"><i class="fa-solid fa-trash-can"></i></button>` : ''}</td>
                     </tr>
                 `;
-            });
+            }
+            tbody.innerHTML = html;
         }
 
         function renderAdminItemsTable() {
-            const tbody = document.getElementById('adminItemsTable'); tbody.innerHTML = '';
-            state.sharedItems.forEach((item, idx) => {
+            const tbody = document.getElementById('adminItemsTable');
+            let html = '';
+            for (let idx = 0; idx < state.sharedItems.length; idx++) {
+                const item = state.sharedItems[idx];
                 const selectHTML = state.members.map(m => `<option value="${m.id}" ${item.buyerId == m.id ? 'selected' : ''}>${m.name}</option>`).join('');
-                tbody.innerHTML += `
+                html += `
                     <tr class="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
                         <td class="p-3"><input type="text" value="${item.name}" onchange="state.sharedItems[${idx}].name=this.value" class="w-full min-w-[150px] px-3 py-1.5 border border-slate-200 rounded-lg outline-none font-semibold text-slate-700"></td>
                         <td class="p-3"><select onchange="state.sharedItems[${idx}].buyerId=this.value" class="w-full px-3 py-1.5 border border-slate-200 rounded-lg outline-none font-medium text-slate-700">${selectHTML}</select></td>
                         <td class="p-3 text-right"><input type="number" value="${item.cost}" onchange="state.sharedItems[${idx}].cost=this.value" class="w-28 px-3 py-1.5 border border-slate-200 rounded-lg outline-none text-right font-bold text-blue-700"></td>
-                        <td class="p-3 text-center"><button onclick="removeAdminItem(${idx})" class="w-8 h-8 rounded-full bg-red-100 text-red-500 hover:bg-red-500 hover:text-white"><i class="fa-solid fa-trash-can"></i></button></td>
+                        <td class="p-3 text-center"><button onclick="removeAdminItem(${idx})" class="w-8 h-8 rounded-full bg-red-100 text-red-500 hover:bg-red-500 hover:text-white transition-colors"><i class="fa-solid fa-trash-can"></i></button></td>
                     </tr>
                 `;
-            });
+            }
+            tbody.innerHTML = html;
         }
 
         function addAdminMember() {
             state.members.push({ id: state.members.length ? Math.max(...state.members.map(m=>m.id))+1 : 1, name: "Tên mới", days: 0, status: "unpaid" });
+            populateAttendanceMemberOptions();
             renderAdminMembersTable();
         }
-        function removeAdminMember(idx) { if(confirm("Xóa thành viên này? Dữ liệu lịch của họ sẽ vẫn lưu nhưng không tính vào tổng nữa.")) { state.members.splice(idx, 1); renderAdminMembersTable(); } }
+        function removeAdminMember(idx) { 
+            openCustomConfirm("Xóa thành viên?", "Dữ liệu điểm danh của thành viên này sẽ không còn tính vào tổng tiền của phòng nữa.", () => {
+                state.members.splice(idx, 1);
+                populateAttendanceMemberOptions();
+                renderAdminMembersTable();
+            });
+        }
         function addAdminItem() {
             state.sharedItems.push({ id: state.sharedItems.length ? Math.max(...state.sharedItems.map(i=>i.id))+1 : 1, buyerId: state.members[0]?.id||1, name: "Đồ mới", cost: 0 });
             renderAdminItemsTable();
         }
-        function removeAdminItem(idx) { if(confirm("Xóa món đồ này?")) { state.sharedItems.splice(idx, 1); renderAdminItemsTable(); } }
+        function removeAdminItem(idx) { 
+            openCustomConfirm("Xóa món đồ chung?", "Món đồ này sẽ bị xóa khỏi quỹ chi tiêu chung của phòng.", () => {
+                state.sharedItems.splice(idx, 1);
+                renderAdminItemsTable();
+            });
+        }
 
         function saveAdminData() {
             state.config.month = document.getElementById('adminMonth').value;
@@ -1484,7 +1987,6 @@
             state.config.waterUsage = Number(document.getElementById('adminWaterUsage').value);
             state.config.totalFees = Number(document.getElementById('adminFeesCost').value);
             
-            // Tính lại ngày một lần nữa để chắc chắn dữ liệu Member Days chuẩn
             calculateDaysFromRecords();
 
             showLoading("Đang lưu lên máy chủ...");
@@ -1498,29 +2000,67 @@
             .catch(err => { console.error(err); showToast("Lỗi kết nối khi lưu!", true); hideLoading(); });
         }
 
-        function calculateAndRender() { if(state.members.length > 0) { const data = calculateData(); renderPublicDashboard(data); renderBillPopup(data); } }
+        function calculateAndRender() { 
+            if(state.members.length > 0) { 
+                const data = calculateData(); 
+                renderPublicDashboard(data); 
+                renderBillPopup(data); 
+            } 
+        }
         
         function showBillPopup() { showModal('billModal'); }
-        function showModal(id) { const m = document.getElementById(id), c = m.querySelector('div'); m.classList.remove('hide'); void m.offsetWidth; c.classList.remove('scale-95', 'opacity-0'); c.classList.add('scale-100', 'opacity-100'); }
-        function closeModal(id) { const m = document.getElementById(id), c = m.querySelector('div'); c.classList.remove('scale-100', 'opacity-100'); c.classList.add('scale-95', 'opacity-0'); setTimeout(() => m.classList.add('hide'), 300); }
+        function showModal(id) { 
+            const m = document.getElementById(id); 
+            if(!m) return;
+            const c = m.querySelector('div'); 
+            m.classList.remove('hide'); 
+            void m.offsetWidth; 
+            if(c) {
+                c.classList.remove('scale-95', 'opacity-0'); 
+                c.classList.add('scale-100', 'opacity-100'); 
+            }
+        }
+        function closeModal(id) { 
+            const m = document.getElementById(id); 
+            if(!m) return;
+            const c = m.querySelector('div'); 
+            if(c) {
+                c.classList.remove('scale-100', 'opacity-100'); 
+                c.classList.add('scale-95', 'opacity-0'); 
+            }
+            setTimeout(() => m.classList.add('hide'), 250); 
+        }
 
         async function downloadQR() {
             const url = document.getElementById('mbQRCode').src;
             try {
                 const response = await fetch(url);
                 const blobUrl = window.URL.createObjectURL(await response.blob());
-                const a = document.createElement('a'); a.href = blobUrl; a.download = `QR_ThanhToan_KTX.png`;
-                document.body.appendChild(a); a.click(); document.body.removeChild(a); window.URL.revokeObjectURL(blobUrl);
+                const a = document.createElement('a'); 
+                a.href = blobUrl; 
+                a.download = `QR_ThanhToan_KTX.png`;
+                document.body.appendChild(a); 
+                a.click(); 
+                document.body.removeChild(a); 
+                window.URL.revokeObjectURL(blobUrl);
                 showToast("Đã tải mã QR!");
-            } catch (error) { window.open(url, '_blank'); showToast("Đã mở ảnh trong tab mới."); }
+            } catch (error) { 
+                window.open(url, '_blank'); 
+                showToast("Đã mở ảnh trong tab mới."); 
+            }
         }
 
         window.onclick = function(e) {
-            if (['billModal', 'memberBillModal', 'attendanceModal'].includes(e.target.id)) closeModal(e.target.id);
-            if (e.target.id === 'loginModal') { closeModal('loginModal'); window.location.hash = ''; }
-        }
+            if (['billModal', 'memberBillModal', 'attendanceModal', 'dayInspectModal', 'customConfirmModal', 'selfAttendanceModal'].includes(e.target.id)) {
+                closeModal(e.target.id);
+            }
+            if (e.target.id === 'loginModal') { 
+                closeModal('loginModal'); 
+                window.location.hash = ''; 
+            }
+        };
 
-        // Khởi động ứng dụng
+        // Bắt đầu khởi động ứng dụng
         initApp();
     </script>
 </body>
