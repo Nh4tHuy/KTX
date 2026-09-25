@@ -478,7 +478,7 @@
                                     <i class="fa-regular fa-copy"></i>
                                 </button>
                             </div>
-                            <p class="text-[10px] text-slate-500 font-semibold mb-1 text-center">* Đại diện phòng nộp tiền Điện/Nước lên HTQL trường</p>
+                            <p class="text-[10px] text-slate-500 font-semibold mb-1 text-center">* Đại diện phòng gửi tiền Điện/Nước lên HTQL của trường</p>
                         </div>
                     </div>
 
@@ -641,7 +641,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-extrabold leading-tight">Điểm Danh</h3>
-                            <p class="text-xs text-emerald-100 font-medium">Tự cập nhật ngày ở KTX của bạn</p>
+                            <p class="text-xs text-emerald-100 font-medium">Tự cập nhật ngày ở KTX của bạn (Không cần điểm danh hằng ngày, cuối tuần lên cập nhật cũng được).</p>
                         </div>
                     </div>
                     <button onclick="closeModal('selfAttendanceModal')" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center text-white transition-colors">
@@ -702,7 +702,7 @@
                 <div class="p-4 bg-white border-t border-slate-100 flex gap-3">
                     <button onclick="closeModal('selfAttendanceModal')" class="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors text-sm">Hủy</button>
                     <button onclick="submitModalAttendance()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 text-sm">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Lưu Điểm Danh
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Điểm Danh
                     </button>
                 </div>
             </div>
@@ -785,7 +785,7 @@
                         Đóng
                     </button>
                     <button onclick="openSelfAttendanceForInspectedDate()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-sm transition-colors shadow-sm flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-user-check"></i> Điểm danh ngày này
+                        <i class="fa-solid fa-user-check"></i> Điểm danh
                     </button>
                 </div>
             </div>
@@ -1143,7 +1143,7 @@
             if (!mSelect) return;
             const currentMVal = mSelect.value;
 
-            let optionsHtml = `<option value="">-- Bấm vào đây để chọn tên bạn --</option>`;
+            let optionsHtml = `<option value="">Chọn tên của bạn</option>`;
             for (let i = 0; i < state.members.length; i++) {
                 const m = state.members[i];
                 optionsHtml += `<option value="${m.id}">${m.name}</option>`;
