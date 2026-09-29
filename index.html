@@ -3,8 +3,8 @@
 <head>
     <!-- 
     Tác giả: Nh4tHuy
-    Cập nhật ngày 25/09/2026
-    Vui lòng không copy hay cố ý spam ảnh hưởng đến web, mục đích chỉ xây dựng công cụ hỗ trợ quản lý và tính tiền phòng ở KTX
+    Cập nhật: Nâng cấp Popup Báo cáo & Trình phóng to Ảnh Bill Điện Nước - 29/9/2026
+    Mục đích: Hỗ trợ quản lý và tính tiền phòng ở KTX B06203
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -130,9 +130,9 @@
         .hide { display: none !important; }
         
         .modal-overlay {
-            background-color: rgba(15, 23, 42, 0.45);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            background-color: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
         }
 
         .btn-gradient-blue {
@@ -229,6 +229,37 @@
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.85; transform: scale(1.02); }
         }
+
+        /* Tỷ lệ khung bill nửa A4 (A5: 148 x 210mm ~ 1:1.414) */
+        .bill-a4-half-container {
+            position: relative;
+            width: 100%;
+            max-width: 440px;
+            margin: 0 auto;
+            aspect-ratio: 1 / 1.414;
+            max-height: 250px;
+            overflow: hidden;
+            border-radius: 1.25rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .bill-a4-half-container:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 20px 30px -10px rgba(59, 130, 246, 0.25);
+            border-color: #3b82f6;
+        }
+
+        /* Trình xem ảnh phóng to không vỡ hạt */
+        #zoomableImage {
+            transform-origin: center center;
+            transition: transform 0.08s ease-out;
+            will-change: transform;
+            user-select: none;
+            -webkit-user-drag: none;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: high-quality;
+        }
     </style>
 </head>
 <body class="pb-24 md:pb-10 text-sm md:text-base">
@@ -248,7 +279,7 @@
             <div class="w-14 h-14 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin z-10 shadow-lg"></div>
             <i class="fa-solid fa-cloud-arrow-down absolute text-blue-600 text-lg z-20"></i>
         </div>
-        <h3 id="loadingText" class="text-xl font-extrabold text-blue-900 tracking-tight">Đang tải dữ liệu lên web app ...</h3>
+        <h3 id="loadingText" class="text-xl font-extrabold text-blue-900 tracking-tight">Đang tải dữ liệu...</h3>
         <p class="text-sm text-blue-600/70 mt-2 animate-pulse font-medium">Vui lòng chờ trong giây lát!</p>
     </div>
 
@@ -356,7 +387,6 @@
                             <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
                                 <i class="fa-solid fa-cart-shopping text-cyan-500"></i> Quỹ chung
                             </h3>
-                           
                         </div>
                         
                         <div class="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-2xl p-4 mb-4 border border-cyan-100 flex justify-between items-center shadow-sm">
@@ -379,7 +409,6 @@
                                 <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
                                     <i class="fa-regular fa-calendar-check text-blue-500"></i> Ngày ở
                                 </h3>
-                               
                             </div>
                             <div class="flex gap-2 items-center">
                                 <button onclick="changeCalendarMonth(-1, false)" class="w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors"><i class="fa-solid fa-chevron-left text-xs"></i></button>
@@ -771,19 +800,19 @@
 
         <div id="billModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white/95 backdrop-blur-xl rounded-[2rem] w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 border border-white">
-                <div class="p-6 bg-gradient-to-br from-blue-600 to-indigo-700 flex justify-between items-start relative overflow-hidden flex-shrink-0">
+                <div class="p-5 md:p-6 bg-gradient-to-br from-blue-600 to-indigo-700 flex justify-between items-start relative overflow-hidden flex-shrink-0">
                     <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
                     <div class="relative z-10 text-white">
-                        <span class="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-lg uppercase tracking-wider backdrop-blur-md border border-white/30 mb-3 inline-block shadow-sm">Báo Cáo Tổng Kết</span>
-                        <h3 class="text-3xl font-black">Tháng <span id="billMonth">...</span></h3>
-                        <p class="text-blue-100 mt-1 font-medium text-sm flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> Phòng B6203</p>
+                        <span class="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-lg uppercase tracking-wider backdrop-blur-md border border-white/30 mb-2 inline-block shadow-sm">Báo Cáo Tổng Kết</span>
+                        <h3 class="text-2xl md:text-3xl font-black">Tháng <span id="billMonth">...</span></h3>
+                        <p class="text-blue-100 mt-0.5 font-medium text-xs md:text-sm flex items-center gap-1.5"><i class="fa-solid fa-location-dot"></i> Phòng B6203 - KTX</p>
                     </div>
                     <button onclick="closeModal('billModal')" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center text-white transition-colors z-10 backdrop-blur-md border border-white/20">
                         <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
                 
-                <div class="p-5 md:p-6 overflow-y-auto flex-1 bg-slate-50/50 space-y-6">
+                <div class="p-4 md:p-6 overflow-y-auto flex-1 bg-slate-50/60 space-y-6">
                     <div class="bg-white rounded-2xl p-5 border border-blue-100 shadow-sm">
                         <h4 class="text-xs font-extrabold text-blue-500 uppercase tracking-wider mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
                             <i class="fa-solid fa-calculator"></i> Thông số chung
@@ -814,12 +843,91 @@
                         </div>
                     </div>
                     
+                    <!-- Phần hiển thị ảnh Bill Điện Nước dạng nửa A4 -->
                     <div>
-                        <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-3 px-2 flex items-center gap-2">
-                            <i class="fa-solid fa-list-check"></i> Trạng thái thu tiền
-                        </h4>
-                        <div id="billMembersList" class="space-y-3"></div>
+                        <div class="flex items-center justify-between mb-3 px-1">
+                            <h4 class="text-xs font-extrabold text-slate-600 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-file-invoice text-blue-600 text-sm"></i> Hóa đơn
+                            </h4>
+                           
+                        </div>
+
+                        <div class="bill-a4-half-container bg-slate-900 border-2 border-slate-200/80 group" onclick="openBillImageViewer()">
+                            <img id="billPreviewImage" 
+                                 src="" 
+                                 alt="Hóa đơn tiền điện nước phòng B06203" 
+                                 class="w-full h-full object-contain bg-slate-800 group-hover:scale-105 transition-transform duration-300"
+                                 loading="lazy"
+                                 onerror="handleBillImageError(this)">
+                            
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex flex-col justify-end p-4 opacity-90 group-hover:opacity-100 transition-opacity">
+                                <div class="flex items-center justify-between text-white">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-blue-500/80 flex items-center justify-center text-xs backdrop-blur-sm">
+                                            <i class="fa-solid fa-expand"></i>
+                                        </div>
+                                        <span class="text-xs font-extrabold tracking-wide drop-shadow-md">Xem chi tiết</span>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-slate-400 text-center font-medium mt-2">
+                            <i class="fa-regular fa-hand-pointer mr-1"></i> Nhấp trực tiếp vào ảnh để xem rõ hơn
+                        </p>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="billImageModal" class="fixed inset-0 z-[95] flex items-center justify-center bg-slate-950/90 backdrop-blur-lg p-2 sm:p-4 hide select-none">
+            <div class="relative w-full h-full max-w-5xl max-h-[96vh] flex flex-col rounded-3xl overflow-hidden bg-slate-900/90 border border-slate-800 shadow-2xl">
+                <!-- Top Control Bar -->
+                <div class="h-14 bg-slate-900/95 border-b border-slate-800 px-4 flex items-center justify-between z-20 flex-shrink-0 text-white">
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <div class="w-8 h-8 rounded-xl bg-blue-600/30 text-blue-400 flex items-center justify-center font-bold text-sm border border-blue-500/30">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                        <div class="truncate">
+                            <h3 class="text-sm font-extrabold text-white truncate">Hóa Đơn Chi Tiết</h3>
+                            <p class="text-[10px] text-slate-400 font-semibold truncate" id="zoomLevelIndicator">Thu phóng: 100%</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 md:gap-2">
+                        <button onclick="changeZoom(-0.25)" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition-colors text-sm" title="Thu nhỏ (-)">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+                        <button onclick="resetZoom()" class="px-2.5 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition-colors text-xs font-bold" title="Đặt lại kích thước">
+                            1:1
+                        </button>
+                        <button onclick="changeZoom(0.25)" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition-colors text-sm" title="Phóng to (+)">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                        <div class="w-[1px] h-6 bg-slate-800 mx-1"></div>
+                        <button onclick="closeModal('billImageModal')" class="w-9 h-9 rounded-xl bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white flex items-center justify-center transition-all text-base" title="Đóng">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pan & Zoom Image Canvas Area -->
+                <div id="imageViewerViewport" class="flex-1 w-full h-full relative overflow-hidden bg-slate-950 flex items-center justify-center cursor-grab active:cursor-grabbing touch-none">
+                    <img id="zoomableImage" 
+                         src="" 
+                         alt="Chi tiết hóa đơn phóng to" 
+                         class="max-w-none max-h-none pointer-events-none transition-none shadow-2xl" 
+                         draggable="false">
+                </div>
+
+                <!-- Bottom Helper Bar -->
+                <div class="h-10 bg-slate-900/90 border-t border-slate-800 px-4 flex items-center justify-between text-[11px] text-slate-400 font-semibold z-20 flex-shrink-0">
+                    <span class="flex items-center gap-1.5 truncate">
+                        <i class="fa-solid fa-up-down-left-right text-blue-400"></i> Kéo thả để xem mọi góc ảnh
+                    </span>
+                    <span class="hidden sm:inline-flex items-center gap-1.5 text-slate-400">
+                        <i class="fa-solid fa-computer-mouse text-blue-400"></i> Cuộn chuột hoặc nhấp đúp để phóng to/thu nhỏ
+                    </span>
                 </div>
             </div>
         </div>
@@ -933,6 +1041,13 @@
         const BANK_BIN = "970405"; 
         const BANK_ACCOUNT = "7105205478044";
         
+        /**
+         * LINK ẢNH HÓA ĐƠN ĐIỆN NƯỚC:
+         * Bạn hãy dán link ảnh bill của bạn vào biến BILL_IMAGE_URL bên dưới.
+         * Khung hiển thị đã được định dạng tỷ lệ nửa tờ A4 (A5 chuẩn) tự động căn chỉnh.
+         */
+        let BILL_IMAGE_URL = "https://i.ibb.co/dJm0WSqp/nh-ch-p-m-n-h-nh-2024-12-05-194958.png";
+
         let state = {
             config: { 
                 month: "Đang tải...", 
@@ -951,6 +1066,15 @@
         let tempModalRecords = {};
         let inspectedDateStr = null;
         let modalSelfSelectedStatus = 'full';
+
+        // Biến trạng thái cho bộ phóng to ảnh (Pan & Zoom)
+        let currentZoom = 1;
+        let currentPanX = 0;
+        let currentPanY = 0;
+        let isDraggingImage = false;
+        let startPointerX = 0;
+        let startPointerY = 0;
+        let touchStartDist = 0;
 
         const STATUS = { NONE: 'none', MORNING: 'morning', AFTERNOON: 'afternoon', FULL: 'full' };
         const STATUS_CONFIG = {
@@ -1063,6 +1187,9 @@
             const mDate = document.getElementById('modalSelfDateInput');
             if (mDate) mDate.value = todayStr;
 
+            // Nạp link ảnh bill vào thẻ ảnh
+            applyBillImageUrl(BILL_IMAGE_URL);
+
             fetch(API_URL, { redirect: 'follow' })
                 .then(response => {
                     if (!response.ok) throw new Error("Network response not ok");
@@ -1086,14 +1213,167 @@
 
                     calculateAndRender();
                     hideLoading();
+
+                    // TỰ ĐỘNG HIỆN POPUP BÁO CÁO TỔNG KẾT KHI TRUY CẬP WEB
+                    if (window.location.hash !== '#/admin') {
+                        setTimeout(() => {
+                            showBillPopup();
+                        }, 400);
+                    }
+
                     checkRoute(); 
                 })
                 .catch(error => {
                     console.error("Fetch error:", error);
                     showToast("Không tải được dữ liệu từ Apps Script!", true);
                     hideLoading();
+                    
+                    // Nếu lỗi mạng vẫn tự động bật popup để xem giao diện
+                    if (window.location.hash !== '#/admin') {
+                        setTimeout(() => {
+                            showBillPopup();
+                        }, 400);
+                    }
                 });
         }
+
+        function applyBillImageUrl(url) {
+            const previewImg = document.getElementById('billPreviewImage');
+            const zoomableImg = document.getElementById('zoomableImage');
+            if (previewImg) previewImg.src = url;
+            if (zoomableImg) zoomableImg.src = url;
+        }
+
+        function handleBillImageError(img) {
+            img.onerror = null;
+            img.src = "https://placehold.co/600x850/1e293b/94a3b8?text=Anh+Hoa+Don+Dien+Nuoc+(A5)";
+        }
+
+        function openBillImageViewer() {
+            const zoomImg = document.getElementById('zoomableImage');
+            if (!zoomImg.src) {
+                zoomImg.src = BILL_IMAGE_URL;
+            }
+            showModal('billImageModal');
+            resetZoom();
+        }
+
+        function updateImageTransform() {
+            const img = document.getElementById('zoomableImage');
+            const indicator = document.getElementById('zoomLevelIndicator');
+            if (!img) return;
+            img.style.transform = `translate(${currentPanX}px, ${currentPanY}px) scale(${currentZoom})`;
+            if (indicator) {
+                indicator.innerText = `Thu phóng: ${Math.round(currentZoom * 100)}%`;
+            }
+        }
+
+        function changeZoom(delta) {
+            const newZoom = Math.min(Math.max(0.5, currentZoom + delta), 4.5);
+            currentZoom = parseFloat(newZoom.toFixed(2));
+            if (currentZoom === 1) {
+                currentPanX = 0;
+                currentPanY = 0;
+            }
+            updateImageTransform();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            currentPanX = 0;
+            currentPanY = 0;
+            updateImageTransform();
+        }
+
+        // Khởi tạo các sự kiện vuốt, kéo thả, pinch to zoom
+        (function setupImagePanZoom() {
+            const viewport = document.getElementById('imageViewerViewport');
+            if (!viewport) return;
+
+            // Kéo thả chuột
+            viewport.addEventListener('mousedown', (e) => {
+                isDraggingImage = true;
+                startPointerX = e.clientX - currentPanX;
+                startPointerY = e.clientY - currentPanY;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDraggingImage) return;
+                currentPanX = e.clientX - startPointerX;
+                currentPanY = e.clientY - startPointerY;
+                updateImageTransform();
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDraggingImage = false;
+            });
+
+            // Lăn con trỏ chuột để zoom mượt
+            viewport.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaY < 0 ? 0.2 : -0.2;
+                changeZoom(delta);
+            }, { passive: false });
+
+            // Nhấp đúp (Double Click) để phóng to / thu nhỏ nhanh
+            let lastTapTime = 0;
+            viewport.addEventListener('dblclick', () => {
+                if (currentZoom > 1.2) {
+                    resetZoom();
+                } else {
+                    currentZoom = 2.2;
+                    updateImageTransform();
+                }
+            });
+
+            // Xử lý cảm ứng Touch trên thiết bị di động
+            viewport.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDraggingImage = true;
+                    startPointerX = e.touches[0].clientX - currentPanX;
+                    startPointerY = e.touches[0].clientY - currentPanY;
+
+                    const now = Date.now();
+                    if (now - lastTapTime < 300) {
+                        // Double tap trên mobile
+                        if (currentZoom > 1.2) resetZoom();
+                        else { currentZoom = 2.2; updateImageTransform(); }
+                    }
+                    lastTapTime = now;
+                } else if (e.touches.length === 2) {
+                    isDraggingImage = false;
+                    touchStartDist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                }
+            }, { passive: true });
+
+            viewport.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDraggingImage) {
+                    currentPanX = e.touches[0].clientX - startPointerX;
+                    currentPanY = e.touches[0].clientY - startPointerY;
+                    updateImageTransform();
+                } else if (e.touches.length === 2) {
+                    const dist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    if (touchStartDist > 0) {
+                        const scaleFactor = dist / touchStartDist;
+                        const targetZoom = Math.min(Math.max(0.5, currentZoom * scaleFactor), 4.5);
+                        currentZoom = parseFloat(targetZoom.toFixed(2));
+                        touchStartDist = dist;
+                        updateImageTransform();
+                    }
+                }
+            }, { passive: true });
+
+            viewport.addEventListener('touchend', () => {
+                isDraggingImage = false;
+                touchStartDist = 0;
+            });
+        })();
 
         function populateAttendanceMemberOptions() {
             const mSelect = document.getElementById('modalSelfMemberSelect');
@@ -1735,32 +2015,6 @@
             document.getElementById('billGrandTotal').innerText = formatMoney(data.grandTotalCost) + 'đ';
             document.getElementById('billTotalDays').innerText = data.totalDays + ' ngày';
             document.getElementById('billRate').innerText = formatMoney(data.ratePerDay) + 'đ';
-            
-            const listEl = document.getElementById('billMembersList');
-            let html = '';
-            for (let i = 0; i < data.processedMembers.length; i++) {
-                const m = data.processedMembers[i];
-                let balanceHtml = m.netAmount > 0 ? `<span class="text-blue-600 font-bold">${formatMoney(Math.abs(m.netAmount))}đ</span>` 
-                    : (m.netAmount < 0 ? `<span class="text-emerald-600 font-bold">Dư ${formatMoney(Math.abs(m.netAmount))}đ</span>` : `<span class="text-slate-400 font-bold">0đ</span>`);
-                html += `
-                    <div class="flex justify-between items-center py-3 border-b border-slate-200/60 last:border-0 bg-white px-4 rounded-xl shadow-sm mb-2">
-                        <div class="flex-1">
-                            <p class="text-sm font-bold text-slate-800">${m.name} <span class="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500 font-bold ml-1">${m.days} ngày</span></p>
-                            <div class="flex gap-2 mt-1">
-                                <span class="text-[10px] font-medium text-slate-500">Gốc: ${formatMoney(m.shareCost)}đ</span>
-                                ${m.totalAdvance > 0 ? `<span class="text-[10px] font-bold text-emerald-600">Ứng: ${formatMoney(m.totalAdvance)}đ</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            ${balanceHtml}
-                            <p class="text-[9px] font-bold uppercase mt-1 ${m.status === 'paid' ? 'text-emerald-500' : 'text-amber-500'}">
-                                ${m.status === 'paid' ? '<i class="fa-solid fa-check"></i> Đã đóng' : 'Đang cập nhật'}
-                            </p>
-                        </div>
-                    </div>
-                `;
-            }
-            listEl.innerHTML = html;
         }
 
         function openMemberBill(memberId) {
@@ -2009,11 +2263,29 @@
             if (['billModal', 'memberBillModal', 'attendanceModal', 'dayInspectModal', 'customConfirmModal', 'selfAttendanceModal'].includes(e.target.id)) {
                 closeModal(e.target.id);
             }
+            if (e.target.id === 'billImageModal') {
+                closeModal('billImageModal');
+            }
             if (e.target.id === 'loginModal') { 
                 closeModal('loginModal'); 
                 window.location.hash = ''; 
             }
         };
+
+        // Phím tắt bàn phím tiện dụng (Escape để đóng popup)
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modals = ['billImageModal', 'billModal', 'memberBillModal', 'attendanceModal', 'selfAttendanceModal', 'dayInspectModal', 'customConfirmModal', 'loginModal'];
+                for (let i = 0; i < modals.length; i++) {
+                    const m = document.getElementById(modals[i]);
+                    if (m && !m.classList.contains('hide')) {
+                        closeModal(modals[i]);
+                        break;
+                    }
+                }
+            }
+        });
+
         initApp();
     </script>
 </body>
