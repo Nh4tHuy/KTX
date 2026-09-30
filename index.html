@@ -3,7 +3,7 @@
 <head>
     <!-- 
     Tác giả: Nh4tHuy
-    Cập nhật: Nâng cấp Popup Báo cáo & Trình phóng to Ảnh Bill Điện Nước - 29/9/2026
+    Cập nhật: Bổ sung loại trừ quỹ chung & Biểu đồ đường tỉ lệ ở theo ngày - 30/09/2026
     Mục đích: Hỗ trợ quản lý và tính tiền phòng ở KTX B06203
     -->
     <meta charset="UTF-8">
@@ -15,6 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://img.vietqr.io">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <meta name="robots" content="noindex, nofollow"/>
@@ -230,7 +231,6 @@
             50% { opacity: 0.85; transform: scale(1.02); }
         }
 
-        /* Tỷ lệ khung bill nửa A4 (A5: 148 x 210mm ~ 1:1.414) */
         .bill-a4-half-container {
             position: relative;
             width: 100%;
@@ -250,7 +250,6 @@
             border-color: #3b82f6;
         }
 
-        /* Trình xem ảnh phóng to không vỡ hạt */
         #zoomableImage {
             transform-origin: center center;
             transition: transform 0.08s ease-out;
@@ -259,6 +258,17 @@
             -webkit-user-drag: none;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: high-quality;
+        }
+
+        .chart-container-wrapper {
+            position: relative;
+            width: 100%;
+            height: 280px;
+        }
+        @media (min-width: 768px) {
+            .chart-container-wrapper {
+                height: 330px;
+            }
         }
     </style>
 </head>
@@ -403,6 +413,7 @@
                         </div>
                     </div>
 
+                    <!-- WIDGET NGÀY Ở (CALENDAR) -->
                     <div class="glass-panel rounded-[2rem] p-5 md:p-6 shadow-sm relative overflow-hidden bg-white/65">
                         <div class="flex justify-between items-center mb-4">
                             <div>
@@ -429,6 +440,32 @@
                             <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-green-500 mr-1.5 shadow-sm"></span> Buổi chiều</div>
                             <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-gray-300 mr-1.5 shadow-sm"></span> Không ở</div>
                         </div>
+                    </div>
+
+                    <div class="glass-panel rounded-[2rem] p-5 md:p-6 shadow-sm relative overflow-hidden bg-white/75 border border-white/80">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                            <div>
+                                <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-chart-line text-blue-600"></i> Tỷ Lệ Ở Trong Tháng
+                                </h3>
+                               
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] font-bold bg-blue-100 text-blue-700 px-2.5 py-1 rounded-lg border border-blue-200" id="chartMonthBadge">
+                                    Tháng ...
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Chú thích người dùng có thể nhấp để ẩn/hiện line -->
+                        <div id="attendanceChartLegend" class="flex flex-wrap items-center gap-3 mb-3 text-xs font-bold text-slate-600"></div>
+
+                        <!-- Vùng hiển thị biểu đồ Chart.js -->
+                        <div class="chart-container-wrapper bg-white/60 p-2 sm:p-3 rounded-2xl border border-slate-100 shadow-inner">
+                            <canvas id="attendanceLineChart"></canvas>
+                        </div>
+
+                      
                     </div>
 
                 </div>
@@ -491,11 +528,11 @@
                         <div class="space-y-3 text-[13px] text-slate-600">
                             <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
                                 <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-bolt text-amber-500"></i> Điện, Nước</p>
-                                <p class="leading-relaxed">Được chia tự động theo <span class="font-bold text-blue-600">tỷ lệ ngày ở thực tế</span>. Làm tròn 500đ. <br/> <b>Công thức:</b><br/> (Tổng tiền Điện/Nước) × (Số ngày ở ÷ Tổng ngày cả phòng)</p>
+                                <p class="leading-relaxed">Được chia tự động theo <span class="font-bold text-blue-600">tỷ lệ ngày ở thực tế</span>. Làm tròn 500đ.</p>
                             </div>
                             <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
                                 <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-box-open text-cyan-500"></i> Quỹ đồ chung</p>
-                                <p class="leading-relaxed">Số tiền mua đồ chung được <span class="font-bold text-cyan-600">chia đều ngang nhau</span> cho tất cả các thành viên.</p>
+                                <p class="leading-relaxed"><span class="font-bold text-emerald-600">Chia đều ngang nhau</span> cho các thành viên tham gia quỹ. Thành viên được loại trừ sẽ <span class="font-bold text-emerald-600">không tính thêm phí quỹ</span>.</p>
                             </div>
                             <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
                                 <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-money-bill-transfer text-emerald-500"></i> Tiền ứng trước</p>
@@ -503,8 +540,32 @@
                             </div>
                             <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
                                 <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-note-sticky text-indigo-400"></i> Ghi nhận ngày ở</p>
-                                <p class="leading-relaxed">Buổi sáng (0h-12h) và Buổi chiều (12h-24h). Thời gian ghi nhận mang tính tương đối nên <span class="font-bold text-red-600">đơn giá có sai số</span>.</p>
+                                <p class="leading-relaxed">Thời gian ghi nhận mang tính tương đối nên <span class="font-bold text-red-600">đơn giá có sai số</span>.</p>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- WIDGET TÍNH TIỀN CHI TIẾT & MINH BẠCH SỐ LIỆU -->
+                    <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden bg-white/75 border border-white/90 shadow-md">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-calculator text-blue-600"></i> Chi tiết
+                            </h3>
+                        </div>
+
+                        <div>
+                            <div class="relative">
+                                <select id="detailCalcMemberSelect" onchange="renderDetailedCalculation()" class="w-full bg-white border border-slate-200 text-slate-800 font-extrabold text-sm rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-sm transition-all appearance-none cursor-pointer">
+                                    <option value="">Đang tải danh sách...</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 text-xs">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="detailedCalculationOutput" class="mt-3">
+                            <p class="text-xs text-slate-400 italic text-center py-4">Đang chuẩn bị dữ liệu...</p>
                         </div>
                     </div>
 
@@ -576,19 +637,23 @@
 
             <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-slate-200">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-users-gear text-emerald-500 mr-2"></i>Quản lý Thành Viên</h2>
-                    <button onclick="addAdminMember()" class="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors">
+                    <div>
+                        <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-users-gear text-emerald-500 mr-2"></i>Quản lý Thành Viên</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Tích chọn "Loại trừ quỹ" để không tính chia tiền mua đồ chung cho thành viên đó.</p>
+                    </div>
+                    <button onclick="addAdminMember()" class="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors flex items-center gap-1.5 shadow-sm">
                         <i class="fa-solid fa-plus mr-1"></i> Thêm
                     </button>
                 </div>
                 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[600px]">
+                    <table class="w-full text-left border-collapse min-w-[650px]">
                         <thead>
                             <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
                                 <th class="p-3 rounded-tl-xl w-16">ID</th>
                                 <th class="p-3">Tên thành viên</th>
                                 <th class="p-3 text-center">Số ngày ở (Tự động)</th>
+                                <th class="p-3 text-center">Loại trừ quỹ chung</th>
                                 <th class="p-3 text-center">Trạng thái nộp</th>
                                 <th class="p-3 rounded-tr-xl text-center">Xóa</th>
                             </tr>
@@ -843,13 +908,11 @@
                         </div>
                     </div>
                     
-                    <!-- Phần hiển thị ảnh Bill Điện Nước dạng nửa A4 -->
                     <div>
                         <div class="flex items-center justify-between mb-3 px-1">
                             <h4 class="text-xs font-extrabold text-slate-600 uppercase tracking-wider flex items-center gap-2">
                                 <i class="fa-solid fa-file-invoice text-blue-600 text-sm"></i> Hóa đơn
                             </h4>
-                           
                         </div>
 
                         <div class="bill-a4-half-container bg-slate-900 border-2 border-slate-200/80 group" onclick="openBillImageViewer()">
@@ -868,7 +931,6 @@
                                         </div>
                                         <span class="text-xs font-extrabold tracking-wide drop-shadow-md">Xem chi tiết</span>
                                     </div>
-                                   
                                 </div>
                             </div>
                         </div>
@@ -882,7 +944,6 @@
 
         <div id="billImageModal" class="fixed inset-0 z-[95] flex items-center justify-center bg-slate-950/90 backdrop-blur-lg p-2 sm:p-4 hide select-none">
             <div class="relative w-full h-full max-w-5xl max-h-[96vh] flex flex-col rounded-3xl overflow-hidden bg-slate-900/90 border border-slate-800 shadow-2xl">
-                <!-- Top Control Bar -->
                 <div class="h-14 bg-slate-900/95 border-b border-slate-800 px-4 flex items-center justify-between z-20 flex-shrink-0 text-white">
                     <div class="flex items-center gap-2.5 overflow-hidden">
                         <div class="w-8 h-8 rounded-xl bg-blue-600/30 text-blue-400 flex items-center justify-center font-bold text-sm border border-blue-500/30">
@@ -911,7 +972,6 @@
                     </div>
                 </div>
 
-                <!-- Pan & Zoom Image Canvas Area -->
                 <div id="imageViewerViewport" class="flex-1 w-full h-full relative overflow-hidden bg-slate-950 flex items-center justify-center cursor-grab active:cursor-grabbing touch-none">
                     <img id="zoomableImage" 
                          src="" 
@@ -920,7 +980,6 @@
                          draggable="false">
                 </div>
 
-                <!-- Bottom Helper Bar -->
                 <div class="h-10 bg-slate-900/90 border-t border-slate-800 px-4 flex items-center justify-between text-[11px] text-slate-400 font-semibold z-20 flex-shrink-0">
                     <span class="flex items-center gap-1.5 truncate">
                         <i class="fa-solid fa-up-down-left-right text-blue-400"></i> Kéo thả để xem mọi góc ảnh
@@ -964,11 +1023,11 @@
                                  <span class="font-semibold text-slate-800" id="mbWaterShare">0đ</span>
                              </div>
                              <div class="flex justify-between text-slate-600">
-                                 <span>Phí khác <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-400">Theo ngày</span></span>
+                                 <span>Phí khác <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-400">...</span></span>
                                  <span class="font-semibold text-slate-800" id="mbFeeShare">0đ</span>
                              </div>
                              <div class="flex justify-between text-slate-600">
-                                 <span>Phí quỹ chung <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-400">Chia đều</span></span>
+                                 <span id="mbSharedItemLabel">Phí quỹ chung <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-400">Chia đều</span></span>
                                  <span class="font-semibold text-slate-800" id="mbSharedItemShare">0đ</span>
                              </div>
                              <div class="border-t border-slate-200 my-2 pt-2 flex justify-between items-center bg-slate-50 p-2 rounded-lg -mx-2">
@@ -1037,15 +1096,10 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwmTQmkHIUUZ1IcDpkuvt1I0c_8qGtBr_FnBqNxdG_92xRYYzwoiamqyojhBldgtA-W/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbz4g117_YTM6k7E8KVhneeR3fVw-BC07VkKesTQFlMidsDPCFKYa9cIU7pyov5PrKix/exec"; 
         const BANK_BIN = "970405"; 
         const BANK_ACCOUNT = "7105205478044";
         
-        /**
-         * LINK ẢNH HÓA ĐƠN ĐIỆN NƯỚC:
-         * Bạn hãy dán link ảnh bill của bạn vào biến BILL_IMAGE_URL bên dưới.
-         * Khung hiển thị đã được định dạng tỷ lệ nửa tờ A4 (A5 chuẩn) tự động căn chỉnh.
-         */
         let BILL_IMAGE_URL = "https://i.ibb.co/dJm0WSqp/nh-ch-p-m-n-h-nh-2024-12-05-194958.png";
 
         let state = {
@@ -1066,6 +1120,7 @@
         let tempModalRecords = {};
         let inspectedDateStr = null;
         let modalSelfSelectedStatus = 'full';
+        let attendanceChartInstance = null;
 
         // Biến trạng thái cho bộ phóng to ảnh (Pan & Zoom)
         let currentZoom = 1;
@@ -1083,6 +1138,15 @@
             [STATUS.AFTERNOON]: { label: 'Chiều', value: 0.5, class: 'active-afternoon' },
             [STATUS.FULL]: { label: 'Cả ngày', value: 1, class: 'active-full' }
         };
+
+        const MEMBER_COLORS = [
+            { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.12)' },  // Xanh lam
+            { border: '#10b981', bg: 'rgba(16, 185, 129, 0.12)' },  // Xanh lá
+            { border: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' },  // Vàng cam
+            { border: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.12)' },  // Tím
+            { border: '#ec4899', bg: 'rgba(236, 72, 153, 0.12)' },  // Hồng
+            { border: '#06b6d4', bg: 'rgba(6, 182, 212, 0.12)' }   // Cyan
+        ];
 
         const moneyFormatter = new Intl.NumberFormat('vi-VN');
         const round500 = (amount) => Math.round(amount / 500) * 500;
@@ -1187,7 +1251,6 @@
             const mDate = document.getElementById('modalSelfDateInput');
             if (mDate) mDate.value = todayStr;
 
-            // Nạp link ảnh bill vào thẻ ảnh
             applyBillImageUrl(BILL_IMAGE_URL);
 
             fetch(API_URL, { redirect: 'follow' })
@@ -1197,7 +1260,10 @@
                 })
                 .then(data => {
                     state.config = { ...state.config, ...data.config };
-                    state.members = data.members || [];
+                    state.members = (data.members || []).map(m => ({
+                        ...m,
+                        excludeShared: m.excludeShared === true || m.excludeShared === "true"
+                    }));
                     state.sharedItems = data.sharedItems || [];
                     state.records = data.records || {};
                     
@@ -1214,7 +1280,6 @@
                     calculateAndRender();
                     hideLoading();
 
-                    // TỰ ĐỘNG HIỆN POPUP BÁO CÁO TỔNG KẾT KHI TRUY CẬP WEB
                     if (window.location.hash !== '#/admin') {
                         setTimeout(() => {
                             showBillPopup();
@@ -1228,7 +1293,6 @@
                     showToast("Không tải được dữ liệu từ Apps Script!", true);
                     hideLoading();
                     
-                    // Nếu lỗi mạng vẫn tự động bật popup để xem giao diện
                     if (window.location.hash !== '#/admin') {
                         setTimeout(() => {
                             showBillPopup();
@@ -1285,12 +1349,10 @@
             updateImageTransform();
         }
 
-        // Khởi tạo các sự kiện vuốt, kéo thả, pinch to zoom
         (function setupImagePanZoom() {
             const viewport = document.getElementById('imageViewerViewport');
             if (!viewport) return;
 
-            // Kéo thả chuột
             viewport.addEventListener('mousedown', (e) => {
                 isDraggingImage = true;
                 startPointerX = e.clientX - currentPanX;
@@ -1308,14 +1370,12 @@
                 isDraggingImage = false;
             });
 
-            // Lăn con trỏ chuột để zoom mượt
             viewport.addEventListener('wheel', (e) => {
                 e.preventDefault();
                 const delta = e.deltaY < 0 ? 0.2 : -0.2;
                 changeZoom(delta);
             }, { passive: false });
 
-            // Nhấp đúp (Double Click) để phóng to / thu nhỏ nhanh
             let lastTapTime = 0;
             viewport.addEventListener('dblclick', () => {
                 if (currentZoom > 1.2) {
@@ -1326,7 +1386,6 @@
                 }
             });
 
-            // Xử lý cảm ứng Touch trên thiết bị di động
             viewport.addEventListener('touchstart', (e) => {
                 if (e.touches.length === 1) {
                     isDraggingImage = true;
@@ -1335,7 +1394,6 @@
 
                     const now = Date.now();
                     if (now - lastTapTime < 300) {
-                        // Double tap trên mobile
                         if (currentZoom > 1.2) resetZoom();
                         else { currentZoom = 2.2; updateImageTransform(); }
                     }
@@ -1456,34 +1514,49 @@
                 totalDays += Number(state.members[i].days) || 0;
             }
 
-            const numberOfMembers = state.members.length;
-            const sharedItemSharePerPerson = numberOfMembers > 0 ? (totalSharedItemsCost / numberOfMembers) : 0;
+            // Đếm số lượng thành viên THỰC TẾ tham gia chia quỹ chung (không bị loại trừ)
+            const sharedMembers = state.members.filter(m => !m.excludeShared);
+            const sharedCount = sharedMembers.length;
+            // Số tiền quỹ chung mỗi người phải chịu (chỉ chia cho người không bị loại trừ)
+            const sharedItemSharePerPerson = sharedCount > 0 ? (totalSharedItemsCost / sharedCount) : 0;
 
             const processedMembers = state.members.map(m => {
                 const dayRatio = totalDays > 0 ? (Number(m.days) / totalDays) : 0;
                 const elecShare = elecCost * dayRatio;
                 const waterShare = waterCost * dayRatio;
                 const feeShare = feeCost * dayRatio;
+
+                // Nếu người này bị loại trừ (excludeShared === true) thì phí quỹ chung = 0đ
+                const isExcluded = !!m.excludeShared;
+                const memberSharedItemShare = isExcluded ? 0 : sharedItemSharePerPerson;
                 
-                const rawShareCost = elecShare + waterShare + feeShare + sharedItemSharePerPerson;
+                const rawShareCost = elecShare + waterShare + feeShare + memberSharedItemShare;
                 const shareCost = round500(rawShareCost);
                 const totalAdvance = advancesByUser[m.id] || 0;
                 const netAmount = shareCost - totalAdvance; 
                 
                 return {
-                    ...m, totalAdvance,
+                    ...m, 
+                    totalAdvance,
+                    dayRatio,
+                    isExcludedFromShared: isExcluded,
+                    rawElec: elecShare,
+                    rawWater: waterShare,
+                    rawFee: feeShare,
                     elecShare: round500(elecShare),
                     waterShare: round500(waterShare),
                     feeShare: round500(feeShare),
-                    sharedItemShare: round500(sharedItemSharePerPerson),
-                    shareCost, netAmount
+                    sharedItemShare: round500(memberSharedItemShare),
+                    shareCost, 
+                    netAmount
                 };
             });
 
             return {
                 elecCost, waterCost, feeCost, totalSharedItemsCost, grandTotalCost,
                 totalDays, ratePerDay: totalDays > 0 ? (grandTotalCost / totalDays) : 0, 
-                processedMembers
+                processedMembers, numberOfMembers: state.members.length,
+                sharedCount, sharedItemSharePerPerson
             };
         }
         
@@ -1572,6 +1645,167 @@
                 `;
             }
             grid.innerHTML = gridHtml;
+        }
+
+        function renderAttendanceLineChart() {
+            const canvas = document.getElementById('attendanceLineChart');
+            const legendEl = document.getElementById('attendanceChartLegend');
+            const badgeEl = document.getElementById('chartMonthBadge');
+            if (!canvas) return;
+
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            const lastDay = new Date(year, month + 1, 0).getDate();
+            
+            if (badgeEl) {
+                badgeEl.innerText = `Tháng ${String(month + 1).padStart(2, '0')}/${year}`;
+            }
+
+            // Tạo nhãn các ngày từ 1 đến ngày cuối của tháng
+            const labels = [];
+            for (let d = 1; d <= lastDay; d++) {
+                labels.push(`N${d}`);
+            }
+
+            // Tính tỷ lệ tích lũy số ngày có mặt của từng thành viên đến từng ngày
+            // Để hiển thị biểu đồ đường thể hiện tỷ lệ ở (hoặc % tỷ lệ ở trên tổng số ngày trôi qua)
+            const datasets = state.members.map((member, idx) => {
+                const colorTheme = MEMBER_COLORS[idx % MEMBER_COLORS.length];
+                let cumulativeDays = 0;
+                const dataPoints = [];
+
+                for (let d = 1; d <= lastDay; d++) {
+                    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                    const dayRecord = state.records[dateStr];
+                    if (dayRecord && dayRecord[member.id] && STATUS_CONFIG[dayRecord[member.id]]) {
+                        cumulativeDays += STATUS_CONFIG[dayRecord[member.id]].value;
+                    }
+                    // Tỉ lệ % có mặt tính trên tổng số ngày tính đến ngày d đó
+                    const ratioPercent = d > 0 ? Number(((cumulativeDays / d) * 100).toFixed(1)) : 0;
+                    dataPoints.push({
+                        x: `N${d}`,
+                        y: ratioPercent,
+                        days: cumulativeDays,
+                        dayNum: d
+                    });
+                }
+
+                return {
+                    label: member.name,
+                    data: dataPoints,
+                    borderColor: colorTheme.border,
+                    backgroundColor: colorTheme.bg,
+                    borderWidth: 2.5,
+                    fill: false,
+                    tension: 0.3,
+                    pointRadius: 2.5,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: colorTheme.border,
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 1.5,
+                    memberId: member.id
+                };
+            });
+
+            // Tự render Chú thích (Legend) tùy chỉnh đẹp mắt & có thể click ẩn/hiện line
+            if (legendEl) {
+                legendEl.innerHTML = datasets.map((ds, idx) => `
+                    <button onclick="toggleChartDataset(${idx})" id="chart-legend-btn-${idx}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200 hover:border-slate-300 shadow-sm transition-all text-xs font-bold">
+                        <span class="w-3 h-3 rounded-full" style="background-color: ${ds.borderColor}"></span>
+                        <span class="text-slate-700">${ds.label}</span>
+                    </button>
+                `).join('');
+            }
+
+            if (attendanceChartInstance) {
+                attendanceChartInstance.destroy();
+            }
+
+            const ctx = canvas.getContext('2d');
+            attendanceChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Đã dùng custom legend ở trên
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.92)',
+                            titleFont: { family: 'Quicksand', size: 12, weight: 'bold' },
+                            bodyFont: { family: 'Quicksand', size: 11, weight: '600' },
+                            padding: 10,
+                            cornerRadius: 12,
+                            boxPadding: 4,
+                            callbacks: {
+                                title: function(context) {
+                                    const d = context[0].dataIndex + 1;
+                                    return `Ngày ${String(d).padStart(2, '0')}/${String(month + 1).padStart(2, '0')}/${year}`;
+                                },
+                                label: function(context) {
+                                    const raw = context.raw;
+                                    return ` ${context.dataset.label}: ${raw.y}% (~ ${raw.days} ngày)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: { family: 'Quicksand', size: 10, weight: '600' },
+                                color: '#64748b',
+                                maxRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 16
+                            }
+                        },
+                        y: {
+                            min: 0,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(226, 232, 240, 0.7)',
+                                borderDash: [4, 4]
+                            },
+                            ticks: {
+                                font: { family: 'Quicksand', size: 10, weight: 'bold' },
+                                color: '#64748b',
+                                stepSize: 25,
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function toggleChartDataset(index) {
+            if (!attendanceChartInstance) return;
+            const meta = attendanceChartInstance.getDatasetMeta(index);
+            meta.hidden = meta.hidden === null ? !attendanceChartInstance.data.datasets[index].hidden : null;
+            attendanceChartInstance.update();
+
+            const btn = document.getElementById(`chart-legend-btn-${index}`);
+            if (btn) {
+                if (meta.hidden) {
+                    btn.classList.add('opacity-40', 'line-through');
+                } else {
+                    btn.classList.remove('opacity-40', 'line-through');
+                }
+            }
         }
 
         function openDayInspect(dateStr, day, month, year) {
@@ -1960,6 +2194,10 @@
                 const elecWaterPct = Math.min(100, Math.round(((m.elecShare + m.waterShare) / totalItemAmount) * 100));
                 const sharedPct = Math.min(100 - elecWaterPct, Math.round((m.sharedItemShare / totalItemAmount) * 100));
 
+                const excludeBadge = m.isExcludedFromShared 
+                    ? ``
+                    : '';
+
                 membersHtml += `
                     <div class="glass-card rounded-[1.5rem] p-5 flex flex-col relative group">
                         <div class="flex items-center justify-between mb-4">
@@ -1967,9 +2205,10 @@
                                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border border-blue-200 shadow-md shadow-blue-500/20 flex items-center justify-center font-black text-xl text-white">${m.name.charAt(0).toUpperCase()}</div>
                                 <div>
                                     <h4 class="font-extrabold text-slate-800 text-lg leading-tight">${m.name}</h4>
-                                    <div class="flex gap-2 mt-1 items-center">
+                                    <div class="flex flex-wrap gap-1.5 mt-1 items-center">
                                         <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">~ ${m.days} ngày</span>
                                         ${statusBadge}
+                                        ${excludeBadge}
                                     </div>
                                 </div>
                             </div>
@@ -1978,7 +2217,12 @@
                         <div class="space-y-1.5 text-xs text-slate-600 mb-3 border-l-2 border-blue-300 pl-3">
                              <div class="flex justify-between"><span>Điện & Nước:</span><span class="font-semibold">${formatMoney(m.elecShare + m.waterShare)}đ</span></div>
                              <div class="flex justify-between"><span>Phí khác:</span><span class="font-semibold">${formatMoney(m.feeShare)}đ</span></div>
-                             <div class="flex justify-between"><span>Quỹ chung:</span><span class="font-semibold">${formatMoney(m.sharedItemShare)}đ</span></div>
+                             <div class="flex justify-between">
+                                <span>Quỹ chung:</span>
+                                <span class="font-semibold ${m.isExcludedFromShared ? 'text-slate-400 line-through' : ''}">
+                                    ${m.isExcludedFromShared ? '0đ' : formatMoney(m.sharedItemShare) + 'đ'}
+                                </span>
+                             </div>
                             ${m.totalAdvance > 0 ? `<div class="flex justify-between pt-1 mt-1 border-t border-slate-200 border-dashed text-emerald-600"><span class="font-semibold">Tạm ứng:</span><span class="font-bold">-${formatMoney(m.totalAdvance)}đ</span></div>` : ''}
                         </div>
 
@@ -2001,6 +2245,7 @@
             }
             listEl.innerHTML = membersHtml;
             renderPublicCalendar();
+            renderAttendanceLineChart();
         }
 
         function renderBillPopup(data) {
@@ -2017,10 +2262,191 @@
             document.getElementById('billRate').innerText = formatMoney(data.ratePerDay) + 'đ';
         }
 
+        function renderDetailedCalculation() {
+            const select = document.getElementById('detailCalcMemberSelect');
+            const container = document.getElementById('detailedCalculationOutput');
+            if (!select || !container) return;
+
+            const data = calculateData();
+            if (!data.processedMembers || data.processedMembers.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 italic text-center py-4">Chưa có dữ liệu thành viên</p>';
+                return;
+            }
+
+            const currentSelectedVal = select.value;
+            const currentOptionIds = Array.from(select.options).map(o => String(o.value));
+            const freshMemberIds = data.processedMembers.map(m => String(m.id));
+
+            const isOptionsMismatch = currentOptionIds.length !== freshMemberIds.length || 
+                                     !freshMemberIds.every((id, idx) => id === currentOptionIds[idx]);
+
+            if (isOptionsMismatch) {
+                select.innerHTML = data.processedMembers.map(m => 
+                    `<option value="${m.id}">${m.name} (${m.days} ngày)${m.isExcludedFromShared ? ' - [Miễn quỹ]' : ''}</option>`
+                ).join('');
+
+                if (freshMemberIds.includes(String(currentSelectedVal))) {
+                    select.value = currentSelectedVal;
+                } else {
+                    select.value = data.processedMembers[0].id;
+                }
+            }
+
+            const activeMemberId = select.value || data.processedMembers[0].id;
+            const member = data.processedMembers.find(m => String(m.id) === String(activeMemberId)) || data.processedMembers[0];
+            if (!member) return;
+
+            const totalDays = data.totalDays || 0;
+            const memberDays = Number(member.days) || 0;
+            const dayRatioPercent = totalDays > 0 ? ((memberDays / totalDays) * 100).toFixed(1) : 0;
+            const dayRatioDec = totalDays > 0 ? (memberDays / totalDays).toFixed(4) : 0;
+            const sharedCount = data.sharedCount || 1;
+
+            let html = `
+                <div class="space-y-3.5 mt-3 fade-in">
+                    <!-- Tỷ lệ ngày ở -->
+                    <div class="bg-blue-50/70 p-3 rounded-2xl border border-blue-100">
+                        <div class="flex items-center justify-between font-bold text-blue-900 text-xs mb-1.5">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-percent text-blue-600"></i> Tỷ lệ ngày ở</span>
+                            <span class="text-blue-700 bg-blue-100 px-2 py-0.5 rounded-md font-extrabold text-[11px]">${dayRatioPercent}%</span>
+                        </div>
+                        <div class="text-[11px] font-mono text-slate-600 bg-white/90 p-2 rounded-xl border border-blue-100 flex items-center justify-between flex-wrap gap-1">
+                            <span class="font-extrabold text-blue-800">${memberDays} (ngày) ÷ ${totalDays} (tổng ngày) = ${dayRatioDec}</span>
+                        </div>
+                    </div>
+
+                    <!-- 1. Tiền điện -->
+                    <div class="bg-white/95 p-3 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-bolt text-amber-500"></i> 1. Tiền điện:
+                            </span>
+                            <span class="font-black text-amber-800 text-sm">${formatMoney(member.elecShare)}đ</span>
+                        </div>
+                        <div class="text-[11px] text-slate-600 font-mono bg-slate-50 p-2 rounded-xl border border-slate-100 leading-relaxed">
+                            <div class="font-bold text-slate-800">${formatMoney(data.elecCost)}đ × (${memberDays} ÷ ${totalDays}) = ${formatMoney(Math.round(member.rawElec || 0))}đ</div>
+                            <div class="text-[10px] text-slate-400 font-sans mt-1 flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-turn-down text-slate-400"></i> Làm tròn: <span class="font-extrabold text-amber-700">${formatMoney(member.elecShare)}đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Tiền nước -->
+                    <div class="bg-white/95 p-3 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-droplet text-cyan-500"></i> 2. Tiền nước:
+                            </span>
+                            <span class="font-black text-cyan-800 text-sm">${formatMoney(member.waterShare)}đ</span>
+                        </div>
+                        <div class="text-[11px] text-slate-600 font-mono bg-slate-50 p-2 rounded-xl border border-slate-100 leading-relaxed">
+                            <div class="font-bold text-slate-800">${formatMoney(data.waterCost)}đ × (${memberDays} ÷ ${totalDays}) = ${formatMoney(Math.round(member.rawWater || 0))}đ</div>
+                            <div class="text-[10px] text-slate-400 font-sans mt-1 flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-turn-down text-slate-400"></i> Làm tròn: <span class="font-extrabold text-cyan-700">${formatMoney(member.waterShare)}đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Phí khác (nếu có) -->
+                    ${data.feeCost > 0 ? `
+                    <div class="bg-white/95 p-3 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-receipt text-slate-400"></i> 3. Phí khác:
+                            </span>
+                            <span class="font-black text-slate-800 text-sm">${formatMoney(member.feeShare)}đ</span>
+                        </div>
+                        <div class="text-[11px] text-slate-600 font-mono bg-slate-50 p-2 rounded-xl border border-slate-100 leading-relaxed">
+                            <div class="font-bold text-slate-800">${formatMoney(data.feeCost)}đ × (${memberDays} ÷ ${totalDays}) = ${formatMoney(member.feeShare)}đ</div>
+                        </div>
+                    </div>` : ''}
+
+                    <!-- 4. Quỹ đồ chung (Minh bạch khi có thành viên loại trừ) -->
+                    <div class="bg-white/95 p-3 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-box-open text-teal-500"></i> ${data.feeCost > 0 ? '4' : '3'}. Quỹ chung:
+                            </span>
+                            <span class="font-black ${member.isExcludedFromShared ? 'text-rose-600' : 'text-teal-800'} text-sm">
+                                ${member.isExcludedFromShared ? '0đ' : formatMoney(member.sharedItemShare) + 'đ'}
+                            </span>
+                        </div>
+                        <div class="text-[11px] text-slate-600 font-mono bg-slate-50 p-2 rounded-xl border border-slate-100 leading-relaxed">
+                            ${member.isExcludedFromShared 
+                                ? `<div class="text-slate-600 font-bold font-sans flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-slate-500"></i> Thành viên được loại trừ không tính chia quỹ chung.</div>`
+                                : `<div class="font-bold text-slate-800">${formatMoney(data.totalSharedItemsCost)}đ ÷ ${sharedCount} người tham gia = ${formatMoney(member.sharedItemShare)}đ / người</div>
+                                  `
+                            }
+                        </div>
+                    </div>
+
+                    <!-- 5. Tạm ứng trước (nếu có) -->
+                    ${member.totalAdvance > 0 ? `
+                    <div class="bg-emerald-50/80 p-3 rounded-2xl border border-emerald-200 shadow-sm space-y-1.5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-emerald-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-money-bill-transfer text-emerald-600"></i> Tiền đã ứng mua đồ:
+                            </span>
+                            <span class="font-black text-emerald-700 text-sm">-${formatMoney(member.totalAdvance)}đ</span>
+                        </div>
+                    </div>` : ''}
+
+                    <!-- Khung tổng kết công thức toán học -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm space-y-2.5">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <span class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-calculator text-blue-600"></i> Số tiền cuối
+                            </span>
+                            <span class="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-lg border border-blue-100">
+                                ${member.name}
+                            </span>
+                        </div>
+
+                        <div class="space-y-1.5 text-xs font-mono text-slate-600">
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="text-slate-500 font-sans">Cộng chi phí gốc:</span>
+                                <span class="font-semibold text-slate-700">
+                                    ${formatMoney(member.elecShare)} + ${formatMoney(member.waterShare)} ${data.feeCost > 0 ? '+ ' + formatMoney(member.feeShare) : ''} + ${formatMoney(member.sharedItemShare)}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center text-[11px] pb-1.5 border-b border-dashed border-slate-200">
+                                <span class="text-slate-500 font-sans">↳ Tổng phí gốc:</span>
+                                <span class="font-bold text-blue-800">${formatMoney(member.shareCost)}đ</span>
+                            </div>
+
+                            ${member.totalAdvance > 0 ? `
+                            <div class="flex justify-between items-center text-[11px] text-emerald-600 pb-1.5 border-b border-dashed border-slate-200">
+                                <span class="font-sans">Trừ khoản tạm ứng:</span>
+                                <span class="font-bold">-${formatMoney(member.totalAdvance)}đ</span>
+                            </div>` : ''}
+
+                            <div class="flex justify-between items-center pt-1 font-sans">
+                                <span class="text-xs font-extrabold ${member.netAmount >= 0 ? 'text-slate-700' : 'text-emerald-700'}">
+                                    ${member.netAmount >= 0 ? 'SỐ TIỀN CẦN ĐÓNG:' : 'SỐ TIỀN NHẬN LẠI:'}
+                                </span>
+                                <span class="text-lg font-black ${member.netAmount >= 0 ? 'text-blue-600' : 'text-emerald-600'}">
+                                    ${formatMoney(Math.abs(member.netAmount))}đ
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
         function openMemberBill(memberId) {
             const data = calculateData();
             const member = data.processedMembers.find(m => m.id === memberId);
             if(!member) return;
+
+            const detailSelect = document.getElementById('detailCalcMemberSelect');
+            if (detailSelect) {
+                detailSelect.value = memberId;
+                renderDetailedCalculation();
+            }
 
             document.getElementById('mbName').innerText = member.name;
             document.getElementById('mbAvatar').innerText = member.name.charAt(0).toUpperCase();
@@ -2030,7 +2456,16 @@
             document.getElementById('mbElecShare').innerText = formatMoney(member.elecShare) + 'đ';
             document.getElementById('mbWaterShare').innerText = formatMoney(member.waterShare) + 'đ';
             document.getElementById('mbFeeShare').innerText = formatMoney(member.feeShare) + 'đ';
-            document.getElementById('mbSharedItemShare').innerText = formatMoney(member.sharedItemShare) + 'đ';
+            
+            const mbSharedLabel = document.getElementById('mbSharedItemLabel');
+            if (member.isExcludedFromShared) {
+                mbSharedLabel.innerHTML = `Phí quỹ chung <span class="text-[10px] bg-rose-100 text-rose-700 font-bold px-1.5 py-0.5 rounded ml-1">Được miễn</span>`;
+                document.getElementById('mbSharedItemShare').innerHTML = `<span class="text-rose-600 font-bold">0đ</span>`;
+            } else {
+                mbSharedLabel.innerHTML = `Phí quỹ chung <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-400">Chia đều</span>`;
+                document.getElementById('mbSharedItemShare').innerText = formatMoney(member.sharedItemShare) + 'đ';
+            }
+
             document.getElementById('mbBaseShare').innerText = formatMoney(member.shareCost) + 'đ';
 
             const deducContainer = document.getElementById('mbDeductionContainer');
@@ -2124,16 +2559,28 @@
             renderAdminItemsTable();
         }
 
+        function toggleMemberExcludeShared(idx, isChecked) {
+            state.members[idx].excludeShared = isChecked;
+            calculateAndRender();
+        }
+
         function renderAdminMembersTable() {
             const tbody = document.getElementById('adminMembersTable');
             let html = '';
             for (let idx = 0; idx < state.members.length; idx++) {
                 const m = state.members[idx];
+                const isExcluded = !!m.excludeShared;
                 html += `
                     <tr class="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
                         <td class="p-3"><input type="number" value="${m.id}" onchange="state.members[${idx}].id=this.value" class="w-12 px-2 py-1.5 border border-slate-200 rounded-lg outline-none text-center font-bold" ${m.id==1?'readonly':''}></td>
                         <td class="p-3"><input type="text" value="${m.name}" onchange="state.members[${idx}].name=this.value; populateAttendanceMemberOptions();" class="w-full min-w-[120px] px-3 py-1.5 border border-slate-200 rounded-lg outline-none font-semibold text-slate-700"></td>
                         <td class="p-3 text-center"><input type="number" value="${m.days}" readonly class="w-16 px-2 py-1.5 border border-slate-200 bg-slate-100 rounded-lg outline-none text-center font-bold text-slate-500 cursor-not-allowed"></td>
+                        <td class="p-3 text-center">
+                            <label class="inline-flex items-center cursor-pointer gap-1.5">
+                                <input type="checkbox" ${isExcluded ? 'checked' : ''} onchange="toggleMemberExcludeShared(${idx}, this.checked)" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer">
+                                <span class="text-xs font-semibold ${isExcluded ? 'text-rose-600 font-bold' : 'text-slate-500'}">${isExcluded ? 'Được miễn' : 'Chia đều'}</span>
+                            </label>
+                        </td>
                         <td class="p-3 text-center">
                             <select onchange="state.members[${idx}].status=this.value" class="px-2 py-1.5 border border-slate-200 rounded-lg outline-none font-bold ${m.status === 'paid' ? 'text-emerald-600' : 'text-amber-600'}">
                                 <option value="paid" class="text-emerald-600" ${m.status === 'paid' ? 'selected' : ''}>Đã nộp</option>
@@ -2166,7 +2613,13 @@
         }
 
         function addAdminMember() {
-            state.members.push({ id: state.members.length ? Math.max(...state.members.map(m=>m.id))+1 : 1, name: "Tên mới", days: 0, status: "unpaid" });
+            state.members.push({ 
+                id: state.members.length ? Math.max(...state.members.map(m=>m.id))+1 : 1, 
+                name: "Tên mới", 
+                days: 0, 
+                status: "unpaid",
+                excludeShared: false
+            });
             populateAttendanceMemberOptions();
             renderAdminMembersTable();
         }
@@ -2214,6 +2667,7 @@
                 const data = calculateData(); 
                 renderPublicDashboard(data); 
                 renderBillPopup(data); 
+                renderDetailedCalculation();
             } 
         }
         
@@ -2272,7 +2726,6 @@
             }
         };
 
-        // Phím tắt bàn phím tiện dụng (Escape để đóng popup)
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const modals = ['billImageModal', 'billModal', 'memberBillModal', 'attendanceModal', 'selfAttendanceModal', 'dayInspectModal', 'customConfirmModal', 'loginModal'];
