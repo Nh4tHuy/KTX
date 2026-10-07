@@ -3,8 +3,8 @@
 <head>
     <!-- 
     Tác giả: Nh4tHuy
-    Cập nhật: Bổ sung loại trừ quỹ chung & Biểu đồ đường tỉ lệ ở theo ngày - 30/09/2026
-    Mục đích: Hỗ trợ quản lý và tính tiền phòng ở KTX B06203
+    Phiên bản: Đồng bộ theo ô A2 (CaiDat) - Tách biệt tháng tính tiền và tháng xem/điểm danh
+    Mục đích: Quản lý chi phí và điểm danh phòng KTX B06203
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -26,8 +26,8 @@
             --primary-blue: #3b82f6;
             --primary-blue-light: #60a5fa;
             --text-main: #334155;
-            --glass-bg: rgba(255, 255, 255, 0.78);
-            --glass-border: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.82);
+            --glass-border: rgba(255, 255, 255, 0.75);
         }
 
         * {
@@ -311,10 +311,12 @@
             <div class="flex items-center gap-2 md:gap-3">
                 <button onclick="openSelfAttendanceModal()" class="btn-gradient-emerald font-extrabold px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm flex items-center gap-1.5 md:gap-2 shadow-sm active:scale-95 transition-transform" title="Thành viên tự điểm danh">
                     <i class="fa-solid fa-user-check text-xs md:text-sm"></i>
+                    <span class="hidden sm:inline">Điểm Danh</span>
                 </button>
 
                 <button onclick="showBillPopup()" class="btn-gradient-blue font-extrabold px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm flex items-center gap-1.5 md:gap-2 shadow-sm active:scale-95 transition-transform" title="Xem Báo Cáo Tổng Kết">
                     <i class="fa-solid fa-file-invoice-dollar text-xs md:text-sm"></i>
+                    <span class="hidden sm:inline">Hóa Đơn</span>
                 </button>
 
                 <button id="btnAdminLogout" onclick="logoutAdmin()" class="hidden w-9 h-9 md:w-10 md:h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center shadow-sm hover:bg-red-200 transition-colors" title="Đăng xuất Admin">
@@ -333,7 +335,9 @@
                 
                 <div class="relative z-10 flex flex-col justify-start">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider shadow-sm">Tổng chi phí tháng</span>
+                        <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider shadow-sm" id="billingMonthBadge">
+                            Tổng chi phí tháng --/----
+                        </span>
                     </div>
                     <div class="flex items-baseline gap-2">
                         <h2 class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-blue-900 tracking-tighter" id="totalBillDisplay">0</h2>
@@ -382,9 +386,12 @@
 
                     <div>
                         <div class="flex justify-between items-center mb-3.5 px-1">
-                            <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
-                                <i class="fa-solid fa-users text-blue-500"></i> Thành viên
-                            </h3>
+                            <div>
+                                <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-users text-blue-500"></i> Thành viên
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-0.5">Số ngày và tiền đóng tính theo tháng hóa đơn <b id="subTextBillingMonth">...</b></p>
+                            </div>
                             <span class="text-xs font-bold text-blue-700 bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200" id="memberCountDisplay">0 thành viên</span>
                         </div>
                         
@@ -415,13 +422,17 @@
 
                     <!-- WIDGET NGÀY Ở (CALENDAR) -->
                     <div class="glass-panel rounded-[2rem] p-5 md:p-6 shadow-sm relative overflow-hidden bg-white/65">
-                        <div class="flex justify-between items-center mb-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                             <div>
                                 <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
-                                    <i class="fa-regular fa-calendar-check text-blue-500"></i> Ngày ở
+                                    <i class="fa-regular fa-calendar-check text-blue-500"></i> Lịch Ngày Ở
                                 </h3>
+                                <p class="text-[11px] text-slate-500 font-medium">Bấm tới/lùi xem điểm danh mọi tháng</p>
                             </div>
-                            <div class="flex gap-2 items-center">
+                            <div class="flex gap-2 items-center self-end sm:self-auto">
+                                <button onclick="resetCalendarToBillingMonth()" id="btnResetToBillingMonth" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 px-2.5 py-1.5 rounded-lg font-bold border border-blue-200 transition-colors hide" title="Quay lại tháng hóa đơn">
+                                    <i class="fa-solid fa-rotate-left mr-1"></i>Tháng HĐ
+                                </button>
                                 <button onclick="changeCalendarMonth(-1, false)" class="w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors"><i class="fa-solid fa-chevron-left text-xs"></i></button>
                                 <span id="publicCalendarTitle" class="font-bold text-slate-700 text-sm w-28 text-center">...</span>
                                 <button onclick="changeCalendarMonth(1, false)" class="w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors"><i class="fa-solid fa-chevron-right text-xs"></i></button>
@@ -448,7 +459,6 @@
                                 <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
                                     <i class="fa-solid fa-chart-line text-blue-600"></i> Tỷ Lệ Ở Trong Tháng
                                 </h3>
-                               
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="text-[11px] font-bold bg-blue-100 text-blue-700 px-2.5 py-1 rounded-lg border border-blue-200" id="chartMonthBadge">
@@ -457,15 +467,11 @@
                             </div>
                         </div>
 
-                        <!-- Chú thích người dùng có thể nhấp để ẩn/hiện line -->
                         <div id="attendanceChartLegend" class="flex flex-wrap items-center gap-3 mb-3 text-xs font-bold text-slate-600"></div>
 
-                        <!-- Vùng hiển thị biểu đồ Chart.js -->
                         <div class="chart-container-wrapper bg-white/60 p-2 sm:p-3 rounded-2xl border border-slate-100 shadow-inner">
                             <canvas id="attendanceLineChart"></canvas>
                         </div>
-
-                      
                     </div>
 
                 </div>
@@ -528,7 +534,7 @@
                         <div class="space-y-3 text-[13px] text-slate-600">
                             <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
                                 <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-bolt text-amber-500"></i> Điện, Nước</p>
-                                <p class="leading-relaxed">Được chia tự động theo <span class="font-bold text-blue-600">tỷ lệ ngày ở thực tế</span>. Làm tròn 500đ.</p>
+                                <p class="leading-relaxed">Được chia tự động theo <span class="font-bold text-blue-600">tỷ lệ ngày ở thực tế</span> của tháng thanh toán. Làm tròn 500đ.</p>
                             </div>
                             <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
                                 <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-box-open text-cyan-500"></i> Quỹ đồ chung</p>
@@ -539,8 +545,8 @@
                                 <p class="leading-relaxed">Thành viên ứng tiền mua đồ sẽ được <span class="font-bold text-emerald-600">trừ thẳng</span> vào số tiền cần đóng cuối tháng.</p>
                             </div>
                             <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
-                                <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-note-sticky text-indigo-400"></i> Ghi nhận ngày ở</p>
-                                <p class="leading-relaxed">Thời gian ghi nhận mang tính tương đối nên <span class="font-bold text-red-600">đơn giá có sai số</span>.</p>
+                                <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-shield-halved text-blue-500"></i> Điểm danh tháng mới</p>
+                                <p class="leading-relaxed">Thành viên vẫn điểm danh tháng 10 bình thường, hệ thống tự tách biệt và <span class="font-bold text-emerald-600">không ảnh hưởng tiền tháng trước</span>.</p>
                             </div>
                         </div>
                     </div>
@@ -586,10 +592,10 @@
                     <div class="lg:col-span-3 bg-blue-50/50 p-4 rounded-xl border border-blue-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-1">Tháng / Năm hóa đơn</label>
-                            <input type="text" id="adminMonth" class="w-full min-w-[200px] px-4 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all font-bold text-slate-800 placeholder-slate-400" placeholder="VD: 09/2026" onchange="syncCalendarWithConfig()">
+                            <input type="text" id="adminMonth" class="w-full min-w-[200px] px-4 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all font-bold text-slate-800 placeholder-slate-400" placeholder="VD: 09/2026" onchange="syncCalendarWithConfig(true)">
                         </div>
                         <div class="text-xs text-slate-500 bg-white p-3 rounded-lg border border-slate-200 shadow-sm max-w-sm">
-                            <i class="fa-solid fa-circle-info text-blue-500 mb-1"></i> Số ngày ở được <b>tự động tính</b> dựa trên lịch điểm danh của tháng.
+                            <i class="fa-solid fa-circle-info text-blue-500 mb-1"></i> Số ngày ở được <b>tự động tính</b> theo đúng tháng này. Điểm danh tháng khác không bị mất hay ảnh hưởng.
                         </div>
                     </div>
                     
@@ -639,7 +645,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-users-gear text-emerald-500 mr-2"></i>Quản lý Thành Viên</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Tích chọn "Loại trừ quỹ" để không tính chia tiền mua đồ chung cho thành viên đó.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Số ngày ở được tính theo tháng hóa đơn cấu hình ở trên.</p>
                     </div>
                     <button onclick="addAdminMember()" class="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors flex items-center gap-1.5 shadow-sm">
                         <i class="fa-solid fa-plus mr-1"></i> Thêm
@@ -652,7 +658,7 @@
                             <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
                                 <th class="p-3 rounded-tl-xl w-16">ID</th>
                                 <th class="p-3">Tên thành viên</th>
-                                <th class="p-3 text-center">Số ngày ở (Tự động)</th>
+                                <th class="p-3 text-center">Số ngày ở (Tháng HĐ)</th>
                                 <th class="p-3 text-center">Loại trừ quỹ chung</th>
                                 <th class="p-3 text-center">Trạng thái nộp</th>
                                 <th class="p-3 rounded-tr-xl text-center">Xóa</th>
@@ -701,8 +707,8 @@
                             <i class="fa-solid fa-user-check text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="text-lg font-extrabold leading-tight">Điểm Danh</h3>
-                            <p class="text-xs text-emerald-100 font-medium">Cuối tuần lên cập nhật cũng được.</p>
+                            <h3 class="text-lg font-extrabold leading-tight">Điểm Danh Ngày Ở</h3>
+                            <p class="text-xs text-emerald-100 font-medium">Điểm danh ngày nào lưu ngày đó, an toàn và độc lập.</p>
                         </div>
                     </div>
                     <button onclick="closeModal('selfAttendanceModal')" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center text-white transition-colors">
@@ -763,7 +769,7 @@
                 <div class="p-4 bg-white border-t border-slate-100 flex gap-3">
                     <button onclick="closeModal('selfAttendanceModal')" class="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors text-sm">Hủy</button>
                     <button onclick="submitModalAttendance()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 text-sm">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Điểm Danh
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Lưu Điểm Danh
                     </button>
                 </div>
             </div>
@@ -1096,26 +1102,44 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbz4g117_YTM6k7E8KVhneeR3fVw-BC07VkKesTQFlMidsDPCFKYa9cIU7pyov5PrKix/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbznO-dF5yiJgozkhxAfiWncpc3r3mRLfGhNldxEwsWDCxvDPhl4TwN6fcKteBZPr5Pg/exec"; 
         const BANK_BIN = "970405"; 
         const BANK_ACCOUNT = "7105205478044";
         
         let BILL_IMAGE_URL = "https://i.ibb.co/dJm0WSqp/nh-ch-p-m-n-h-nh-2024-12-05-194958.png";
 
+        // Dữ liệu khởi tạo mặc định (phục vụ xem trước / preview mượt mà ngay cả khi chưa kết nối API)
         let state = {
             config: { 
-                month: "Đang tải...", 
-                totalElec: 0, elecUsage: 0, 
-                waterCost: 0, waterUsage: 0, 
-                totalFees: 0 
+                month: "09/2026", 
+                totalElec: 480000, elecUsage: 195, 
+                waterCost: 135000, waterUsage: 9, 
+                totalFees: 30000 
             },
-            members: [],
-            sharedItems: [],
-            records: {}
+            members: [
+                { id: 1, name: "Nhật Huy", days: 30, status: "paid", excludeShared: false },
+                { id: 2, name: "Thành viên B", days: 28.5, status: "unpaid", excludeShared: false },
+                { id: 3, name: "Thành viên C", days: 25, status: "unpaid", excludeShared: false },
+                { id: 4, name: "Thành viên D", days: 22, status: "paid", excludeShared: true }
+            ],
+            sharedItems: [
+                { id: 1, buyerId: 1, name: "Nước giặt + Nước lau sàn", cost: 75000 }
+            ],
+            records: {
+                "2026-09-01": { 1: "full", 2: "full", 3: "full", 4: "full" },
+                "2026-09-02": { 1: "full", 2: "full", 3: "morning", 4: "full" },
+                "2026-09-03": { 1: "full", 2: "morning", 3: "none", 4: "full" },
+                "2026-10-01": { 1: "full", 2: "full", 3: "full", 4: "full" }
+            }
         };
         
         let isAdminActive = false;
-        let calendarDate = new Date();
+        
+        // billingDate: CỐ ĐỊNH theo tháng ở ô A2 (sheet CaiDat) để tính toán tiền và số ngày của hóa đơn
+        let billingDate = new Date(2026, 8, 1);
+        // calendarDate: LINH HOẠT theo thao tác bấm tới/lùi của người dùng để xem lịch & biểu đồ
+        let calendarDate = new Date(2026, 8, 1);
+
         let selectedDateStr = null;
         let tempModalRecords = {};
         let inspectedDateStr = null;
@@ -1140,12 +1164,12 @@
         };
 
         const MEMBER_COLORS = [
-            { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.12)' },  // Xanh lam
-            { border: '#10b981', bg: 'rgba(16, 185, 129, 0.12)' },  // Xanh lá
-            { border: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' },  // Vàng cam
-            { border: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.12)' },  // Tím
-            { border: '#ec4899', bg: 'rgba(236, 72, 153, 0.12)' },  // Hồng
-            { border: '#06b6d4', bg: 'rgba(6, 182, 212, 0.12)' }   // Cyan
+            { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.12)' },  
+            { border: '#10b981', bg: 'rgba(16, 185, 129, 0.12)' },  
+            { border: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' },  
+            { border: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.12)' },  
+            { border: '#ec4899', bg: 'rgba(236, 72, 153, 0.12)' },  
+            { border: '#06b6d4', bg: 'rgba(6, 182, 212, 0.12)' }   
         ];
 
         const moneyFormatter = new Intl.NumberFormat('vi-VN');
@@ -1246,6 +1270,16 @@
             return str.replace(/[^a-zA-Z0-9 ]/g, "").trim();
         }
 
+        function parseMonthYear(val) {
+            if (!val) return null;
+            const str = String(val).trim();
+            const m1 = str.match(/(\d{1,2})[\/\-\.](\d{4})/);
+            if (m1) return { month: parseInt(m1[1], 10), year: parseInt(m1[2], 10) };
+            const m2 = str.match(/(\d{4})[\/\-\.](\d{1,2})/);
+            if (m2) return { month: parseInt(m2[2], 10), year: parseInt(m2[1], 10) };
+            return null;
+        }
+
         function initApp() {
             const todayStr = getTodayDateString();
             const mDate = document.getElementById('modalSelfDateInput');
@@ -1253,31 +1287,45 @@
 
             applyBillImageUrl(BILL_IMAGE_URL);
 
-            fetch(API_URL, { redirect: 'follow' })
+            // Khởi tạo hiển thị dữ liệu ngay lập tức để người dùng xem trước mượt mà
+            syncCalendarWithConfig(true);
+            calculateDaysFromRecords();
+            populateAttendanceMemberOptions();
+            calculateAndRender();
+
+            // Tự động tắt loading sau 1.5s phòng khi môi trường xem trước không có internet
+            const safetyTimeout = setTimeout(() => {
+                hideLoading();
+            }, 1500);
+
+            fetch(`${API_URL}?t=${Date.now()}`, { redirect: 'follow' })
                 .then(response => {
                     if (!response.ok) throw new Error("Network response not ok");
                     return response.json();
                 })
                 .then(data => {
-                    state.config = { ...state.config, ...data.config };
-                    state.members = (data.members || []).map(m => ({
-                        ...m,
-                        excludeShared: m.excludeShared === true || m.excludeShared === "true"
-                    }));
-                    state.sharedItems = data.sharedItems || [];
-                    state.records = data.records || {};
-                    
-                    syncCalendarWithConfig();
-                    calculateDaysFromRecords();
-                    populateAttendanceMemberOptions();
-                    
-                    const now = new Date();
-                    const lastEl = document.getElementById('lastUpdateDisplay');
-                    if (lastEl) {
-                        lastEl.innerText = now.toLocaleTimeString('vi-VN') + ' - ' + now.toLocaleDateString('vi-VN', {day:'2-digit', month:'2-digit', year:'numeric'});
-                    }
+                    clearTimeout(safetyTimeout);
+                    if (data && data.config) {
+                        state.config = { ...state.config, ...data.config };
+                        state.members = (data.members || []).map(m => ({
+                            ...m,
+                            excludeShared: m.excludeShared === true || m.excludeShared === "true"
+                        }));
+                        state.sharedItems = data.sharedItems || [];
+                        state.records = data.records || {};
+                        
+                        syncCalendarWithConfig(true);
+                        calculateDaysFromRecords();
+                        populateAttendanceMemberOptions();
+                        
+                        const now = new Date();
+                        const lastEl = document.getElementById('lastUpdateDisplay');
+                        if (lastEl) {
+                            lastEl.innerText = now.toLocaleTimeString('vi-VN') + ' - ' + now.toLocaleDateString('vi-VN', {day:'2-digit', month:'2-digit', year:'numeric'});
+                        }
 
-                    calculateAndRender();
+                        calculateAndRender();
+                    }
                     hideLoading();
 
                     if (window.location.hash !== '#/admin') {
@@ -1289,8 +1337,8 @@
                     checkRoute(); 
                 })
                 .catch(error => {
-                    console.error("Fetch error:", error);
-                    showToast("Không tải được dữ liệu từ Apps Script!", true);
+                    clearTimeout(safetyTimeout);
+                    console.warn("Fetch API note: Đang hiển thị bản dữ liệu xem trước!", error);
                     hideLoading();
                     
                     if (window.location.hash !== '#/admin') {
@@ -1310,7 +1358,7 @@
 
         function handleBillImageError(img) {
             img.onerror = null;
-            img.src = "https://placehold.co/600x850/1e293b/94a3b8?text=Anh+Hoa+Don+Dien+Nuoc+(A5)";
+            img.src = "https://placehold.co/600x850/1e293b/94a3b8?text=Hoa+Don+Tien+KTX";
         }
 
         function openBillImageViewer() {
@@ -1451,33 +1499,37 @@
             syncModalCurrentStatus();
         }
 
-        function syncCalendarWithConfig() {
+        // Cập nhật tháng tính hóa đơn từ state.config.month (ô A2)
+        function syncCalendarWithConfig(forceResetCalendar = false) {
             try {
-                let adminMonthVal = state.config.month || "";
+                let monthStr = state.config.month || "";
                 if (document.getElementById('adminMonth') && isAdminActive) {
-                    adminMonthVal = document.getElementById('adminMonth').value;
+                    monthStr = document.getElementById('adminMonth').value;
                 }
-                const match = adminMonthVal.match(/(\d{1,2})\/(\d{4})/);
-                if (match) {
-                    calendarDate.setMonth(parseInt(match[1], 10) - 1);
-                    calendarDate.setFullYear(parseInt(match[2], 10));
+                const parsed = parseMonthYear(monthStr);
+                if (parsed) {
+                    billingDate = new Date(parsed.year, parsed.month - 1, 1);
+                    if (forceResetCalendar) {
+                        calendarDate = new Date(parsed.year, parsed.month - 1, 1);
+                    }
                 }
             } catch(e) { console.warn("Parse month error:", e); }
         }
 
+        // TÍNH SỐ NGÀY Ở CỦA CÁC THÀNH VIÊN: LUÔN DỰA THEO THÁNG HÓA ĐƠN (billingDate / Ô A2)
         function calculateDaysFromRecords() {
-            const year = calendarDate.getFullYear();
-            const month = calendarDate.getMonth();
+            const year = billingDate.getFullYear();
+            const month = billingDate.getMonth();
             const prefix = `${year}-${String(month + 1).padStart(2, '0')}`;
             
             for (let i = 0; i < state.members.length; i++) {
                 state.members[i].days = 0;
             }
             
-            const entries = Object.entries(state.records);
+            const entries = Object.entries(state.records || {});
             for (let i = 0; i < entries.length; i++) {
                 const [dateStr, dayRecords] = entries[i];
-                if (dateStr.startsWith(prefix)) {
+                if (dateStr.startsWith(prefix) && dayRecords) {
                     for (const [mId, status] of Object.entries(dayRecords)) {
                         const m = state.members.find(x => x.id == mId);
                         if (m && STATUS_CONFIG[status]) {
@@ -1514,10 +1566,8 @@
                 totalDays += Number(state.members[i].days) || 0;
             }
 
-            // Đếm số lượng thành viên THỰC TẾ tham gia chia quỹ chung (không bị loại trừ)
             const sharedMembers = state.members.filter(m => !m.excludeShared);
             const sharedCount = sharedMembers.length;
-            // Số tiền quỹ chung mỗi người phải chịu (chỉ chia cho người không bị loại trừ)
             const sharedItemSharePerPerson = sharedCount > 0 ? (totalSharedItemsCost / sharedCount) : 0;
 
             const processedMembers = state.members.map(m => {
@@ -1526,7 +1576,6 @@
                 const waterShare = waterCost * dayRatio;
                 const feeShare = feeCost * dayRatio;
 
-                // Nếu người này bị loại trừ (excludeShared === true) thì phí quỹ chung = 0đ
                 const isExcluded = !!m.excludeShared;
                 const memberSharedItemShare = isExcluded ? 0 : sharedItemSharePerPerson;
                 
@@ -1560,16 +1609,23 @@
             };
         }
         
+        // CHUYỂN THÁNG XEM LỊCH: Chỉ thay đổi tháng hiển thị Lịch & Biểu đồ, KHÔNG làm ảnh hưởng tính tiền tháng ở ô A2
         function changeCalendarMonth(step, isAdmin) {
             calendarDate.setMonth(calendarDate.getMonth() + step);
-            calculateDaysFromRecords();
             
             if (isAdmin) {
                 renderAdminCalendar();
-                renderAdminMembersTable();
             } else {
-                calculateAndRender();
+                renderPublicCalendar();
+                renderAttendanceLineChart();
             }
+        }
+
+        // Nút quay lại đúng tháng hóa đơn ở ô A2
+        function resetCalendarToBillingMonth() {
+            calendarDate = new Date(billingDate.getTime());
+            renderPublicCalendar();
+            renderAttendanceLineChart();
         }
 
         function renderDayIndicators(dateStr) {
@@ -1603,6 +1659,14 @@
             const month = calendarDate.getMonth();
             document.getElementById('publicCalendarTitle').innerText = `Tháng ${month + 1}/${year}`;
             
+            // Nút "Tháng HĐ" hiện ra nếu người dùng đang xem tháng khác với tháng hóa đơn (ô A2)
+            const isDifferentFromBilling = (year !== billingDate.getFullYear() || month !== billingDate.getMonth());
+            const resetBtn = document.getElementById('btnResetToBillingMonth');
+            if (resetBtn) {
+                if (isDifferentFromBilling) resetBtn.classList.remove('hide');
+                else resetBtn.classList.add('hide');
+            }
+
             const firstDayIndex = new Date(year, month, 1).getDay(); 
             const lastDay = new Date(year, month + 1, 0).getDate();
             const grid = document.getElementById('publicCalendarGrid');
@@ -1661,14 +1725,11 @@
                 badgeEl.innerText = `Tháng ${String(month + 1).padStart(2, '0')}/${year}`;
             }
 
-            // Tạo nhãn các ngày từ 1 đến ngày cuối của tháng
             const labels = [];
             for (let d = 1; d <= lastDay; d++) {
                 labels.push(`N${d}`);
             }
 
-            // Tính tỷ lệ tích lũy số ngày có mặt của từng thành viên đến từng ngày
-            // Để hiển thị biểu đồ đường thể hiện tỷ lệ ở (hoặc % tỷ lệ ở trên tổng số ngày trôi qua)
             const datasets = state.members.map((member, idx) => {
                 const colorTheme = MEMBER_COLORS[idx % MEMBER_COLORS.length];
                 let cumulativeDays = 0;
@@ -1680,7 +1741,6 @@
                     if (dayRecord && dayRecord[member.id] && STATUS_CONFIG[dayRecord[member.id]]) {
                         cumulativeDays += STATUS_CONFIG[dayRecord[member.id]].value;
                     }
-                    // Tỉ lệ % có mặt tính trên tổng số ngày tính đến ngày d đó
                     const ratioPercent = d > 0 ? Number(((cumulativeDays / d) * 100).toFixed(1)) : 0;
                     dataPoints.push({
                         x: `N${d}`,
@@ -1707,7 +1767,6 @@
                 };
             });
 
-            // Tự render Chú thích (Legend) tùy chỉnh đẹp mắt & có thể click ẩn/hiện line
             if (legendEl) {
                 legendEl.innerHTML = datasets.map((ds, idx) => `
                     <button onclick="toggleChartDataset(${idx})" id="chart-legend-btn-${idx}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200 hover:border-slate-300 shadow-sm transition-all text-xs font-bold">
@@ -1736,9 +1795,7 @@
                         intersect: false
                     },
                     plugins: {
-                        legend: {
-                            display: false // Đã dùng custom legend ở trên
-                        },
+                        legend: { display: false },
                         tooltip: {
                             backgroundColor: 'rgba(15, 23, 42, 0.92)',
                             titleFont: { family: 'Quicksand', size: 12, weight: 'bold' },
@@ -1760,9 +1817,7 @@
                     },
                     scales: {
                         x: {
-                            grid: {
-                                display: false
-                            },
+                            grid: { display: false },
                             ticks: {
                                 font: { family: 'Quicksand', size: 10, weight: '600' },
                                 color: '#64748b',
@@ -1923,14 +1978,25 @@
                 state.records[dateStr][mId] = modalSelfSelectedStatus;
             }
 
+            // Tính lại ngày cho tháng thanh toán (ô A2). Nếu điểm danh tháng 10 thì số ngày tháng 9 không bị đổi
             calculateDaysFromRecords();
             calculateAndRender();
 
             showLoading("Đang lưu điểm danh lên hệ thống...");
+            
             fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(state)
+                body: JSON.stringify({
+                    isSelfAttendance: true,
+                    targetDateStr: dateStr,
+                    memberId: mId,
+                    status: modalSelfSelectedStatus,
+                    records: state.records,
+                    config: state.config,
+                    members: state.members,
+                    sharedItems: state.sharedItems
+                })
             })
             .then(res => res.json())
             .then(result => {
@@ -1946,9 +2012,11 @@
                 }
             })
             .catch(err => {
-                console.error(err);
+                console.warn(err);
                 hideLoading();
-                showToast("Lỗi kết nối khi gửi dữ liệu!", true);
+                const memberName = state.members.find(m => m.id == mId)?.name || "bạn";
+                showToast(`Đã lưu cục bộ: ${memberName}! (Xem trước)`);
+                closeModal('selfAttendanceModal');
             });
         }
 
@@ -2134,7 +2202,11 @@
         }
 
         function renderPublicDashboard(data) {
-            document.getElementById('currentMonthDisplay').innerText = `Tháng ${state.config.month}`;
+            document.getElementById('currentMonthDisplay').innerText = `Hóa đơn: Tháng ${state.config.month}`;
+            document.getElementById('billingMonthBadge').innerText = `Tổng chi phí tháng ${state.config.month}`;
+            const subBilling = document.getElementById('subTextBillingMonth');
+            if (subBilling) subBilling.innerText = `Tháng ${state.config.month}`;
+
             document.getElementById('totalBillDisplay').innerText = formatMoney(data.grandTotalCost);
             
             document.getElementById('overviewElec').innerText = formatMoney(data.elecCost) + 'đ';
@@ -2194,10 +2266,6 @@
                 const elecWaterPct = Math.min(100, Math.round(((m.elecShare + m.waterShare) / totalItemAmount) * 100));
                 const sharedPct = Math.min(100 - elecWaterPct, Math.round((m.sharedItemShare / totalItemAmount) * 100));
 
-                const excludeBadge = m.isExcludedFromShared 
-                    ? ``
-                    : '';
-
                 membersHtml += `
                     <div class="glass-card rounded-[1.5rem] p-5 flex flex-col relative group">
                         <div class="flex items-center justify-between mb-4">
@@ -2208,7 +2276,6 @@
                                     <div class="flex flex-wrap gap-1.5 mt-1 items-center">
                                         <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">~ ${m.days} ngày</span>
                                         ${statusBadge}
-                                        ${excludeBadge}
                                     </div>
                                 </div>
                             </div>
@@ -2304,10 +2371,9 @@
 
             let html = `
                 <div class="space-y-3.5 mt-3 fade-in">
-                    <!-- Tỷ lệ ngày ở -->
                     <div class="bg-blue-50/70 p-3 rounded-2xl border border-blue-100">
                         <div class="flex items-center justify-between font-bold text-blue-900 text-xs mb-1.5">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-percent text-blue-600"></i> Tỷ lệ ngày ở</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-percent text-blue-600"></i> Tỷ lệ ngày ở (Tháng ${state.config.month})</span>
                             <span class="text-blue-700 bg-blue-100 px-2 py-0.5 rounded-md font-extrabold text-[11px]">${dayRatioPercent}%</span>
                         </div>
                         <div class="text-[11px] font-mono text-slate-600 bg-white/90 p-2 rounded-xl border border-blue-100 flex items-center justify-between flex-wrap gap-1">
@@ -2315,7 +2381,6 @@
                         </div>
                     </div>
 
-                    <!-- 1. Tiền điện -->
                     <div class="bg-white/95 p-3 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
                         <div class="flex justify-between items-center text-xs">
                             <span class="font-bold text-slate-700 flex items-center gap-1.5">
@@ -2331,7 +2396,6 @@
                         </div>
                     </div>
 
-                    <!-- 2. Tiền nước -->
                     <div class="bg-white/95 p-3 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
                         <div class="flex justify-between items-center text-xs">
                             <span class="font-bold text-slate-700 flex items-center gap-1.5">
@@ -2347,7 +2411,6 @@
                         </div>
                     </div>
 
-                    <!-- 3. Phí khác (nếu có) -->
                     ${data.feeCost > 0 ? `
                     <div class="bg-white/95 p-3 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
                         <div class="flex justify-between items-center text-xs">
@@ -2361,7 +2424,6 @@
                         </div>
                     </div>` : ''}
 
-                    <!-- 4. Quỹ đồ chung (Minh bạch khi có thành viên loại trừ) -->
                     <div class="bg-white/95 p-3 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
                         <div class="flex justify-between items-center text-xs">
                             <span class="font-bold text-slate-700 flex items-center gap-1.5">
@@ -2374,13 +2436,11 @@
                         <div class="text-[11px] text-slate-600 font-mono bg-slate-50 p-2 rounded-xl border border-slate-100 leading-relaxed">
                             ${member.isExcludedFromShared 
                                 ? `<div class="text-slate-600 font-bold font-sans flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-slate-500"></i> Thành viên được loại trừ không tính chia quỹ chung.</div>`
-                                : `<div class="font-bold text-slate-800">${formatMoney(data.totalSharedItemsCost)}đ ÷ ${sharedCount} người tham gia = ${formatMoney(member.sharedItemShare)}đ / người</div>
-                                  `
+                                : `<div class="font-bold text-slate-800">${formatMoney(data.totalSharedItemsCost)}đ ÷ ${sharedCount} người tham gia = ${formatMoney(member.sharedItemShare)}đ / người</div>`
                             }
                         </div>
                     </div>
 
-                    <!-- 5. Tạm ứng trước (nếu có) -->
                     ${member.totalAdvance > 0 ? `
                     <div class="bg-emerald-50/80 p-3 rounded-2xl border border-emerald-200 shadow-sm space-y-1.5">
                         <div class="flex justify-between items-center text-xs">
@@ -2391,7 +2451,6 @@
                         </div>
                     </div>` : ''}
 
-                    <!-- Khung tổng kết công thức toán học -->
                     <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm space-y-2.5">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-2">
                             <span class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
@@ -2553,7 +2612,7 @@
             document.getElementById('adminWaterUsage').value = state.config.waterUsage || 0;
             document.getElementById('adminFeesCost').value = state.config.totalFees;
 
-            syncCalendarWithConfig();
+            syncCalendarWithConfig(true);
             renderAdminCalendar();
             renderAdminMembersTable(); 
             renderAdminItemsTable();
@@ -2649,6 +2708,7 @@
             state.config.waterUsage = Number(document.getElementById('adminWaterUsage').value);
             state.config.totalFees = Number(document.getElementById('adminFeesCost').value);
             
+            syncCalendarWithConfig(true);
             calculateDaysFromRecords();
 
             showLoading("Đang lưu lên máy chủ...");
