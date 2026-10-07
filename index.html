@@ -1112,9 +1112,9 @@
         let state = {
             config: { 
                 month: "09/2026", 
-                totalElec: 480000, elecUsage: 195, 
-                waterCost: 135000, waterUsage: 9, 
-                totalFees: 30000 
+                totalElec: 0, elecUsage: 0, 
+                waterCost: 0, waterUsage: 0, 
+                totalFees: 0
             },
             members: [
                 { id: 1, name: "Nhật Huy", days: 30, status: "paid", excludeShared: false },
@@ -1123,7 +1123,7 @@
                 { id: 4, name: "Thành viên D", days: 22, status: "paid", excludeShared: true }
             ],
             sharedItems: [
-                { id: 1, buyerId: 1, name: "Nước giặt + Nước lau sàn", cost: 75000 }
+                { id: 1, buyerId: 1, name: "", cost: 0 }
             ],
             records: {
                 "2026-09-01": { 1: "full", 2: "full", 3: "full", 4: "full" },
