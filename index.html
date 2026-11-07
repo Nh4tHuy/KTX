@@ -1034,7 +1034,7 @@
             </div>
         </div>
 
-        <!-- MODAL CHI TIẾT ĐÓNG TIỀN THÀNH VIÊN (CÓ MÃ QR SỬA LỖI VIETQR) -->
+        <!-- MODAL CHI TIẾT ĐÓNG TIỀN THÀNH VIÊN -->
         <div id="memberBillModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
              <div class="bg-white rounded-[2rem] w-full max-w-md max-h-[95vh] flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 border border-slate-200">
                  <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-white flex-shrink-0 relative">
@@ -1099,22 +1099,9 @@
                         </div>
                     </div>
 
-                    <!-- KHẮC PHỤC HOÀN TOÀN LỖI HIỂN THỊ ẢNH QR -->
+                    <!-- TẢI MÃ QR MẠNH MẼ KHÔNG QUA XEM TRƯỚC VÀ KHÔNG LỖI -->
                     <div id="mbQRContainer" class="mt-2 flex flex-col items-center justify-center p-5 bg-gradient-to-b from-blue-50 to-white rounded-3xl border border-blue-200 shadow-sm hide">
-                        <p class="text-xs font-bold text-blue-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-qrcode text-lg"></i> Lấy mã để thanh toán nhanh
-                        </p>
-                      <!--   <div class="bg-white p-3 rounded-2xl shadow-lg border border-blue-100 relative group flex items-center justify-center min-h-[260px] w-full">
-                            <img id="mbQRCode" 
-                                 src="" 
-                                 alt="Mã QR Chuyển Khoản KTX" 
-                                 class="w-64 h-64 sm:w-72 sm:h-72 object-contain transition-opacity duration-300" 
-                                 crossorigin="anonymous" 
-                                 loading="eager"
-                                 onerror="handleQRError(this)">
-                        </div>-->
-
-                        <div class="mt-4 w-full space-y-2">
+                        <div class="w-full space-y-2">
                             <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200">
                                 <div>
                                     <p class="text-[10px] text-slate-400 uppercase font-bold">Số tiền chuyển</p>
@@ -1135,8 +1122,8 @@
                             </div>
                         </div>
 
-                        <button onclick="downloadQR()" class="mt-4 w-full bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-md text-sm">
-                            <i class="fa-solid fa-download"></i> Tải ảnh mã QR
+                        <button onclick="downloadQR()" class="mt-4 w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3.5 rounded-xl font-extrabold flex items-center justify-center gap-2 transition-all shadow-md text-sm active:scale-95">
+                            <i class="fa-solid fa-download text-base"></i> Tải Ảnh Mã QR
                         </button>
                     </div>
                  </div>
@@ -1145,22 +1132,16 @@
 
     </div>
 
-    <!-- ---------------------------------------------------- -->
-    <!-- WIDGET CHIBI THÔNG BÁO THÔNG MINH CỦA WEB APP KTX   -->
-    <!-- ---------------------------------------------------- -->
+    <!-- WIDGET CHIBI THÔNG BÁO THÔNG MINH -->
     <div id="chibiBubbleContainer" class="fixed bottom-4 right-4 z-40 pointer-events-auto flex flex-col items-end group transition-all duration-300">
-        
-        <!-- Interactive Speech Bubble -->
         <div id="chibiSpeechBubble" class="mb-2 max-w-[220px] sm:max-w-[260px] p-2.5 sm:p-3 rounded-2xl chibi-speech-bubble text-slate-800 text-[11px] font-extrabold shadow-2xl transition-all duration-300 opacity-0 translate-y-2 pointer-events-none relative">
             <span id="chibiSpeechText">Xin chào! Trợ lý KTX B06203 sẵn sàng hỗ trợ bạn!</span>
             <div class="absolute -bottom-1.5 right-6 w-3 h-3 bg-white rotate-45 border-r border-b border-blue-300"></div>
         </div>
 
         <div class="relative cursor-pointer" onclick="triggerChibiInteraction()">
-            <!-- Glow Shadow Pastel Ocean -->
             <div class="absolute inset-0 rounded-full blur-2xl transition-all duration-700 w-24 h-24 -translate-x-2 -translate-y-2" style="background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, rgba(14, 165, 233, 0.25) 50%, transparent 70%); animation: 2s ease-in-out infinite alternate siri-glow-pulse;"></div>
             
-            <!-- Chibi Morphing Bubble Body -->
             <div class="relative z-10 w-[68px] h-[68px] sm:w-[76px] sm:h-[76px] overflow-hidden shadow-2xl transition-transform duration-300 group-hover:scale-110" style="animation: 3.5s ease-in-out 0s infinite normal none running siri-morph-active; border-radius: 42% 58% 50% 50% / 50% 42% 58% 50%; box-shadow: rgba(14, 165, 233, 0.4) 0px 12px 28px -6px;">
                 <div class="absolute inset-0" style="background: radial-gradient(circle at 35% 35%, rgba(186, 230, 253, 0.95) 0%, rgba(56, 189, 248, 0.85) 45%, rgba(14, 165, 233, 0.95) 100%);"></div>
                 <div class="absolute inset-[-20%] rounded-full" style="background: conic-gradient(transparent 0%, rgba(255, 255, 255, 0.7) 15%, transparent 30%, rgba(56, 189, 248, 0.6) 50%, transparent 65%, rgba(186, 230, 253, 0.7) 80%, transparent 100%); filter: blur(6px); animation: 4s linear 0s infinite normal none running siri-rotate-1;"></div>
@@ -1170,7 +1151,6 @@
                 <div class="absolute rounded-full" style="left: 20%; top: 14%; width: 34%; height: 24%; background: radial-gradient(rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 75%); filter: blur(2px); transform: rotate(-25deg);"></div>
             </div>
 
-            <!-- Chibi Eyes & Dynamic Mouth -->
             <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center space-y-1">
                 <div id="chibiEyes" class="flex items-center gap-[10px] sm:gap-[12px] transition-transform duration-100 ease-out">
                     <span class="block bg-slate-900" style="width: 8px; height: 10px; border-radius: 50%; box-shadow: rgba(255, 255, 255, 0.8) -1px -1px 2px inset; animation: 4.5s ease-in-out 0s infinite normal none running siri-blink;"></span>
@@ -1183,47 +1163,33 @@
 
     <!-- MAIN JAVASCRIPT APP LOGIC -->
     <script>
+        // HÀM XỬ LÝ LỖI HÌNH ẢNH AN TOÀN TRƯỚC KHI DOM LOAD
+        function handleBillImageError(img) {
+            if (!img) return;
+            img.onerror = null;
+            img.src = "https://placehold.co/600x850/1e293b/94a3b8?text=Hoa+Don+Tien+KTX";
+        }
+
         const API_URL = "https://script.google.com/macros/s/AKfycbznO-dF5yiJgozkhxAfiWncpc3r3mRLfGhNldxEwsWDCxvDPhl4TwN6fcKteBZPr5Pg/exec"; 
         const BANK_BIN = "970405"; 
         const BANK_ACCOUNT = "7105205478044";
         
         let BILL_IMAGE_URL = "https://i.ibb.co/HT31zt6c/A-nh-chu-p-ma-n-hi-nh-2026-10-07-172336.png";
 
-        /* ĐỊNH NGHĨA SỚM HÀM XỬ LÝ LỖI ẢNH QR - ĐẢM BẢO HTML GỌI ONERROR KHÔNG BỊ PHÁT SINH REFERENCEERROR */
-        function handleQRError(img) {
-            if (!img) return;
-            img.onerror = null; // Tránh vòng lặp vô hạn
-            console.warn("Không thể tải mã VietQR chính, đang tự động chuyển sang server dự phòng...");
-            
-            const currentSrc = img.src || '';
-            const rawAmount = document.getElementById('mbCopyAmountDisplay')?.getAttribute('data-raw') || '0';
-            const transferMsg = document.getElementById('mbQRText')?.innerText || `Agribank ${BANK_ACCOUNT}`;
+        let currentActiveMemberForQR = null;
 
-            if (currentSrc.includes('img.vietqr.io')) {
-                // Thử server phụ của VietQR
-                img.src = `https://api.vietqr.io/image/${BANK_BIN}-${BANK_ACCOUNT}-compact2.png?amount=${rawAmount}&addInfo=${encodeURIComponent(transferMsg)}`;
-            } else if (currentSrc.includes('api.vietqr.io')) {
-                // Thử template qr quickpay thay thế
-                img.src = `https://api.vietqr.io/image/${BANK_BIN}-${BANK_ACCOUNT}-qr_only.png?amount=${rawAmount}&addInfo=${encodeURIComponent(transferMsg)}`;
-            } else {
-                // Dự phòng cuối cùng: Placeholder QR rõ ràng chứa STK
-                img.src = `https://placehold.co/300x300/eff6ff/1d4ed8?text=STK:+${BANK_ACCOUNT}%0NAgribank`;
-            }
-        }
-
-        // Dữ liệu khởi tạo mặc định (xem trước mượt mà ngay cả khi chờ API)
         let state = {
             config: { 
-                month: "09/2026", 
+                month: "10/2026",  
                 totalElec: 0, elecUsage: 0, 
                 waterCost: 0, waterUsage: 0, 
                 totalFees: 0
             },
             members: [
                 { id: 1, name: "Nhật Huy", days: 30, status: "paid", excludeShared: false },
-                { id: 2, name: "Thành viên B", days: 28.5, status: "unpaid", excludeShared: false },
-                { id: 3, name: "Thành viên C", days: 25, status: "unpaid", excludeShared: false },
-                { id: 4, name: "Thành viên D", days: 22, status: "paid", excludeShared: true }
+                { id: 2, name: "Thanh Phong", days: 28.5, status: "unpaid", excludeShared: false },
+                { id: 3, name: "Quốc Minh", days: 25, status: "unpaid", excludeShared: false },
+                { id: 4, name: "Thành viên ", days: 22, status: "paid", excludeShared: true }
             ],
             sharedItems: [
                 { id: 1, buyerId: 1, name: "", cost: 0 }
@@ -1237,18 +1203,23 @@
         };
         
         let isAdminActive = false;
-        
-        // billingDate: CỐ ĐỊNH theo tháng ở ô A2 (sheet CaiDat)
         let billingDate = new Date(2026, 8, 1);
-        // calendarDate: LINH HOẠT theo thao tác bấm tới/lùi lịch
         let calendarDate = new Date(2026, 8, 1);
 
         let selectedDateStr = null;
         let tempModalRecords = {};
         let inspectedDateStr = null;
         let modalSelfSelectedStatus = 'full';
+        let chibiTimer = null;
 
-        // Biến trạng thái cho bộ phóng to ảnh (Pan & Zoom)
+        const CHIBI_QUOTES = [
+            "Đừng quên kiểm tra điểm danh ngày ở của bạn!",
+            "Tiền điện nước được chia hoàn toàn tự động theo đúng tỷ lệ số ngày bạn ở!",
+            "Nút 'Tải Ảnh Mã QR' sẽ giúp bạn chuyển khoản nhanh chóng và chính xác 100%.",
+            "Bấm vào biểu tượng Hóa Đơn để xem chi tiết tiền phòng phòng B06203!",
+            "Mọi thay đổi cấu hình tính tiền được đồng bộ trực tiếp theo tháng."
+        ];
+
         let currentZoom = 1;
         let currentPanX = 0;
         let currentPanY = 0;
@@ -1256,7 +1227,6 @@
         let startPointerX = 0;
         let startPointerY = 0;
         let touchStartDist = 0;
-        let chibiTimer = null;
 
         const STATUS = { NONE: 'none', MORNING: 'morning', AFTERNOON: 'afternoon', FULL: 'full' };
         const STATUS_CONFIG = {
@@ -1265,16 +1235,6 @@
             [STATUS.AFTERNOON]: { label: 'Chiều', value: 0.5, class: 'active-afternoon' },
             [STATUS.FULL]: { label: 'Cả ngày', value: 1, class: 'active-full' }
         };
-
-        /* RANDOM CHIBI SPEECH QUOTES FOR KTX APP */
-        const CHIBI_QUOTES = [
-            "Chào bạn! Bạn nhớ bấm nút 'Điểm Danh' để ghi nhận số ngày ở tháng này nhé!",
-            "Số tiền Điện & Nước được tự động chia theo tỷ lệ ngày ở thực tế đó!",
-            "Nhấp vào thẻ từng thành viên để quét mã VietQR đóng tiền cực kỳ tiện lợi!",
-            "Các khoản chi mua đồ chung sẽ được chia đều minh bạch cho cả phòng.",
-            "Thành viên ứng tiền trước mua đồ sẽ được trừ thẳng vào hóa đơn cuối tháng ✨",
-            "Bấm vào nút 'Hóa Đơn' để xem báo cáo tổng kết chi tiết mọi khoản phí nhé!"
-        ];
 
         const moneyFormatter = new Intl.NumberFormat('vi-VN');
         const round500 = (amount) => Math.round(amount / 500) * 500;
@@ -1316,7 +1276,6 @@
             setTimeout(() => { if (container.contains(toast)) container.removeChild(toast); }, 3000);
         }
 
-        /* LOGIC TƯƠNG TÁC TRỢ LÝ CHIBI THÔNG BÁO */
         function initChibiEyeTracking() {
             const chibiEyes = document.getElementById('chibiEyes');
             if (!chibiEyes) return;
@@ -1447,13 +1406,11 @@
             applyBillImageUrl(BILL_IMAGE_URL);
             initChibiEyeTracking();
 
-            // Khởi tạo hiển thị dữ liệu ngay lập tức
             syncCalendarWithConfig(true);
             calculateDaysFromRecords();
             populateAttendanceMemberOptions();
             calculateAndRender();
 
-            // Tự động tắt loading sau 1.2s phòng khi môi trường offline
             const safetyTimeout = setTimeout(() => {
                 hideLoading();
             }, 1200);
@@ -1507,11 +1464,6 @@
                         }, 400);
                     }
                 });
-
-            // Chào mừng từ trợ lý Chibi
-            setTimeout(() => {
-                speakChibi(`Chào mừng bạn! Dữ liệu tiền KTX tháng ${state.config.month} đã sẵn sàng.`);
-            }, 1000);
         }
 
         function applyBillImageUrl(url) {
@@ -1519,11 +1471,6 @@
             const zoomableImg = document.getElementById('zoomableImage');
             if (previewImg) previewImg.src = url;
             if (zoomableImg) zoomableImg.src = url;
-        }
-
-        function handleBillImageError(img) {
-            img.onerror = null;
-            img.src = "https://placehold.co/600x850/1e293b/94a3b8?text=Hoa+Don+Tien+KTX";
         }
 
         function openBillImageViewer() {
@@ -1664,7 +1611,6 @@
             syncModalCurrentStatus();
         }
 
-        // Cập nhật tháng tính hóa đơn từ state.config.month (ô A2)
         function syncCalendarWithConfig(forceResetCalendar = false) {
             try {
                 let monthStr = state.config.month || "";
@@ -1681,7 +1627,6 @@
             } catch(e) { console.warn("Parse month error:", e); }
         }
 
-        // TÍNH SỐ NGÀY Ở CỦA CÁC THÀNH VIÊN: LUÔN DỰA THEO THÁNG HÓA ĐƠN (billingDate / Ô A2)
         function calculateDaysFromRecords() {
             const year = billingDate.getFullYear();
             const month = billingDate.getMonth();
@@ -1776,7 +1721,6 @@
         
         function changeCalendarMonth(step, isAdmin) {
             calendarDate.setMonth(calendarDate.getMonth() + step);
-            
             if (isAdmin) {
                 renderAdminCalendar();
             } else {
@@ -1968,7 +1912,6 @@
             
             if (!mId) {
                 showToast("Vui lòng chọn tên của bạn!", true);
-                speakChibi("Hãy chọn đúng tên của bạn trước khi bấm lưu nhé!");
                 return;
             }
             if (!dateStr) {
@@ -2014,8 +1957,8 @@
                     const statusLabel = STATUS_CONFIG[modalSelfSelectedStatus]?.label || "Chưa ở";
                     const [, m, d] = dateStr.split('-');
                     showToast(`Đã lưu: ${memberName} (${statusLabel} ngày ${d}/${m})!`);
-                    speakChibi(`Cảm ơn ${memberName}! Đã ghi nhận điểm danh ngày ${d}/${m} thành công.`);
                     closeModal('selfAttendanceModal');
+                    speakChibi(`Đã cập nhật điểm danh thành công cho ${memberName}!`);
                 } else {
                     showToast("Lỗi khi lưu: " + result.error, true);
                 }
@@ -2025,7 +1968,6 @@
                 hideLoading();
                 const memberName = state.members.find(m => m.id == mId)?.name || "bạn";
                 showToast(`Đã lưu cục bộ: ${memberName}! (Xem trước)`);
-                speakChibi(`Đã lưu điểm danh tạm thời cho ${memberName}!`);
                 closeModal('selfAttendanceModal');
             });
         }
@@ -2216,8 +2158,6 @@
             document.getElementById('billingMonthBadge').innerText = `Tổng chi phí tháng ${state.config.month}`;
             const subBilling = document.getElementById('subTextBillingMonth');
             if (subBilling) subBilling.innerText = `Tháng ${state.config.month}`;
-            const detailBadge = document.getElementById('detailWidgetMonthBadge');
-            if (detailBadge) detailBadge.innerText = `Tháng ${state.config.month}`;
 
             document.getElementById('totalBillDisplay').innerText = formatMoney(data.grandTotalCost);
             
@@ -2340,13 +2280,15 @@
             document.getElementById('billRate').innerText = formatMoney(data.ratePerDay) + 'đ';
         }
 
-        /* ------------------------------------------------------------------ */
-        /* WIDGET TÍNH TIỀN CHI TIẾT & MINH BẠCH - ĐỒNG BỘ THEO THÁNG ADMIN   */
-        /* ------------------------------------------------------------------ */
         function renderDetailedCalculation() {
             const select = document.getElementById('detailCalcMemberSelect');
             const container = document.getElementById('detailedCalculationOutput');
+            const badgeMonth = document.getElementById('detailWidgetMonthBadge');
             if (!select || !container) return;
+
+            if (badgeMonth) {
+                badgeMonth.innerText = `Tháng ${state.config.month}`;
+            }
 
             const data = calculateData();
             if (!data.processedMembers || data.processedMembers.length === 0) {
@@ -2515,6 +2457,8 @@
             const member = data.processedMembers.find(m => m.id === memberId);
             if(!member) return;
 
+            currentActiveMemberForQR = member;
+
             const detailSelect = document.getElementById('detailCalcMemberSelect');
             if (detailSelect) {
                 detailSelect.value = memberId;
@@ -2571,15 +2515,6 @@
                 document.getElementById('mbQRText').innerText = transferMessage;
                 document.getElementById('mbCopyAmountDisplay').innerText = formatMoney(transferAmount) + 'đ';
                 document.getElementById('mbCopyAmountDisplay').setAttribute('data-raw', transferAmount);
-
-                /* HIỂN THỊ VÀ CẬP NHẬT ẢNH MÃ VIETQR CHUẨN XÁC */
-                const qrImg = document.getElementById('mbQRCode');
-                if (qrImg) {
-                    qrImg.onerror = function() { handleQRError(this); };
-                    const qrUrl = `https://img.vietqr.io/image/${BANK_BIN}-${BANK_ACCOUNT}-compact2.png?amount=${transferAmount}&addInfo=${encodeURIComponent(transferMessage)}`;
-                    qrImg.src = qrUrl;
-                }
-
                 qrContainer.classList.remove('hide');
             } else {
                 finalTextEl.innerText = member.netAmount < 0 ? "NHẬN LẠI TIỀN QUỸ" : "ĐÃ HÒA VỐN";
@@ -2616,7 +2551,7 @@
                 document.getElementById('adminPin').value = '';
                 closeModal('loginModal'); 
                 renderAdminDashboard();
-                speakChibi("Chào mừng Admin! Bạn đã vào khu vực quản trị.");
+                speakChibi("Chào sếp! Đã đăng nhập trang quản trị Admin thành công.");
             } else {
                 document.getElementById('loginError').classList.remove('hide');
             }
@@ -2738,7 +2673,7 @@
             fetch(API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(state) })
             .then(res => res.json())
             .then(result => {
-                if(result.success) { showToast("Đã lưu dữ liệu thành công!"); calculateAndRender(); speakChibi("Đã cập nhật dữ liệu cấu hình tháng thành công!"); }
+                if(result.success) { showToast("Đã lưu dữ liệu thành công!"); calculateAndRender(); }
                 else showToast("Lỗi khi lưu: " + result.error, true);
                 hideLoading();
             })
@@ -2777,26 +2712,41 @@
             setTimeout(() => m.classList.add('hide'), 250); 
         }
 
-        /* KHẮC PHỤC TRIỆT ĐỂ LỖI ĐẢM BẢO TẢI ẢNH MÃ QR VỀ MÁY VÀ DỰ PHÒNG CHẤT LƯỢNG CAO */
+        // TẢI TRỰC TIẾP MÃ QR VIETQR KHÔNG BỊ LỖI KẾT NỐI VÀ KHÔNG QUA XEM TRƯỚC
         async function downloadQR() {
-            const qrImg = document.getElementById('mbQRCode');
-            const url = qrImg ? qrImg.src : '';
-            if (!url) return;
+            if (!currentActiveMemberForQR || currentActiveMemberForQR.netAmount <= 0) {
+                showToast("Thành viên không cần đóng tiền!", true);
+                return;
+            }
+
+            const member = currentActiveMemberForQR;
+            const rawMonth = removeVietnameseTones(state.config.month); 
+            const monthStr = rawMonth.match(/\d+/) ? rawMonth.match(/\d+/)[0] : rawMonth;
+            const transferMessage = `${removeVietnameseTones(member.name)} tien KTX thang ${monthStr}`;
+            const transferAmount = Math.round(member.netAmount);
+
+            showToast("Đang tạo mã QR để tải về...");
+
+            const primaryQRUrl = `https://img.vietqr.io/image/${BANK_BIN}-${BANK_ACCOUNT}-compact2.png?amount=${transferAmount}&addInfo=${encodeURIComponent(transferMessage)}`;
+
             try {
-                const response = await fetch(url, { mode: 'cors' });
+                const response = await fetch(primaryQRUrl, { mode: 'cors' });
+                if (!response.ok) throw new Error("CORS or network error");
                 const blob = await response.blob();
                 const blobUrl = window.URL.createObjectURL(blob);
+                
                 const a = document.createElement('a'); 
                 a.href = blobUrl; 
-                a.download = `VietQR_ChuyenKhoan_KTX.png`;
+                a.download = `VietQR_${removeVietnameseTones(member.name)}_KTX.png`;
                 document.body.appendChild(a); 
                 a.click(); 
                 document.body.removeChild(a); 
                 window.URL.revokeObjectURL(blobUrl);
-                showToast("Đã tải mã QR về thiết bị!");
-            } catch (error) { 
-                window.open(url, '_blank'); 
-                showToast("Đã mở mã QR trong tab mới."); 
+                showToast("Đã tải mã QR VietQR về máy!");
+            } catch (error) {
+                console.warn("Fallback direct window open for QR:", error);
+                window.open(primaryQRUrl, '_blank');
+                showToast("Đã mở mã QR trong tab mới để lưu!");
             }
         }
 
