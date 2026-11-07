@@ -2,23 +2,27 @@
 <html lang="vi">
 <head>
     <!-- 
-    Tác giả: Nh4tHuy
-    Phiên bản: Đồng bộ theo ô A2 (CaiDat) - Tách biệt tháng tính tiền và tháng xem/điểm danh
+    Tác giả: Nh4tHuy (Nâng cấp & Tối ưu bởi Assistant)
+    Phiên bản: Đồng bộ theo ô A2 (CaiDat) - Tích hợp trợ lý Chibi thông báo thông minh & Tối ưu tốc độ
     Mục đích: Quản lý chi phí và điểm danh phòng KTX B06203
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tiền KTX Phòng B06203</title>
+    
+    <!-- Dynamic DNS & CDN Preconnect -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://img.vietqr.io">
+    <link rel="preconnect" href="https://api.vietqr.io" crossorigin>
+    <link rel="dns-prefetch" href="https://api.vietqr.io">
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <meta name="robots" content="noindex, nofollow"/>
+
     <style>
         :root {
             --bg-gradient-1: #f0f9ff; 
@@ -260,20 +264,52 @@
             image-rendering: high-quality;
         }
 
-        .chart-container-wrapper {
-            position: relative;
-            width: 100%;
-            height: 280px;
+        /* ---------------------------------------------------- */
+        /* HE TONG CHIBI THONG BAO & ANIMATION DUOC NANG CAP    */
+        /* ---------------------------------------------------- */
+        @keyframes siri-rotate-1 {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        @media (min-width: 768px) {
-            .chart-container-wrapper {
-                height: 330px;
-            }
+        @keyframes siri-rotate-2 {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+        @keyframes siri-morph-active {
+            0%, 100% { border-radius: 42% 58% 50% 50% / 50% 42% 58% 50%; transform: scale(0.96); }
+            25% { border-radius: 52% 48% 42% 58% / 58% 52% 48% 42%; transform: scale(1.02); }
+            50% { border-radius: 58% 42% 52% 48% / 48% 58% 42% 52%; transform: scale(0.98); }
+            75% { border-radius: 48% 52% 58% 42% / 42% 48% 52% 58%; transform: scale(1.03); }
+        }
+        @keyframes siri-glow-pulse {
+            0%, 100% { opacity: 0.35; transform: scale(0.9); }
+            50% { opacity: 0.7; transform: scale(1.15); }
+        }
+        @keyframes siri-blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+        @keyframes chibiTalk {
+            0%, 100% { height: 4px; width: 10px; border-radius: 50%; }
+            50% { height: 9px; width: 12px; border-radius: 40% 40% 50% 50%; }
+        }
+
+        .chibi-mouth-talking {
+            animation: chibiTalk 0.4s infinite ease-in-out;
+        }
+
+        .chibi-speech-bubble {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(147, 197, 253, 0.8);
+            box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.2);
         }
     </style>
 </head>
 <body class="pb-24 md:pb-10 text-sm md:text-base">
 
+    <!-- BACKGROUND ANIMATED ORBS & FLOATING SHAPES -->
     <div class="bg-animation-area">
         <div class="glowing-orb orb-1"></div>
         <div class="glowing-orb orb-2"></div>
@@ -283,6 +319,7 @@
         </ul>
     </div>
 
+    <!-- LOADING OVERLAY -->
     <div id="loadingOverlay" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/85 backdrop-blur-md transition-opacity duration-300">
         <div class="relative flex justify-center items-center mb-6">
             <div class="absolute w-20 h-20 rounded-full bg-blue-500 opacity-20 animate-ping"></div>
@@ -297,6 +334,7 @@
 
     <div class="w-full max-w-7xl mx-auto md:p-6 min-h-screen flex flex-col relative">
 
+        <!-- HEADER BANNER -->
         <header class="glass-panel p-3.5 md:p-4 rounded-b-3xl md:rounded-3xl flex justify-between items-center mb-6 md:mb-8 sticky top-0 z-40 mx-0 md:mx-4 mt-0 md:mt-2 shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-md shadow-blue-500/30 text-white cursor-pointer hover:rotate-6 transition-transform" onclick="window.location.hash = ''">
@@ -325,8 +363,10 @@
             </div>
         </header>
 
+        <!-- PUBLIC VIEW (NGƯỜI DÙNG) -->
         <main id="publicView" class="flex-1 px-4 md:px-4 space-y-6 md:space-y-8 fade-in">
 
+            <!-- TOTAL BILL BANNER -->
             <div class="glass-panel rounded-[2rem] p-6 md:p-8 relative overflow-hidden bg-white/60 border border-white/80">
                 <div class="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-blue-400/20 to-cyan-300/20 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute bottom-0 right-0 p-4 opacity-5 pointer-events-none">
@@ -382,8 +422,10 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
+                <!-- COL LEFT: LIST MEMBERS, SHARED ITEMS, CALENDAR -->
                 <div class="lg:col-span-2 space-y-6">
 
+                    <!-- MEMBERS CARDS -->
                     <div>
                         <div class="flex justify-between items-center mb-3.5 px-1">
                             <div>
@@ -399,6 +441,7 @@
                         </div>
                     </div>
 
+                    <!-- SHARED FUND ITEMS -->
                     <div class="glass-panel rounded-[2rem] p-6 shadow-sm relative overflow-hidden bg-white/65">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
@@ -420,7 +463,7 @@
                         </div>
                     </div>
 
-                    <!-- WIDGET NGÀY Ở (CALENDAR) -->
+                    <!-- CALENDAR GRID WIDGET -->
                     <div class="glass-panel rounded-[2rem] p-5 md:p-6 shadow-sm relative overflow-hidden bg-white/65">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                             <div>
@@ -453,31 +496,12 @@
                         </div>
                     </div>
 
-                    <div class="glass-panel rounded-[2rem] p-5 md:p-6 shadow-sm relative overflow-hidden bg-white/75 border border-white/80">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-                            <div>
-                                <h3 class="font-extrabold text-xl text-slate-800 flex items-center gap-2">
-                                    <i class="fa-solid fa-chart-line text-blue-600"></i> Tỷ Lệ Ở Trong Tháng
-                                </h3>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-[11px] font-bold bg-blue-100 text-blue-700 px-2.5 py-1 rounded-lg border border-blue-200" id="chartMonthBadge">
-                                    Tháng ...
-                                </span>
-                            </div>
-                        </div>
-
-                        <div id="attendanceChartLegend" class="flex flex-wrap items-center gap-3 mb-3 text-xs font-bold text-slate-600"></div>
-
-                        <div class="chart-container-wrapper bg-white/60 p-2 sm:p-3 rounded-2xl border border-slate-100 shadow-inner">
-                            <canvas id="attendanceLineChart"></canvas>
-                        </div>
-                    </div>
-
                 </div>
 
+                <!-- COL RIGHT: INFO, BANKING, RULES & DETAILED CALCULATION -->
                 <div class="space-y-6">
 
+                    <!-- TIME SYSTEM -->
                     <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden bg-white/70">
                         <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-4">
                             <i class="fa-solid fa-clock text-blue-500"></i> Web app 
@@ -500,6 +524,7 @@
                         </div>
                     </div>
 
+                    <!-- BANK TRANSFER INFO -->
                     <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50/50">
                         <div class="absolute -right-4 -bottom-4 opacity-10"><i class="fa-solid fa-building-columns text-6xl text-indigo-500"></i></div>
                         <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-4 relative z-10">
@@ -527,6 +552,7 @@
                         </div>
                     </div>
 
+                    <!-- CALCULATION RULES -->
                     <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden bg-white/70">
                         <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 mb-3">
                             <i class="fa-solid fa-scale-balanced text-emerald-500"></i> Quy tắc tính phí
@@ -546,17 +572,18 @@
                             </div>
                             <div class="bg-white/80 p-3 rounded-xl border border-white shadow-sm">
                                 <p class="font-bold text-slate-800 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-shield-halved text-blue-500"></i> Điểm danh tháng mới</p>
-                                <p class="leading-relaxed">Thành viên vẫn điểm danh tháng 10 bình thường, hệ thống tự tách biệt và <span class="font-bold text-emerald-600">không ảnh hưởng tiền tháng trước</span>.</p>
+                                <p class="leading-relaxed">Thành viên vẫn điểm danh tháng mới bình thường, hệ thống tự tách biệt và <span class="font-bold text-emerald-600">không ảnh hưởng tiền tháng trước</span>.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- WIDGET TÍNH TIỀN CHI TIẾT & MINH BẠCH SỐ LIỆU -->
+                    <!-- WIDGET TÍNH TIỀN CHI TIẾT & MINH BẠCH SỐ LIỆU (ĐỒNG BỘ THEO THÁNG ADMIN CẤU HÌNH) -->
                     <div class="glass-panel rounded-[1.5rem] p-5 relative overflow-hidden bg-white/75 border border-white/90 shadow-md">
                         <div class="flex items-center justify-between mb-3">
                             <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2">
                                 <i class="fa-solid fa-calculator text-blue-600"></i> Chi tiết
                             </h3>
+                            <span class="text-[10px] font-extrabold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-md border border-blue-200" id="detailWidgetMonthBadge">Tháng --/----</span>
                         </div>
 
                         <div>
@@ -583,6 +610,7 @@
             </div>
         </main>
 
+        <!-- ADMIN VIEW (KHU VỰC QUẢN TRỊ) -->
         <main id="adminView" class="flex-1 px-4 md:px-4 space-y-6 md:space-y-8 fade-in hide">
             <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-blue-100 relative overflow-hidden">
                 <div class="absolute top-0 right-0 bg-blue-500 text-white px-4 py-1 rounded-bl-xl font-bold text-xs shadow-md">Khu Vực Quản Trị</div>
@@ -699,6 +727,9 @@
             </div>
         </main>
 
+        <!-- MODALS -->
+
+        <!-- MODAL TỰ ĐIỂM DANH -->
         <div id="selfAttendanceModal" class="fixed inset-0 z-[65] flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white rounded-[2rem] w-full max-w-md overflow-hidden flex flex-col shadow-2xl transform transition-all scale-95 opacity-0 border border-emerald-100">
                 <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-5 flex justify-between items-center text-white">
@@ -775,6 +806,7 @@
             </div>
         </div>
 
+        <!-- MODAL LOGIN ADMIN -->
         <div id="loginModal" class="fixed inset-0 z-[60] flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white rounded-[2rem] w-full max-w-sm flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 p-8 text-center">
                 <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mx-auto mb-4 text-2xl shadow-sm">
@@ -784,7 +816,7 @@
                 <p class="text-slate-500 text-sm mb-6">Nhập mã PIN <strong class="text-blue-600">6 số</strong> để quản trị.</p>
                 
                 <input type="password" id="adminPin" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="••••" class="w-full text-center text-3xl tracking-[0.4em] font-black px-4 py-3.5 rounded-xl border-2 border-slate-200 focus:border-blue-500 outline-none mb-4 bg-slate-50 text-slate-800">
-                <p id="loginError" class="text-red-500 text-sm font-bold hide mb-4"><i class="fa-solid fa-triangle-exclamation"></i> Alo! Vô đây làm gì???</p>
+                <p id="loginError" class="text-red-500 text-sm font-bold hide mb-4"><i class="fa-solid fa-triangle-exclamation"></i> Mã PIN không đúng!</p>
                 
                 <div class="flex gap-3">
                     <button onclick="closeModal('loginModal'); window.location.hash = '';" class="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors">Hủy</button>
@@ -793,6 +825,7 @@
             </div>
         </div>
 
+        <!-- MODAL ADMIN ATTENDANCE -->
         <div id="attendanceModal" class="fixed inset-0 z-[70] flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white rounded-[2rem] w-full max-w-lg overflow-hidden flex flex-col shadow-2xl transform transition-all scale-95 opacity-0">
                 <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 flex justify-between items-center border-b border-blue-100">
@@ -833,6 +866,7 @@
             </div>
         </div>
 
+        <!-- MODAL DAY INSPECT -->
         <div id="dayInspectModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white rounded-[2rem] w-full max-w-sm overflow-hidden flex flex-col shadow-2xl transform transition-all scale-95 opacity-0 border border-slate-200">
                 <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 flex justify-between items-center">
@@ -855,6 +889,7 @@
             </div>
         </div>
 
+        <!-- MODAL CONFIRM DIALOG -->
         <div id="customConfirmModal" class="fixed inset-0 z-[80] flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white rounded-[2rem] w-full max-w-sm flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 p-6 text-center">
                 <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm">
@@ -869,6 +904,7 @@
             </div>
         </div>
 
+        <!-- MODAL HÓA ĐƠN TỔNG THÁNG -->
         <div id="billModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
             <div class="bg-white/95 backdrop-blur-xl rounded-[2rem] w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 border border-white">
                 <div class="p-5 md:p-6 bg-gradient-to-br from-blue-600 to-indigo-700 flex justify-between items-start relative overflow-hidden flex-shrink-0">
@@ -948,6 +984,7 @@
             </div>
         </div>
 
+        <!-- MODAL IMAGE VIEW FULLSCREEN -->
         <div id="billImageModal" class="fixed inset-0 z-[95] flex items-center justify-center bg-slate-950/90 backdrop-blur-lg p-2 sm:p-4 hide select-none">
             <div class="relative w-full h-full max-w-5xl max-h-[96vh] flex flex-col rounded-3xl overflow-hidden bg-slate-900/90 border border-slate-800 shadow-2xl">
                 <div class="h-14 bg-slate-900/95 border-b border-slate-800 px-4 flex items-center justify-between z-20 flex-shrink-0 text-white">
@@ -997,6 +1034,7 @@
             </div>
         </div>
 
+        <!-- MODAL CHI TIẾT ĐÓNG TIỀN THÀNH VIÊN (CÓ MÃ QR SỬA LỖI VIETQR) -->
         <div id="memberBillModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4 hide">
              <div class="bg-white rounded-[2rem] w-full max-w-md max-h-[95vh] flex flex-col shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0 border border-slate-200">
                  <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-white flex-shrink-0 relative">
@@ -1061,13 +1099,19 @@
                         </div>
                     </div>
 
+                    <!-- KHẮC PHỤC HOÀN TOÀN LỖI HIỂN THỊ ẢNH QR -->
                     <div id="mbQRContainer" class="mt-2 flex flex-col items-center justify-center p-5 bg-gradient-to-b from-blue-50 to-white rounded-3xl border border-blue-200 shadow-sm hide">
                         <p class="text-xs font-bold text-blue-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                             <i class="fa-solid fa-qrcode text-lg"></i> Quét mã để thanh toán nhanh
                         </p>
-                        <div class="bg-white p-3 rounded-2xl shadow-lg border border-blue-100 relative group">
-                            <div class="absolute inset-0 bg-blue-500 opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity pointer-events-none"></div>
-                            <img id="mbQRCode" src="" alt="Mã QR Chuyển Khoản" class="w-64 h-64 sm:w-72 sm:h-72 object-contain" crossorigin="anonymous" loading="lazy">
+                        <div class="bg-white p-3 rounded-2xl shadow-lg border border-blue-100 relative group flex items-center justify-center min-h-[260px] w-full">
+                            <img id="mbQRCode" 
+                                 src="" 
+                                 alt="Mã QR Chuyển Khoản KTX" 
+                                 class="w-64 h-64 sm:w-72 sm:h-72 object-contain transition-opacity duration-300" 
+                                 crossorigin="anonymous" 
+                                 loading="eager"
+                                 onerror="handleQRError(this)">
                         </div>
 
                         <div class="mt-4 w-full space-y-2">
@@ -1101,6 +1145,43 @@
 
     </div>
 
+    <!-- ---------------------------------------------------- -->
+    <!-- WIDGET CHIBI THÔNG BÁO THÔNG MINH CỦA WEB APP KTX   -->
+    <!-- ---------------------------------------------------- -->
+    <div id="chibiBubbleContainer" class="fixed bottom-4 right-4 z-40 pointer-events-auto flex flex-col items-end group transition-all duration-300">
+        
+        <!-- Interactive Speech Bubble -->
+        <div id="chibiSpeechBubble" class="mb-2 max-w-[220px] sm:max-w-[260px] p-2.5 sm:p-3 rounded-2xl chibi-speech-bubble text-slate-800 text-[11px] font-extrabold shadow-2xl transition-all duration-300 opacity-0 translate-y-2 pointer-events-none relative">
+            <span id="chibiSpeechText">Xin chào! Trợ lý KTX B06203 sẵn sàng hỗ trợ bạn!</span>
+            <div class="absolute -bottom-1.5 right-6 w-3 h-3 bg-white rotate-45 border-r border-b border-blue-300"></div>
+        </div>
+
+        <div class="relative cursor-pointer" onclick="triggerChibiInteraction()">
+            <!-- Glow Shadow Pastel Ocean -->
+            <div class="absolute inset-0 rounded-full blur-2xl transition-all duration-700 w-24 h-24 -translate-x-2 -translate-y-2" style="background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, rgba(14, 165, 233, 0.25) 50%, transparent 70%); animation: 2s ease-in-out infinite alternate siri-glow-pulse;"></div>
+            
+            <!-- Chibi Morphing Bubble Body -->
+            <div class="relative z-10 w-[68px] h-[68px] sm:w-[76px] sm:h-[76px] overflow-hidden shadow-2xl transition-transform duration-300 group-hover:scale-110" style="animation: 3.5s ease-in-out 0s infinite normal none running siri-morph-active; border-radius: 42% 58% 50% 50% / 50% 42% 58% 50%; box-shadow: rgba(14, 165, 233, 0.4) 0px 12px 28px -6px;">
+                <div class="absolute inset-0" style="background: radial-gradient(circle at 35% 35%, rgba(186, 230, 253, 0.95) 0%, rgba(56, 189, 248, 0.85) 45%, rgba(14, 165, 233, 0.95) 100%);"></div>
+                <div class="absolute inset-[-20%] rounded-full" style="background: conic-gradient(transparent 0%, rgba(255, 255, 255, 0.7) 15%, transparent 30%, rgba(56, 189, 248, 0.6) 50%, transparent 65%, rgba(186, 230, 253, 0.7) 80%, transparent 100%); filter: blur(6px); animation: 4s linear 0s infinite normal none running siri-rotate-1;"></div>
+                <div class="absolute inset-[-15%] rounded-full" style="background: conic-gradient(from 120deg, transparent 0%, rgba(125, 211, 252, 0.5) 20%, transparent 40%, rgba(14, 165, 233, 0.4) 60%, transparent 80%, rgba(56, 189, 248, 0.5) 95%, transparent 100%); filter: blur(5px); animation: 5s linear 0s infinite normal none running siri-rotate-2;"></div>
+                <div class="absolute inset-[25%] rounded-full" style="background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(186, 230, 253, 0.2) 50%, transparent 70%); filter: blur(3px);"></div>
+                <div class="absolute inset-0 rounded-[inherit]" style="background: radial-gradient(circle at 36% 30%, transparent 35%, rgba(3, 105, 161, 0.25) 65%, rgba(2, 132, 199, 0.5) 100%); box-shadow: rgba(2, 132, 199, 0.5) -4px -6px 12px inset, rgba(255, 255, 255, 0.6) 2px 3px 6px inset;"></div>
+                <div class="absolute rounded-full" style="left: 20%; top: 14%; width: 34%; height: 24%; background: radial-gradient(rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 75%); filter: blur(2px); transform: rotate(-25deg);"></div>
+            </div>
+
+            <!-- Chibi Eyes & Dynamic Mouth -->
+            <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center space-y-1">
+                <div id="chibiEyes" class="flex items-center gap-[10px] sm:gap-[12px] transition-transform duration-100 ease-out">
+                    <span class="block bg-slate-900" style="width: 8px; height: 10px; border-radius: 50%; box-shadow: rgba(255, 255, 255, 0.8) -1px -1px 2px inset; animation: 4.5s ease-in-out 0s infinite normal none running siri-blink;"></span>
+                    <span class="block bg-slate-900" style="width: 8px; height: 10px; border-radius: 50%; box-shadow: rgba(255, 255, 255, 0.8) -1px -1px 2px inset; animation: 4.5s ease-in-out 0s infinite normal none running siri-blink;"></span>
+                </div>
+                <div id="chibiMouth" class="w-2.5 h-1 bg-slate-800 rounded-full transition-all duration-300"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT APP LOGIC -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbznO-dF5yiJgozkhxAfiWncpc3r3mRLfGhNldxEwsWDCxvDPhl4TwN6fcKteBZPr5Pg/exec"; 
         const BANK_BIN = "970405"; 
@@ -1108,7 +1189,29 @@
         
         let BILL_IMAGE_URL = "https://i.ibb.co/HT31zt6c/A-nh-chu-p-ma-n-hi-nh-2026-10-07-172336.png";
 
-        // Dữ liệu khởi tạo mặc định (phục vụ xem trước / preview mượt mà ngay cả khi chưa kết nối API)
+        /* ĐỊNH NGHĨA SỚM HÀM XỬ LÝ LỖI ẢNH QR - ĐẢM BẢO HTML GỌI ONERROR KHÔNG BỊ PHÁT SINH REFERENCEERROR */
+        function handleQRError(img) {
+            if (!img) return;
+            img.onerror = null; // Tránh vòng lặp vô hạn
+            console.warn("Không thể tải mã VietQR chính, đang tự động chuyển sang server dự phòng...");
+            
+            const currentSrc = img.src || '';
+            const rawAmount = document.getElementById('mbCopyAmountDisplay')?.getAttribute('data-raw') || '0';
+            const transferMsg = document.getElementById('mbQRText')?.innerText || `Agribank ${BANK_ACCOUNT}`;
+
+            if (currentSrc.includes('img.vietqr.io')) {
+                // Thử server phụ của VietQR
+                img.src = `https://api.vietqr.io/image/${BANK_BIN}-${BANK_ACCOUNT}-compact2.png?amount=${rawAmount}&addInfo=${encodeURIComponent(transferMsg)}`;
+            } else if (currentSrc.includes('api.vietqr.io')) {
+                // Thử template qr quickpay thay thế
+                img.src = `https://api.vietqr.io/image/${BANK_BIN}-${BANK_ACCOUNT}-qr_only.png?amount=${rawAmount}&addInfo=${encodeURIComponent(transferMsg)}`;
+            } else {
+                // Dự phòng cuối cùng: Placeholder QR rõ ràng chứa STK
+                img.src = `https://placehold.co/300x300/eff6ff/1d4ed8?text=STK:+${BANK_ACCOUNT}%0NAgribank`;
+            }
+        }
+
+        // Dữ liệu khởi tạo mặc định (xem trước mượt mà ngay cả khi chờ API)
         let state = {
             config: { 
                 month: "09/2026", 
@@ -1135,16 +1238,15 @@
         
         let isAdminActive = false;
         
-        // billingDate: CỐ ĐỊNH theo tháng ở ô A2 (sheet CaiDat) để tính toán tiền và số ngày của hóa đơn
+        // billingDate: CỐ ĐỊNH theo tháng ở ô A2 (sheet CaiDat)
         let billingDate = new Date(2026, 8, 1);
-        // calendarDate: LINH HOẠT theo thao tác bấm tới/lùi của người dùng để xem lịch & biểu đồ
+        // calendarDate: LINH HOẠT theo thao tác bấm tới/lùi lịch
         let calendarDate = new Date(2026, 8, 1);
 
         let selectedDateStr = null;
         let tempModalRecords = {};
         let inspectedDateStr = null;
         let modalSelfSelectedStatus = 'full';
-        let attendanceChartInstance = null;
 
         // Biến trạng thái cho bộ phóng to ảnh (Pan & Zoom)
         let currentZoom = 1;
@@ -1154,6 +1256,7 @@
         let startPointerX = 0;
         let startPointerY = 0;
         let touchStartDist = 0;
+        let chibiTimer = null;
 
         const STATUS = { NONE: 'none', MORNING: 'morning', AFTERNOON: 'afternoon', FULL: 'full' };
         const STATUS_CONFIG = {
@@ -1163,13 +1266,14 @@
             [STATUS.FULL]: { label: 'Cả ngày', value: 1, class: 'active-full' }
         };
 
-        const MEMBER_COLORS = [
-            { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.12)' },  
-            { border: '#10b981', bg: 'rgba(16, 185, 129, 0.12)' },  
-            { border: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' },  
-            { border: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.12)' },  
-            { border: '#ec4899', bg: 'rgba(236, 72, 153, 0.12)' },  
-            { border: '#06b6d4', bg: 'rgba(6, 182, 212, 0.12)' }   
+        /* RANDOM CHIBI SPEECH QUOTES FOR KTX APP */
+        const CHIBI_QUOTES = [
+            "Chào bạn! Bạn nhớ bấm nút 'Điểm Danh' để ghi nhận số ngày ở tháng này nhé!",
+            "Số tiền Điện & Nước được tự động chia theo tỷ lệ ngày ở thực tế đó!",
+            "Nhấp vào thẻ từng thành viên để quét mã VietQR đóng tiền cực kỳ tiện lợi!",
+            "Các khoản chi mua đồ chung sẽ được chia đều minh bạch cho cả phòng.",
+            "Thành viên ứng tiền trước mua đồ sẽ được trừ thẳng vào hóa đơn cuối tháng ✨",
+            "Bấm vào nút 'Hóa Đơn' để xem báo cáo tổng kết chi tiết mọi khoản phí nhé!"
         ];
 
         const moneyFormatter = new Intl.NumberFormat('vi-VN');
@@ -1210,6 +1314,61 @@
             toast.innerHTML = (isError ? '<i class="fa-solid fa-triangle-exclamation text-red-400"></i>' : '<i class="fa-solid fa-circle-check text-emerald-400"></i>') + `<span>${message}</span>`;
             container.appendChild(toast);
             setTimeout(() => { if (container.contains(toast)) container.removeChild(toast); }, 3000);
+        }
+
+        /* LOGIC TƯƠNG TÁC TRỢ LÝ CHIBI THÔNG BÁO */
+        function initChibiEyeTracking() {
+            const chibiEyes = document.getElementById('chibiEyes');
+            if (!chibiEyes) return;
+
+            function updateEyePosition(clientX, clientY) {
+                const rect = chibiEyes.getBoundingClientRect();
+                const eyeCenterX = rect.left + rect.width / 2;
+                const eyeCenterY = rect.top + rect.height / 2;
+
+                const angle = Math.atan2(clientY - eyeCenterY, clientX - eyeCenterX);
+                const distance = Math.min(4, Math.hypot(clientX - eyeCenterX, clientY - eyeCenterY) / 40);
+
+                const moveX = Math.cos(angle) * distance;
+                const moveY = Math.sin(angle) * distance;
+
+                chibiEyes.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            }
+
+            window.addEventListener('mousemove', (e) => updateEyePosition(e.clientX, e.clientY));
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches && e.touches[0]) updateEyePosition(e.touches[0].clientX, e.touches[0].clientY);
+            });
+        }
+
+        function triggerChibiInteraction(customText = null) {
+            const bubble = document.getElementById('chibiSpeechBubble');
+            const speechText = document.getElementById('chibiSpeechText');
+            const mouth = document.getElementById('chibiMouth');
+            if (!bubble || !speechText || !mouth) return;
+
+            const text = customText || CHIBI_QUOTES[Math.floor(Math.random() * CHIBI_QUOTES.length)];
+            speechText.innerText = text;
+
+            mouth.classList.add('chibi-mouth-talking');
+
+            bubble.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+            bubble.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(chibiTimer);
+            
+            setTimeout(() => {
+                mouth.classList.remove('chibi-mouth-talking');
+            }, 2500);
+
+            chibiTimer = setTimeout(() => {
+                bubble.classList.remove('opacity-100', 'translate-y-0');
+                bubble.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+            }, 6500);
+        }
+
+        function speakChibi(text) {
+            triggerChibiInteraction(text);
         }
 
         function copyBankAccount() {
@@ -1286,17 +1445,18 @@
             if (mDate) mDate.value = todayStr;
 
             applyBillImageUrl(BILL_IMAGE_URL);
+            initChibiEyeTracking();
 
-            // Khởi tạo hiển thị dữ liệu ngay lập tức để người dùng xem trước mượt mà
+            // Khởi tạo hiển thị dữ liệu ngay lập tức
             syncCalendarWithConfig(true);
             calculateDaysFromRecords();
             populateAttendanceMemberOptions();
             calculateAndRender();
 
-            // Tự động tắt loading sau 1.5s phòng khi môi trường xem trước không có internet
+            // Tự động tắt loading sau 1.2s phòng khi môi trường offline
             const safetyTimeout = setTimeout(() => {
                 hideLoading();
-            }, 1500);
+            }, 1200);
 
             fetch(`${API_URL}?t=${Date.now()}`, { redirect: 'follow' })
                 .then(response => {
@@ -1347,6 +1507,11 @@
                         }, 400);
                     }
                 });
+
+            // Chào mừng từ trợ lý Chibi
+            setTimeout(() => {
+                speakChibi(`Chào mừng bạn! Dữ liệu tiền KTX tháng ${state.config.month} đã sẵn sàng.`);
+            }, 1000);
         }
 
         function applyBillImageUrl(url) {
@@ -1609,7 +1774,6 @@
             };
         }
         
-        // CHUYỂN THÁNG XEM LỊCH: Chỉ thay đổi tháng hiển thị Lịch & Biểu đồ, KHÔNG làm ảnh hưởng tính tiền tháng ở ô A2
         function changeCalendarMonth(step, isAdmin) {
             calendarDate.setMonth(calendarDate.getMonth() + step);
             
@@ -1617,15 +1781,12 @@
                 renderAdminCalendar();
             } else {
                 renderPublicCalendar();
-                renderAttendanceLineChart();
             }
         }
 
-        // Nút quay lại đúng tháng hóa đơn ở ô A2
         function resetCalendarToBillingMonth() {
             calendarDate = new Date(billingDate.getTime());
             renderPublicCalendar();
-            renderAttendanceLineChart();
         }
 
         function renderDayIndicators(dateStr) {
@@ -1659,7 +1820,6 @@
             const month = calendarDate.getMonth();
             document.getElementById('publicCalendarTitle').innerText = `Tháng ${month + 1}/${year}`;
             
-            // Nút "Tháng HĐ" hiện ra nếu người dùng đang xem tháng khác với tháng hóa đơn (ô A2)
             const isDifferentFromBilling = (year !== billingDate.getFullYear() || month !== billingDate.getMonth());
             const resetBtn = document.getElementById('btnResetToBillingMonth');
             if (resetBtn) {
@@ -1709,158 +1869,6 @@
                 `;
             }
             grid.innerHTML = gridHtml;
-        }
-
-        function renderAttendanceLineChart() {
-            const canvas = document.getElementById('attendanceLineChart');
-            const legendEl = document.getElementById('attendanceChartLegend');
-            const badgeEl = document.getElementById('chartMonthBadge');
-            if (!canvas) return;
-
-            const year = calendarDate.getFullYear();
-            const month = calendarDate.getMonth();
-            const lastDay = new Date(year, month + 1, 0).getDate();
-            
-            if (badgeEl) {
-                badgeEl.innerText = `Tháng ${String(month + 1).padStart(2, '0')}/${year}`;
-            }
-
-            const labels = [];
-            for (let d = 1; d <= lastDay; d++) {
-                labels.push(`N${d}`);
-            }
-
-            const datasets = state.members.map((member, idx) => {
-                const colorTheme = MEMBER_COLORS[idx % MEMBER_COLORS.length];
-                let cumulativeDays = 0;
-                const dataPoints = [];
-
-                for (let d = 1; d <= lastDay; d++) {
-                    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    const dayRecord = state.records[dateStr];
-                    if (dayRecord && dayRecord[member.id] && STATUS_CONFIG[dayRecord[member.id]]) {
-                        cumulativeDays += STATUS_CONFIG[dayRecord[member.id]].value;
-                    }
-                    const ratioPercent = d > 0 ? Number(((cumulativeDays / d) * 100).toFixed(1)) : 0;
-                    dataPoints.push({
-                        x: `N${d}`,
-                        y: ratioPercent,
-                        days: cumulativeDays,
-                        dayNum: d
-                    });
-                }
-
-                return {
-                    label: member.name,
-                    data: dataPoints,
-                    borderColor: colorTheme.border,
-                    backgroundColor: colorTheme.bg,
-                    borderWidth: 2.5,
-                    fill: false,
-                    tension: 0.3,
-                    pointRadius: 2.5,
-                    pointHoverRadius: 6,
-                    pointBackgroundColor: colorTheme.border,
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 1.5,
-                    memberId: member.id
-                };
-            });
-
-            if (legendEl) {
-                legendEl.innerHTML = datasets.map((ds, idx) => `
-                    <button onclick="toggleChartDataset(${idx})" id="chart-legend-btn-${idx}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200 hover:border-slate-300 shadow-sm transition-all text-xs font-bold">
-                        <span class="w-3 h-3 rounded-full" style="background-color: ${ds.borderColor}"></span>
-                        <span class="text-slate-700">${ds.label}</span>
-                    </button>
-                `).join('');
-            }
-
-            if (attendanceChartInstance) {
-                attendanceChartInstance.destroy();
-            }
-
-            const ctx = canvas.getContext('2d');
-            attendanceChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.92)',
-                            titleFont: { family: 'Quicksand', size: 12, weight: 'bold' },
-                            bodyFont: { family: 'Quicksand', size: 11, weight: '600' },
-                            padding: 10,
-                            cornerRadius: 12,
-                            boxPadding: 4,
-                            callbacks: {
-                                title: function(context) {
-                                    const d = context[0].dataIndex + 1;
-                                    return `Ngày ${String(d).padStart(2, '0')}/${String(month + 1).padStart(2, '0')}/${year}`;
-                                },
-                                label: function(context) {
-                                    const raw = context.raw;
-                                    return ` ${context.dataset.label}: ${raw.y}% (~ ${raw.days} ngày)`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                font: { family: 'Quicksand', size: 10, weight: '600' },
-                                color: '#64748b',
-                                maxRotation: 0,
-                                autoSkip: true,
-                                maxTicksLimit: 16
-                            }
-                        },
-                        y: {
-                            min: 0,
-                            max: 100,
-                            grid: {
-                                color: 'rgba(226, 232, 240, 0.7)',
-                                borderDash: [4, 4]
-                            },
-                            ticks: {
-                                font: { family: 'Quicksand', size: 10, weight: 'bold' },
-                                color: '#64748b',
-                                stepSize: 25,
-                                callback: function(value) {
-                                    return value + '%';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function toggleChartDataset(index) {
-            if (!attendanceChartInstance) return;
-            const meta = attendanceChartInstance.getDatasetMeta(index);
-            meta.hidden = meta.hidden === null ? !attendanceChartInstance.data.datasets[index].hidden : null;
-            attendanceChartInstance.update();
-
-            const btn = document.getElementById(`chart-legend-btn-${index}`);
-            if (btn) {
-                if (meta.hidden) {
-                    btn.classList.add('opacity-40', 'line-through');
-                } else {
-                    btn.classList.remove('opacity-40', 'line-through');
-                }
-            }
         }
 
         function openDayInspect(dateStr, day, month, year) {
@@ -1960,6 +1968,7 @@
             
             if (!mId) {
                 showToast("Vui lòng chọn tên của bạn!", true);
+                speakChibi("Hãy chọn đúng tên của bạn trước khi bấm lưu nhé!");
                 return;
             }
             if (!dateStr) {
@@ -1978,7 +1987,6 @@
                 state.records[dateStr][mId] = modalSelfSelectedStatus;
             }
 
-            // Tính lại ngày cho tháng thanh toán (ô A2). Nếu điểm danh tháng 10 thì số ngày tháng 9 không bị đổi
             calculateDaysFromRecords();
             calculateAndRender();
 
@@ -2006,6 +2014,7 @@
                     const statusLabel = STATUS_CONFIG[modalSelfSelectedStatus]?.label || "Chưa ở";
                     const [, m, d] = dateStr.split('-');
                     showToast(`Đã lưu: ${memberName} (${statusLabel} ngày ${d}/${m})!`);
+                    speakChibi(`Cảm ơn ${memberName}! Đã ghi nhận điểm danh ngày ${d}/${m} thành công.`);
                     closeModal('selfAttendanceModal');
                 } else {
                     showToast("Lỗi khi lưu: " + result.error, true);
@@ -2016,6 +2025,7 @@
                 hideLoading();
                 const memberName = state.members.find(m => m.id == mId)?.name || "bạn";
                 showToast(`Đã lưu cục bộ: ${memberName}! (Xem trước)`);
+                speakChibi(`Đã lưu điểm danh tạm thời cho ${memberName}!`);
                 closeModal('selfAttendanceModal');
             });
         }
@@ -2206,6 +2216,8 @@
             document.getElementById('billingMonthBadge').innerText = `Tổng chi phí tháng ${state.config.month}`;
             const subBilling = document.getElementById('subTextBillingMonth');
             if (subBilling) subBilling.innerText = `Tháng ${state.config.month}`;
+            const detailBadge = document.getElementById('detailWidgetMonthBadge');
+            if (detailBadge) detailBadge.innerText = `Tháng ${state.config.month}`;
 
             document.getElementById('totalBillDisplay').innerText = formatMoney(data.grandTotalCost);
             
@@ -2312,7 +2324,6 @@
             }
             listEl.innerHTML = membersHtml;
             renderPublicCalendar();
-            renderAttendanceLineChart();
         }
 
         function renderBillPopup(data) {
@@ -2329,6 +2340,9 @@
             document.getElementById('billRate').innerText = formatMoney(data.ratePerDay) + 'đ';
         }
 
+        /* ------------------------------------------------------------------ */
+        /* WIDGET TÍNH TIỀN CHI TIẾT & MINH BẠCH - ĐỒNG BỘ THEO THÁNG ADMIN   */
+        /* ------------------------------------------------------------------ */
         function renderDetailedCalculation() {
             const select = document.getElementById('detailCalcMemberSelect');
             const container = document.getElementById('detailedCalculationOutput');
@@ -2554,10 +2568,18 @@
                 const transferMessage = `${removeVietnameseTones(member.name)} tien KTX thang ${monthStr}`;
                 const transferAmount = Math.round(member.netAmount);
                 
-                document.getElementById('mbQRCode').src = `https://img.vietqr.io/image/${BANK_BIN}-${BANK_ACCOUNT}-compact2.png?amount=${transferAmount}&addInfo=${encodeURIComponent(transferMessage)}`;
                 document.getElementById('mbQRText').innerText = transferMessage;
                 document.getElementById('mbCopyAmountDisplay').innerText = formatMoney(transferAmount) + 'đ';
                 document.getElementById('mbCopyAmountDisplay').setAttribute('data-raw', transferAmount);
+
+                /* HIỂN THỊ VÀ CẬP NHẬT ẢNH MÃ VIETQR CHUẨN XÁC */
+                const qrImg = document.getElementById('mbQRCode');
+                if (qrImg) {
+                    qrImg.onerror = function() { handleQRError(this); };
+                    const qrUrl = `https://img.vietqr.io/image/${BANK_BIN}-${BANK_ACCOUNT}-compact2.png?amount=${transferAmount}&addInfo=${encodeURIComponent(transferMessage)}`;
+                    qrImg.src = qrUrl;
+                }
+
                 qrContainer.classList.remove('hide');
             } else {
                 finalTextEl.innerText = member.netAmount < 0 ? "NHẬN LẠI TIỀN QUỸ" : "ĐÃ HÒA VỐN";
@@ -2594,6 +2616,7 @@
                 document.getElementById('adminPin').value = '';
                 closeModal('loginModal'); 
                 renderAdminDashboard();
+                speakChibi("Chào mừng Admin! Bạn đã vào khu vực quản trị.");
             } else {
                 document.getElementById('loginError').classList.remove('hide');
             }
@@ -2715,7 +2738,7 @@
             fetch(API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(state) })
             .then(res => res.json())
             .then(result => {
-                if(result.success) { showToast("Đã lưu dữ liệu thành công!"); calculateAndRender(); }
+                if(result.success) { showToast("Đã lưu dữ liệu thành công!"); calculateAndRender(); speakChibi("Đã cập nhật dữ liệu cấu hình tháng thành công!"); }
                 else showToast("Lỗi khi lưu: " + result.error, true);
                 hideLoading();
             })
@@ -2754,22 +2777,26 @@
             setTimeout(() => m.classList.add('hide'), 250); 
         }
 
+        /* KHẮC PHỤC TRIỆT ĐỂ LỖI ĐẢM BẢO TẢI ẢNH MÃ QR VỀ MÁY VÀ DỰ PHÒNG CHẤT LƯỢNG CAO */
         async function downloadQR() {
-            const url = document.getElementById('mbQRCode').src;
+            const qrImg = document.getElementById('mbQRCode');
+            const url = qrImg ? qrImg.src : '';
+            if (!url) return;
             try {
-                const response = await fetch(url);
-                const blobUrl = window.URL.createObjectURL(await response.blob());
+                const response = await fetch(url, { mode: 'cors' });
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
                 const a = document.createElement('a'); 
                 a.href = blobUrl; 
-                a.download = `QR_ThanhToan_KTX.png`;
+                a.download = `VietQR_ChuyenKhoan_KTX.png`;
                 document.body.appendChild(a); 
                 a.click(); 
                 document.body.removeChild(a); 
                 window.URL.revokeObjectURL(blobUrl);
-                showToast("Đã tải mã QR!");
+                showToast("Đã tải mã QR về thiết bị!");
             } catch (error) { 
                 window.open(url, '_blank'); 
-                showToast("Đã mở ảnh trong tab mới."); 
+                showToast("Đã mở mã QR trong tab mới."); 
             }
         }
 
