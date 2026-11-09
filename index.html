@@ -618,7 +618,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h2 class="text-xl font-black text-slate-800"><i class="fa-solid fa-users-gear text-emerald-500 mr-2"></i>Quản lý Thành Viên</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Thành viên và trạng thái thanh toán được khai báo trong APP_CONFIG.members.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Chọn trạng thái tại đây, sau đó nhấn Lưu để cập nhật lên Google Sheets.</p>
                     </div>
                 </div>
                 
@@ -631,7 +631,7 @@
                                 <th class="p-3 text-center">Số ngày ở (Tháng HĐ)</th>
                                 <th class="p-3 text-center">Loại trừ quỹ chung</th>
                                 <th class="p-3 text-center">Trạng thái nộp</th>
-                                <th class="p-3 rounded-tr-xl text-center">Cấu hình</th>
+                                <th class="p-3 rounded-tr-xl text-center">Nguồn trạng thái</th>
                             </tr>
                         </thead>
                         <tbody id="adminMembersTable" class="text-sm"></tbody>
@@ -664,7 +664,7 @@
 
             <div class="sticky bottom-6 z-50 flex justify-center pb-6 mt-10">
                 <button onclick="saveAdminData()" class="btn-gradient-blue px-10 py-4 rounded-full font-black text-lg shadow-xl flex items-center gap-3">
-                    <i class="fa-solid fa-cloud-arrow-up text-xl"></i> LƯU ĐIỂM DANH & QUỸ CHUNG
+                    <i class="fa-solid fa-cloud-arrow-up text-xl"></i> LƯU THAY ĐỔI
                 </button>
             </div>
         </main>
@@ -989,32 +989,6 @@
                  </div>
 
                  <div class="p-5 space-y-5 bg-slate-50/50 overflow-y-auto flex-1">
-                     <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-                         <h4 class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">Phân bổ chi phí</h4>
-                         <div class="space-y-2.5 text-sm">
-                             <div class="flex justify-between text-slate-600">
-                                 <span>Tiền điện <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-400">Theo ngày</span></span>
-                                 <span class="font-semibold text-slate-800" id="mbElecShare">0đ</span>
-                             </div>
-                             <div class="flex justify-between text-slate-600">
-                                 <span>Tiền nước <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-400">Theo ngày</span></span>
-                                 <span class="font-semibold text-slate-800" id="mbWaterShare">0đ</span>
-                             </div>
-                             <div class="flex justify-between text-slate-600">
-                                 <span>Phí khác <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-400">...</span></span>
-                                 <span class="font-semibold text-slate-800" id="mbFeeShare">0đ</span>
-                             </div>
-                             <div class="flex justify-between text-slate-600">
-                                 <span id="mbSharedItemLabel">Phí quỹ chung <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-400">Chia đều</span></span>
-                                 <span class="font-semibold text-slate-800" id="mbSharedItemShare">0đ</span>
-                             </div>
-                             <div class="border-t border-slate-200 my-2 pt-2 flex justify-between items-center bg-slate-50 p-2 rounded-lg -mx-2">
-                                 <span class="font-bold text-slate-700">Tổng phí gốc:</span>
-                                 <span class="font-black text-slate-800 text-base" id="mbBaseShare">0đ</span>
-                             </div>
-                         </div>
-                     </div>
-
                      <div id="mbDeductionContainer">
                         <div class="bg-emerald-50 rounded-2xl p-4 border border-emerald-100 shadow-sm">
                             <h4 class="text-[11px] font-extrabold text-emerald-600 uppercase tracking-wider mb-2">Ứng trước</h4>
@@ -1079,7 +1053,7 @@
                         </div>
 
                         <button onclick="downloadQR()" class="mt-4 w-full bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-md text-sm">
-                            <i class="fa-solid fa-download"></i> Xem ảnh mã QR
+                            <i class="fa-solid fa-download"></i> Lấy mã QR
                         </button>
                     </div>
                  </div>
@@ -1123,7 +1097,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyCkchQIx5Yct5IDS0Nql-dm5D61_TzkfCrcnGLLz69Gc9S3aEV9emq5sNJ7kiZXLrD/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbwRI6715TCOHsYpT6ETZHpltUjU1_Q5jq2j1qRBEpdAZPb2eo3fWfmf1PS5eW_1Qy0z/exec"; 
         const BANK_BIN = "970405"; 
         const BANK_NAME = "Agribank";
         const BANK_ACCOUNT = "7105205478044";
@@ -1138,12 +1112,12 @@
                 waterCost: 70000,
                 totalFees: 0
             },
-            // Mỗi thành viên: { id, name, status: "paid" | "unpaid", excludeShared: boolean }.
+            // Mỗi thành viên: { id, name, excludeShared: boolean }.
             members: [
-                { id: 1, name: "Nhật Huy", status: "paid", excludeShared: false },
-                { id: 2, name: "Thanh Phong", status: "unpaid", excludeShared: false },
-                { id: 3, name: "Quốc Minh", status: "unpaid", excludeShared: false },
-                { id: 4, name: "Trí Tính", status: "unpaid", excludeShared: false }
+                { id: 1, name: "Nhật Huy", excludeShared: false },
+                { id: 2, name: "Thanh Phong", excludeShared: true },
+                { id: 3, name: "Quốc Minh", excludeShared: false },
+                { id: 4, name: "Trí Tính", excludeShared: false }
             ]
         };
 
@@ -1382,6 +1356,7 @@
                     state.members = APP_CONFIG.members.map(member => ({
                         ...member,
                         days: 0,
+                        status: data.memberStatuses && data.memberStatuses[String(member.id)] === 'paid' ? 'paid' : 'unpaid',
                         excludeShared: member.excludeShared === true
                     }));
                     state.sharedItems = data.sharedItems;
@@ -1412,8 +1387,8 @@
                     }
                     hideLoading();
                     speakChibi(hasBillingMonth && state.members.length > 0
-                        ? `Đã tải điểm danh và quỹ chung từ Google Sheets cho tháng ${state.config.month}.`
-                        : "Đã tải dữ liệu Sheet. Cần điền tháng hóa đơn và thành viên trong APP_CONFIG để hiển thị hóa đơn.");
+                        ? `Tải thành công dữ liệu cho tháng ${state.config.month}.`
+                        : "Đã tải dữ liệu. Cần điền tháng hóa đơn và thành viên trong APP_CONFIG để hiển thị hóa đơn.");
 
                     if (state.members.length > 0 && window.location.hash !== '#/admin') {
                         setTimeout(() => {
@@ -2219,7 +2194,7 @@
                                 <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">${netText}</span>
                                 <span class="font-black text-xl ${netColorClass}">${formatMoney(Math.abs(m.netAmount))}đ</span>
                             </div>
-                            ${isOwe ? `<button onclick="openMemberBill(${m.id})" class="w-full btn-gradient-blue text-white py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-4 text-sm shadow-md"><i class="fa-solid fa-qrcode"></i> Chi tiết & Đóng tiền</button>` 
+                            ${isOwe ? `<button onclick="openMemberBill(${m.id})" class="w-full btn-gradient-blue text-white py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-4 text-sm shadow-md"><i class="fa-solid fa-qrcode"></i>Thanh toán</button>` 
                                     : `<button onclick="openMemberBill(${m.id})" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-4 transition-colors text-sm"><i class="fa-solid fa-file-lines"></i> Xem chi tiết</button>`}
                         </div>
                     </div>
@@ -2424,21 +2399,6 @@
             document.getElementById('mbDays').innerText = `${member.days} ngày`;
             document.getElementById('mbMonthTextSpan').innerText = `Tháng ${state.config.month}`;
             
-            document.getElementById('mbElecShare').innerText = formatMoney(member.elecShare) + 'đ';
-            document.getElementById('mbWaterShare').innerText = formatMoney(member.waterShare) + 'đ';
-            document.getElementById('mbFeeShare').innerText = formatMoney(member.feeShare) + 'đ';
-            
-            const mbSharedLabel = document.getElementById('mbSharedItemLabel');
-            if (member.isExcludedFromShared) {
-                mbSharedLabel.innerHTML = `Phí quỹ chung <span class="text-[10px] bg-rose-100 text-rose-700 font-bold px-1.5 py-0.5 rounded ml-1">Được miễn</span>`;
-                document.getElementById('mbSharedItemShare').innerHTML = `<span class="text-rose-600 font-bold">0đ</span>`;
-            } else {
-                mbSharedLabel.innerHTML = `Phí quỹ chung <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-400">Chia đều</span>`;
-                document.getElementById('mbSharedItemShare').innerText = formatMoney(member.sharedItemShare) + 'đ';
-            }
-
-            document.getElementById('mbBaseShare').innerText = formatMoney(member.shareCost) + 'đ';
-
             const deducContainer = document.getElementById('mbDeductionContainer');
             if (member.totalAdvance > 0) {
                 deducContainer.classList.remove('hide');
@@ -2544,8 +2504,13 @@
                         <td class="p-3 font-semibold">${m.name}</td>
                         <td class="p-3 text-center font-bold text-slate-500">${m.days}</td>
                         <td class="p-3 text-center text-xs font-semibold ${isExcluded ? 'text-rose-600' : 'text-slate-500'}">${isExcluded ? 'Được miễn' : 'Chia đều'}</td>
-                        <td class="p-3 text-center font-bold ${m.status === 'paid' ? 'text-emerald-600' : 'text-amber-600'}">${m.status === 'paid' ? 'Đã nộp' : 'Chưa nộp'}</td>
-                        <td class="p-3 text-center text-xs text-slate-400">Trong code</td>
+                        <td class="p-3 text-center">
+                            <select onchange="updateMemberPaymentStatus(${idx}, this.value, this)" class="px-2 py-1.5 border border-slate-200 rounded-lg outline-none font-bold ${m.status === 'paid' ? 'text-emerald-600' : 'text-amber-600'}">
+                                <option value="paid" class="text-emerald-600" ${m.status === 'paid' ? 'selected' : ''}>Đã nộp</option>
+                                <option value="unpaid" class="text-amber-600" ${m.status === 'unpaid' ? 'selected' : ''}>Chưa nộp</option>
+                            </select>
+                        </td>
+                        <td class="p-3 text-center text-xs text-slate-400">Google Sheets</td>
                     </tr>
                 `;
             }
@@ -2570,6 +2535,13 @@
             tbody.innerHTML = html;
         }
 
+        function updateMemberPaymentStatus(idx, status, select) {
+            if (status !== 'paid' && status !== 'unpaid') return;
+            state.members[idx].status = status;
+            select.classList.toggle('text-emerald-600', status === 'paid');
+            select.classList.toggle('text-amber-600', status === 'unpaid');
+        }
+
         function addAdminItem() {
             state.sharedItems.push({ id: state.sharedItems.length ? Math.max(...state.sharedItems.map(i=>i.id))+1 : 1, buyerId: state.members[0]?.id||1, name: "Đồ mới", cost: 0 });
             renderAdminItemsTable();
@@ -2585,7 +2557,10 @@
             syncCalendarWithConfig(true);
             calculateDaysFromRecords();
 
-            const payload = { sharedItems: state.sharedItems };
+            const payload = {
+                sharedItems: state.sharedItems,
+                memberStatuses: Object.fromEntries(state.members.map(member => [String(member.id), member.status]))
+            };
             if (hasPendingRecordChanges) payload.records = state.records;
 
             showLoading("Đang lưu điểm danh và quỹ chung...");
